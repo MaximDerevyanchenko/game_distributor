@@ -1,0 +1,40 @@
+const Game = {
+    props: ['game_id'],
+    data: function () {
+        return {
+            game: null,
+            onlinePlayers: 0
+        }
+    },
+    template: `
+        <div class="homeContainer" v-if="game">
+            <div>Title: {{ game.data.name }}</div>
+            <div>Online players: {{ onlinePlayers }}</div>
+            <button v-if="logged">Add to cart</button>
+        </div>
+    `,
+    methods: {
+        getGame: function () {
+            axios.get("http://localhost:3000/api/game/" + this.$props.game_id)
+                .then(response => {
+                    var gameId = this.$props.game_id
+                    if (response.data[gameId].success)
+                        this.game = response.data[gameId]
+                })
+                .catch(error => console.log(error))
+        },
+        getOnlinePlayers: function () {
+            axios.get("http://localhost:3000/api/game/" + this.$props.game_id + "/players")
+                .then(response => {
+                    if (response.data.hasOwnProperty('player_count'))
+                        this.onlinePlayers = response.data.player_count
+                })
+                .catch(error => console.log(error))
+        }
+    },
+    mounted() {
+        this.getGame()
+        this.getOnlinePlayers()
+        this.checkLogin()
+    }
+}

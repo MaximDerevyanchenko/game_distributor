@@ -1,17 +1,49 @@
 <!DOCTYPE html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello World in Vue.js</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--    <link rel="stylesheet" type="text/css" href="/static/css/style.css">-->
+</head>
+
+<body>
+<div id="app" class="container-fluid">
+    <h1>Amazing Games</h1>
+    <navbar></navbar>
+    <router-view></router-view>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://npmcdn.com/vue-router/dist/vue-router.js"></script>
+<script src="/static/js/home.js"></script>
+<script src="/static/js/games.js"></script>
+<script src="/static/js/404.js"></script>
+<script src="/static/js/game.js"></script>
+<script src="/static/js/navbar.js"></script>
+<script src="/static/js/library.js"></script>
+<script src="/static/js/profile.js"></script>
+<script src="/static/js/sign_up.js"></script>
+<script src="/static/js/loggable.js"></script>
+
+<script src="/static/js/router.js"></script>
+
+<script>
+    const app = new Vue({
+        router,
+        el: "#app",
+        components: {
+            'navbar': Navbar
+        }
+    })
+    Vue.config.optionMergeStrategies.myStrategy = function (toVal, fromVal) {
+        console.log(fromVal, toVal)
+        return fromVal ? fromVal : toVal
+    }
+</script>
+
+</body>
 </html>
