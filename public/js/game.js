@@ -11,7 +11,7 @@ const Game = {
         <div class="homeContainer" v-if="game">
             <div>Title: {{ game.data.name }}</div>
             <div>Online players: {{ onlinePlayers }}</div>
-            <button v-if="logged">Add to cart</button>
+            <button v-if="logged" @click="addToCart">Add to cart</button>
         </div>
     `,
     methods: {
@@ -31,6 +31,14 @@ const Game = {
                 .then(response => {
                     if (response.data.hasOwnProperty('player_count'))
                         this.onlinePlayers = response.data.player_count
+                })
+                .catch(error => console.log(error))
+        },
+        addToCart: function (){
+            axios.post("http://localhost:3000/api/account/cart", this.game, { withCredentials: true })
+                .then(response => {
+                    console.log(response.data + "added to cart")
+                    this.$router.push({ name: 'Cart' })
                 })
                 .catch(error => console.log(error))
         }

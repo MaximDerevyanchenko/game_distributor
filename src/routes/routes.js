@@ -15,11 +15,15 @@ module.exports = function(app) {
 	app.route('/api/game/:game_id/players')
 		.get(gameController.online_players)
 
-	app.route('/api/login')
+	app.route('/api/account/login')
 		.post(accountController.login)
 
-	app.route('/api/signup')
+	app.route('/api/account/signup')
 		.post(accountController.signup)
+
+	app.route('/api/account/cart')
+		.post(accountController.addToCart)
+		.get(accountController.getCart)
 
 	app.use(gameController.show_main);
 };

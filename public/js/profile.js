@@ -6,7 +6,8 @@ const Profile = {
                 password: ""
             },
             day: 24*60*60,
-            logged: false
+            logged: false,
+            typePassword: "password"
         }
     },
     template: `
@@ -15,9 +16,13 @@ const Profile = {
         <p>Logged</p>
     </div>
     <div v-else>
-        <form>
-            <input v-model="account.userId" id="username" type="text"/>
-            <input v-model="account.password" id="pw" type="text"/>
+        <form> 
+            <label for="username">Username:</label>
+            <input id="username" v-model="account.userId" type="text"/>
+            <label for="password">Password:</label>
+            <input id="password" v-model="account.password" v-bind:type="typePassword"/>
+            <label for="showPassword">Show password</label>
+            <input id="showPassword" type="checkbox" @change="showPassword"/>
             <button @click.prevent="login" type="submit">Login</button>
         </form>
         <button >
@@ -27,17 +32,20 @@ const Profile = {
 </div>`,
     methods: {
         login: function () {
-            axios.post('http://localhost:3000/api/login', this.account)
+            axios.post('http://localhost:3000/api/account/login', this.account)
                 .then(response => {
-                    this.$cookies.set("userName", response.data.userId, 7 * this.day)
+                    this.$cookies.set("username", response.data.userId, 7 * this.day)
                     this.$emit('log-event', this.$logged)
                     this.$parent.$children[0].$emit('log-event', this.$logged)
                     this.account = {}
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log("l'utente non esiste")
                 })
         },
+        showPassword: function () {
+            this.typePassword = this.typePassword === "password" ? "text" : "password"
+        }
     },
     mounted() {
         this.$checkLogin()

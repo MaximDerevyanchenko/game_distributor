@@ -20,13 +20,14 @@ const Navbar = {
                            <navbutton text="Store"></navbutton>
                            <navbutton text="Library"></navbutton>
                            <navbutton text="Profile"></navbutton>
+                           <navbutton text="Cart"></navbutton>
                            <button v-if="logged" @click.prevent="logout">Logout</button>
                        </ul>
                    </div>
                </nav>`,
     methods: {
         logout: function () {
-            this.$cookies.remove('userName')
+            this.$cookies.remove('username')
             this.$emit("log-event", this.$logged)
             this.$parent.$children[1].$emit("log-event", this.$logged)
             this.$parent.$children[1].$emit("library-logout", this.$logged)
