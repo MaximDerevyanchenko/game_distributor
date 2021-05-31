@@ -32,8 +32,7 @@ const Games = {
                     this.games = response.data
                 })
                 .catch(error => console.log(error))
-        },
-        handleLogin: function () {}
+        }
     },
     mounted() {
         this.getGames()

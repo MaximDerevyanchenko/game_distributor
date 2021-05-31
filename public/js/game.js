@@ -3,7 +3,8 @@ const Game = {
     data: function () {
         return {
             game: null,
-            onlinePlayers: 0
+            onlinePlayers: 0,
+            logged: false
         }
     },
     template: `
@@ -20,6 +21,8 @@ const Game = {
                     var gameId = this.$props.game_id
                     if (response.data[gameId].success)
                         this.game = response.data[gameId]
+                    else
+                        console.log("game non trovato")
                 })
                 .catch(error => console.log(error))
         },
@@ -35,6 +38,11 @@ const Game = {
     mounted() {
         this.getGame()
         this.getOnlinePlayers()
-        this.checkLogin()
+        this.$checkLogin()
+        this.logged = this.$logged
+        this.$on('log-event', data => {
+            this.$checkLogin()
+            this.logged = this.$logged
+        })
     }
 }

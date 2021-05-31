@@ -6,12 +6,18 @@ const Library = {
         `,
     methods: {
         handleLogin: function () {
-            if (!this.logged)
+            if (!this.$logged)
                 this.$router.push({name: 'Profile'})
         }
     },
     mounted() {
-        this.checkLogin()
+        this.$checkLogin()
         this.handleLogin()
+        this.$on('log-event', data => {
+            this.$checkLogin()
+        })
+        this.$on('library-logout', data => {
+            this.handleLogin()
+        })
     }
 }

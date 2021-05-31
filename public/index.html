@@ -19,6 +19,7 @@
 <script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://npmcdn.com/vue-router/dist/vue-router.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/1.4.1/document-register-element.js"></script>
 <script src="/static/js/home.js"></script>
 <script src="/static/js/games.js"></script>
 <script src="/static/js/404.js"></script>
@@ -27,11 +28,11 @@
 <script src="/static/js/library.js"></script>
 <script src="/static/js/profile.js"></script>
 <script src="/static/js/sign_up.js"></script>
-<script src="/static/js/loggable.js"></script>
-
+<script src="/static/js/plugin.js"></script>
 <script src="/static/js/router.js"></script>
 
 <script>
+    Vue.use(Myplugin)
     const app = new Vue({
         router,
         el: "#app",
@@ -39,10 +40,6 @@
             'navbar': Navbar
         }
     })
-    Vue.config.optionMergeStrategies.myStrategy = function (toVal, fromVal) {
-        console.log(fromVal, toVal)
-        return fromVal ? fromVal : toVal
-    }
 </script>
 
 </body>

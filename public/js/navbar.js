@@ -8,6 +8,7 @@ const NavButton = {
 const Navbar = {
     data: function (){
         return {
+            logged: false
         }
     },
     components: {
@@ -26,12 +27,17 @@ const Navbar = {
     methods: {
         logout: function () {
             this.$cookies.remove('userName')
-            this.checkLogin()
-            this.$root.$emit("log-event", this.logged)
+            this.$emit("log-event", this.$logged)
+            this.$parent.$children[1].$emit("log-event", this.$logged)
+            this.$parent.$children[1].$emit("library-logout", this.$logged)
         }
     },
     mounted() {
-        this.checkLogin()
+        this.$checkLogin()
+        this.logged = this.$logged
+        this.$on('log-event', data => {
+            this.$checkLogin()
+            this.logged = this.$logged
+        })
     }
-
 }
