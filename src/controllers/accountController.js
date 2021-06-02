@@ -1,50 +1,21 @@
 const mongoose = require('mongoose')
 Account = require('../models/accountModel')(mongoose)
-GameCart = require('../models/gameCartModel')(mongoose)
 
 exports.login = function (req, res) {
-    Account.findOne({ userId: req.body.userId, password: req.body.password }, function (err, acc) {
-        if (err)
-            res.send(err)
-        else
-            res.json(acc)
-    })
+    Account.findOne({ userId: req.body.userId, password: req.body.password })
+        .then(acc => res.json(acc))
+        .catch(err => res.send(err))
 }
 
 exports.signup = function (req, res) {
-    Account.findOne({ userId: req.body.userId }, function (err, acc) {
-        if (err)
-            res.send(err)
-        if (acc != null) {
-            let alreadyExistsResponse = {
-                userId: acc.userId
-            }
-            res.json(alreadyExistsResponse)
-        } else {
-            const new_Account = new Account(req.body)
-            new_Account.save(function (err, account) {
-                if (err)
-                    res.send(err)
-                res.status(201).json(account)
-            })
-        }
-    })
-}
-
-exports.addToCart = function (req, res) {
-    const new_game = new GameCart({ username: req.cookies.username, gameId: req.body.data.steam_appid })
-    new_game.save(function (err, gameCart) {
-        if (err)
-            res.send(err)
-        res.status(201).json(gameCart)
-    })
-}
-
-exports.getCart = function (req, res) {
-    GameCart.find({ username: req.cookies.username }, function (err, games){
-        if (err)
-            res.send(err)
-        else
-            res.json(games)
-    })
+    Account.findOne({ userId: req.body.userId })
+        .then(acc => {
+            if (acc != null)
+                res.json({ userId: acc.userId })
+            else
+                Account.create(req.body)
+                    .then(account => res.status(201).json(account))
+                    .catch(err => res.send(err))
+        })
+        .catch(err => res.send(err))
 }

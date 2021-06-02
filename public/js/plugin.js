@@ -1,8 +1,7 @@
-const Myplugin = {
-    install(Vue, options){
-        Vue.prototype.$logged = false
+const LoginPlugin = {
+    install(Vue){
         Vue.prototype.$checkLogin = function () {
-            Vue.prototype.$logged = Vue.$cookies.isKey('username')
+            return Vue.$cookies.isKey('username')
         }
     }
 }

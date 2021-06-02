@@ -8,27 +8,22 @@ exports.show_main = function (req, res) {
 };
 
 exports.list_games = function (req, res) {
-	GameSchema.aggregate().sample(10).exec(function (err, games) {
+	GameSchema.aggregate().sample(10).exec((err, games) => {
 			if (err)
 				res.send(err)
 			res.json(games)
-		}
-	)
+		})
 }
 
 exports.game_info = function (req, res) {
 	axios.get("https://store.steampowered.com/api/appdetails?appids=" + req.params.game_id)
-		.then(response => {
-			res.send(response.data)
-		})
+		.then(response => res.send(response.data))
 		.catch(error => res.send(error.response.data))
 }
 
 exports.online_players = function (req, res) {
 	axios.get("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=" + req.params.game_id)
-		.then(response => {
-			res.send(response.data.response)
-		})
+		.then(response => res.send(response.data.response))
 		.catch(error => res.send(error.response.data.response))
 }
 
@@ -52,10 +47,7 @@ exports.sync_games = function (req, res) {
 }
 
 exports.create_game = function (req, res) {
-	var new_game = new GameSchema(req.body);
-	new_game.save(function (err, game) {
-		if (err)
-			res.send(err);
-		res.status(201).json(game);
-	});
-};
+	GameSchema.create(req.body)
+		.then(game => res.status(201).json(game))
+		.catch(err => res.send(err))
+}

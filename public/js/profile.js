@@ -35,8 +35,8 @@ const Profile = {
             axios.post('http://localhost:3000/api/account/login', this.account)
                 .then(response => {
                     this.$cookies.set("username", response.data.userId, 7 * this.day)
-                    this.$emit('log-event', this.$logged)
-                    this.$parent.$children[0].$emit('log-event', this.$logged)
+                    this.$emit('log-event')
+                    this.$parent.$children[0].$emit('log-event')
                     this.account = {}
                 })
                 .catch(err => {
@@ -48,11 +48,9 @@ const Profile = {
         }
     },
     mounted() {
-        this.$checkLogin()
-        this.logged = this.$logged
-        this.$on('log-event', data => {
-            this.$checkLogin()
-            this.logged = this.$logged
+        this.logged = this.$checkLogin()
+        this.$on('log-event', () => {
+            this.logged = this.$checkLogin()
         })
     }
 }

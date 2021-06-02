@@ -28,17 +28,14 @@ const Navbar = {
     methods: {
         logout: function () {
             this.$cookies.remove('username')
-            this.$emit("log-event", this.$logged)
-            this.$parent.$children[1].$emit("log-event", this.$logged)
-            this.$parent.$children[1].$emit("library-logout", this.$logged)
+            this.$emit("log-event")
+            this.$parent.$children[1].$emit("log-event")
         }
     },
     mounted() {
-        this.$checkLogin()
-        this.logged = this.$logged
-        this.$on('log-event', data => {
-            this.$checkLogin()
-            this.logged = this.$logged
+        this.logged = this.$checkLogin()
+        this.$on('log-event', () => {
+            this.logged = this.$checkLogin()
         })
     }
 }

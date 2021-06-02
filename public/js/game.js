@@ -35,9 +35,8 @@ const Game = {
                 .catch(error => console.log(error))
         },
         addToCart: function (){
-            axios.post("http://localhost:3000/api/account/cart", this.game, { withCredentials: true })
-                .then(response => {
-                    console.log(response.data + "added to cart")
+            axios.post("http://localhost:3000/api/account/cart", this.game)
+                .then(() => {
                     this.$router.push({ name: 'Cart' })
                 })
                 .catch(error => console.log(error))
@@ -46,11 +45,9 @@ const Game = {
     mounted() {
         this.getGame()
         this.getOnlinePlayers()
-        this.$checkLogin()
-        this.logged = this.$logged
-        this.$on('log-event', data => {
-            this.$checkLogin()
-            this.logged = this.$logged
+        this.logged = this.$checkLogin()
+        this.$on('log-event', () => {
+            this.logged = this.$checkLogin()
         })
     }
 }

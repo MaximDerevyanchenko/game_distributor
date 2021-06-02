@@ -1,6 +1,8 @@
 module.exports = function(app) {
 	const gameController = require('../controllers/gameController')
 	const accountController = require('../controllers/accountController')
+	const cartController = require('../controllers/cartController')
+	const libraryController = require('../controllers/libraryController')
 
 	app.route('/api/games')
 		.get(gameController.list_games)
@@ -22,8 +24,15 @@ module.exports = function(app) {
 		.post(accountController.signup)
 
 	app.route('/api/account/cart')
-		.post(accountController.addToCart)
-		.get(accountController.getCart)
+		.post(cartController.addToCart)
+		.get(cartController.getCart)
 
-	app.use(gameController.show_main);
-};
+	app.route('/api/account/cart/:gameId')
+		.delete(cartController.deleteFromCart)
+
+	app.route('/api/account/library')
+		.post(libraryController.addToLibrary)
+		.get(libraryController.getLibrary)
+
+	app.use(gameController.show_main)
+}

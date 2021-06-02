@@ -4,7 +4,6 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const cookieHandler = require('./src/controllers/cookieHandler')
 
 global.appRoot = path.resolve(__dirname);
 
@@ -14,8 +13,6 @@ mongoose.connect('mongodb://localhost/steam', { useNewUrlParser: true, useFindAn
 
 app.use(cors())
 app.use(cookieParser())
-
-// app.use(cookieHandler)
 
 //Per gestire i parametri passati nel corpo della richiesta http.
 app.use(express.json());

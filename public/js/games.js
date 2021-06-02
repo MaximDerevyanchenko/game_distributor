@@ -21,16 +21,12 @@ const Games = {
     methods: {
         getGames: function () {
             axios.get("http://localhost:3000/api/games")
-                .then(response => {
-                    this.games = response.data
-                })
+                .then(response => this.games = response.data)
                 .catch(error => console.log(error))
         },
         syncGames: function () {
             axios.post("http://localhost:3000/api/games")
-                .then(response => {
-                    this.games = response.data
-                })
+                .then(response => this.games = response.data)
                 .catch(error => console.log(error))
         }
     },
