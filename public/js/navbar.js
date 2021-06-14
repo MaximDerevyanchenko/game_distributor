@@ -1,7 +1,7 @@
 const NavButton = {
-    props: ['text'],
+    props: ['text', 'username'],
     template: `<li class="nav-item">
-                    <router-link class="nav-link" :to="{ name: text }">{{ text }}</router-link>
+                    <router-link class="nav-link" :to="{ name: text , params: { username: username }}">{{ text }}</router-link>
                 </li>`
 }
 
@@ -18,18 +18,23 @@ const Navbar = {
                    <div id="navbarNav">
                        <ul class="navbar-nav">
                            <navbutton text="Store"></navbutton>
-                           <navbutton text="Library"></navbutton>
-                           <navbutton text="Profile"></navbutton>
-                           <navbutton text="Cart"></navbutton>
+                           <navbutton v-if="logged" text="Library"></navbutton>
+                           <navbutton text="Profile" :username="Vue.$cookies.get('username')"></navbutton>
+                           <navbutton v-if="logged" text="Cart"></navbutton>
+                           <navbutton v-if="logged" text="Friends"></navbutton>
                            <button v-if="logged" @click.prevent="logout">Logout</button>
                        </ul>
                    </div>
                </nav>`,
     methods: {
         logout: function () {
-            this.$cookies.remove('username')
-            this.$emit("log-event")
-            this.$parent.$children[1].$emit("log-event")
+            axios.patch('http://localhost:3000/api/account/state', { state: "offline" })
+                .then(() => {
+                    this.$cookies.remove('username')
+                    this.$emit("log-event")
+                    this.$parent.$children[1].$emit("log-event")
+                })
+                .catch(err => console.log(err))
         }
     },
     mounted() {

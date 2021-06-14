@@ -9,6 +9,9 @@ const Games = {
             <div >
 <!--                <button @click.prevent="syncGames">Synch With Steam</button>-->
             </div>
+             <div>
+                <router-link class="nav-button" :to="{ name: 'Wishlist', params: { username: Vue.$cookies.get('username') }}">Wishlist</router-link>
+            </div>
             <div class="last" v-for="game in games">
                 <div class="coverText">
                     <div>
@@ -16,6 +19,8 @@ const Games = {
                     </div>
                 </div>
             </div>
+          
+           
         </div>
     `,
     methods: {

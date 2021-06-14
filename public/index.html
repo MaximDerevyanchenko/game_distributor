@@ -20,6 +20,8 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://npmcdn.com/vue-router/dist/vue-router.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/1.4.1/document-register-element.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-socket.io@3.0.10/dist/vue-socketio.min.js"></script>
 <script src="/static/js/home.js"></script>
 <script src="/static/js/games.js"></script>
 <script src="/static/js/404.js"></script>
@@ -30,11 +32,16 @@
 <script src="/static/js/sign_up.js"></script>
 <script src="/static/js/plugin.js"></script>
 <script src="/static/js/cart.js"></script>
+<script src="/static/js/friends.js"></script>
+<script src="/static/js/wishlist.js"></script>
 <script src="/static/js/router.js"></script>
 
 <script>
     axios.defaults.withCredentials = true
     Vue.use(LoginPlugin)
+    Vue.use(new VueSocketIO({
+        connection: io('localhost:3000')
+    }))
     const app = new Vue({
         router,
         el: "#app",

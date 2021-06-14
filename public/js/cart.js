@@ -1,20 +1,18 @@
 const Cart = {
     data: function (){
         return {
-            logged: false,
             games: []
         }
     },
     template: `
     <div>
-        <div class="col-md-10" v-if="logged">
+        <div class="col-md-10">
             <div v-for="(game,index) in games">
                 <h2>{{game.gameId}}</h2>
                 <button @click="remove(index)">Remove</button>
             </div>
             <button @click="buy">Buy</button>
         </div>
-        <p v-else>Not logged</p>
     </div>
     `,
     methods: {
@@ -39,10 +37,12 @@ const Cart = {
         }
     },
     mounted(){
-        this.logged = this.$checkLogin()
-        if (!this.logged)
+        if (!this.$checkLogin())
             this.$router.push({ name: 'Profile'})
         this.getCart()
-        this.$on('log-event', () => this.logged = this.$checkLogin())
+        this.$on('log-event', () => {
+            if (!this.$checkLogin())
+                this.$router.push({ name: 'Profile'})
+        })
     }
 }
