@@ -1,16 +1,18 @@
 const Games = {
     data: function () {
         return {
-            games: []
+            games: [],
+            name: ""
         }
     },
     template: `
         <div class="homeContainer">
-            <div >
-<!--                <button @click.prevent="syncGames">Synch With Steam</button>-->
-            </div>
-             <div>
-                <router-link class="nav-button" :to="{ name: 'Wishlist', params: { username: Vue.$cookies.get('username') }}">Wishlist</router-link>
+            <div>
+                <form>
+                    <label for="name">Name:</label>
+                    <input id="name" type="text" v-model="name" />
+                    <input type="submit" @click.prevent="searchGame" />
+                </form>
             </div>
             <div class="last" v-for="game in games">
                 <div class="coverText">
@@ -19,8 +21,6 @@ const Games = {
                     </div>
                 </div>
             </div>
-          
-           
         </div>
     `,
     methods: {
@@ -33,6 +33,9 @@ const Games = {
             axios.post("http://localhost:3000/api/games")
                 .then(response => this.games = response.data)
                 .catch(error => console.log(error))
+        },
+        searchGame: function () {
+            this.$router.push({name: 'Search', params: { name: this.name }})
         }
     },
     mounted() {

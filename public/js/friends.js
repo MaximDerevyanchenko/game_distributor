@@ -33,8 +33,9 @@ const Friends = {
     `,
     methods: {
         getFriends: function () {
-            axios.get("http://localhost:3000/api/account/friends")
+            axios.get('http://localhost:3000/api/account/friends')
                 .then(res => {
+                    console.log(res)
                     this.friends = res.data
                 })
                 .catch(err => console.log(err))

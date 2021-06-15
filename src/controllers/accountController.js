@@ -18,8 +18,8 @@ module.exports = function (mongoose, io) {
             )
     }
 
-    module.exports.getMyAccount = function (req, res) {
-        Account.findOne({username: req.cookies.username})
+    module.exports.getAccount = function (req, res) {
+        Account.findOne({username: req.params.username})
             .then(acc => res.json(acc))
             .catch(err => res.send(err))
     }

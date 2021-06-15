@@ -19,7 +19,8 @@ const Navbar = {
                        <ul class="navbar-nav">
                            <navbutton text="Store"></navbutton>
                            <navbutton v-if="logged" text="Library"></navbutton>
-                           <navbutton text="Profile" :username="Vue.$cookies.get('username')"></navbutton>
+                           <navbutton v-if="logged" text="Profile" :username="Vue.$cookies.get('username')"></navbutton>
+                           <navbutton v-else text="Login"></navbutton>
                            <navbutton v-if="logged" text="Cart"></navbutton>
                            <navbutton v-if="logged" text="Friends"></navbutton>
                            <button v-if="logged" @click.prevent="logout">Logout</button>

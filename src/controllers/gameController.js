@@ -8,11 +8,15 @@ module.exports = function (mongoose, io) {
 	};
 
 	module.exports.list_games = function (req, res) {
-		GameSchema.aggregate().sample(10).exec((err, games) => {
-			if (err)
-				res.send(err)
-			res.json(games)
-		})
+		GameSchema.aggregate().sample(10).exec()
+			.then(games => res.json(games))
+			.catch(err => res.send(err))
+	}
+
+	module.exports.searchGame = function (req, res) {
+		GameSchema.find({ name: { $regex: req.body.name } })
+			.then(response => res.json(response))
+			.catch(error => res.send(error))
 	}
 
 	module.exports.steam_game_info = function (req, res) {

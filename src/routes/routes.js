@@ -11,7 +11,7 @@ module.exports = function(app, mongoose, io) {
 
 	app.route('/api/games')
 		.get(gameController.list_games)
-		.post(gameController.sync_games)
+		.post(gameController.searchGame)
 
 	app.route('/api/create_game')
 		.post(gameController.create_game)
@@ -29,9 +29,11 @@ module.exports = function(app, mongoose, io) {
 		.post(accountController.login)
 
 	app.route('/api/account')
-		.get(accountController.getMyAccount)
 		.post(accountController.updateMyAccount)
 		.patch(accountController.becomeDeveloper)
+
+	app.route('/api/account/:username')
+		.get(accountController.getAccount)
 
 	app.route('/api/account/state')
 		.patch(accountController.changeState)
