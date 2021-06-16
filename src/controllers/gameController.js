@@ -13,15 +13,29 @@ module.exports = function (mongoose, io) {
 			.catch(err => res.send(err))
 	}
 
+	module.exports.countPages = function (req, res) {
+		GameSchema.countDocuments({ name: { $regex : req.params.game_id }})
+			.then(response => res.json(response))
+			.catch(error => res.send(error))
+	}
+
 	module.exports.searchGame = function (req, res) {
 		GameSchema.find({ name: { $regex: req.body.name } })
+			.sort({ name: "asc"})
+			.limit(10)
+			.skip(10 * (req.body.page - 1))
 			.then(response => res.json(response))
 			.catch(error => res.send(error))
 	}
 
 	module.exports.steam_game_info = function (req, res) {
 		axios.get("https://store.steampowered.com/api/appdetails?appids=" + req.params.game_id)
-			.then(response => res.json(response.data))
+			.then(response => {
+				if (response.data[req.params.game_id].success)
+					res.json(response.data[req.params.game_id].data)
+				else
+					res.sendStatus(204)
+			})
 			.catch(error => res.send(error))
 	}
 

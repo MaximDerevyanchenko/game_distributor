@@ -4,6 +4,7 @@ module.exports = function(app, mongoose, io) {
 	const gameController = require('../controllers/gameController')
 	gameController(mongoose, io)
 	const cartController = require('../controllers/cartController')
+
 	const wishlistController = require('../controllers/wishlistController')
 	wishlistController(mongoose, io)
 	const libraryController = require('../controllers/libraryController')
@@ -15,6 +16,9 @@ module.exports = function(app, mongoose, io) {
 
 	app.route('/api/create_game')
 		.post(gameController.create_game)
+
+	app.route('/api/game/:game_id/count')
+		.get(gameController.countPages)
 
 	app.route('/api/game/:game_id')
 		.get(gameController.game_info)
@@ -31,9 +35,6 @@ module.exports = function(app, mongoose, io) {
 	app.route('/api/account')
 		.post(accountController.updateMyAccount)
 		.patch(accountController.becomeDeveloper)
-
-	app.route('/api/account/:username')
-		.get(accountController.getAccount)
 
 	app.route('/api/account/state')
 		.patch(accountController.changeState)
@@ -77,6 +78,9 @@ module.exports = function(app, mongoose, io) {
 
 	app.route('/api/account/wishlist/:username')
 		.get(wishlistController.getWishlist)
+
+	app.route('/api/account/:username')
+		.get(accountController.getAccount)
 
 	app.use(gameController.show_main)
 }
