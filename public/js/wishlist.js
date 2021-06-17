@@ -27,7 +27,7 @@ const Wishlist = {
                 .catch(error => console.log(error))
         },
         addToCart: function (index) {
-            axios.post("http://localhost:3000/api/account/cart", { data: { steam_appid: this.games[index].gameId }})
+            axios.post("http://localhost:3000/api/account/cart", { data: { gameId: this.games[index].gameId }})
                 .then(() => {
                     this.$router.push({ name: 'Cart' })
                 })

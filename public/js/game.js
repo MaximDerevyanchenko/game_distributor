@@ -1,5 +1,5 @@
 const Game = {
-    props: ['game_id'],
+    props: ['gameId'],
     data: function () {
         return {
             game: null,
@@ -17,15 +17,14 @@ const Game = {
     `,
     methods: {
         getGame: function () {
-            axios.get("http://localhost:3000/api/game/" + this.$props.game_id)
+            axios.get("http://localhost:3000/api/game/" + this.$props.gameId)
                 .then(response => {
                     this.game = response.data
                     if (!this.game.isLocal)
-                        axios.get("http://localhost:3000/api/steam_game/" + this.game.appid)
+                        axios.get("http://localhost:3000/api/steam_game/" + this.game.gameId)
                             .then(response => {
-                                const gameId = this.game.appid;
-                                if (response.data[gameId].success) {
-                                    this.game = response.data[gameId]
+                                if (response.status === 200) {
+                                    this.game = response.data
                                     this.getOnlinePlayers()
                                 } else
                                     console.log("game non trovato")
@@ -35,7 +34,7 @@ const Game = {
                 .catch(error => console.log(error))
         },
         getOnlinePlayers: function () {
-            axios.get("http://localhost:3000/api/steam_game/" + this.game.gameId + "/players")
+            axios.get("http://localhost:3000/api/steam_game/" + this.game.steam_appid + "/players")
                 .then(response => {
                     if (response.data.hasOwnProperty('player_count'))
                         this.onlinePlayers = response.data.player_count

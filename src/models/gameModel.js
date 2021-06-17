@@ -1,7 +1,7 @@
 module.exports = function(mongoose) {
     const Schema = mongoose.Schema
     const GameSchema = new Schema({
-        appid: Number,
+        gameId: Number,
 		name: String,
         isLocal: Boolean
     })

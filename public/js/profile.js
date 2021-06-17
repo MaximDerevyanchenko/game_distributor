@@ -10,7 +10,7 @@ const Profile = {
             day: 24*60*60,
             logged: false,
             game: {
-                appid: -1,
+                gameId: -1,
                 name: "",
                 isLocal: true
             }
@@ -25,7 +25,7 @@ const Profile = {
                 <h2>New Game</h2>
                 <form>
                     <label for="gameId">GameId: </label>
-                    <input id="gameId" type="number" v-model="game.appid" />
+                    <input id="gameId" type="number" v-model="game.gameId" />
                     <label for="name">Name:</label>
                     <input id="name" type="text" v-model="game.name">
                     <input type="submit" @click.prevent="createGame"/>
@@ -54,7 +54,7 @@ const Profile = {
         },
         createGame: function (){
             axios.post('http://localhost:3000/api/create_game', this.game)
-                .then(() => this.$router.push({ name: 'Game', params: { game_id: this.game.appid }}))
+                .then(() => this.$router.push({ name: 'Game', params: { game_id: this.game.gameId }}))
                 .catch(err => console.log(err))
         }
     },

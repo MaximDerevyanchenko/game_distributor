@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 GameCart = require('../models/gameCartModel')(mongoose)
 
 exports.addToCart = function (req, res) {
-    GameCart.create({ username: req.cookies.username, gameId: req.body.data.steam_appid })
+    GameCart.create({ username: req.cookies.username, gameId: req.body.data.gameId })
         .then(gameCart => res.status(201).json(gameCart))
         .catch(err => res.send(err))
 }

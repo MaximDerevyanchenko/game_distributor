@@ -8,17 +8,26 @@ const Library = {
     template: `
         <div>
             <p>Library</p>
-            <div v-for="game in games">
-                <h1>{{ game.gameId }}</h1>
-                <button v-if="gamePlaying !== game.gameId" @click="startGame(game.gameId)">Start Game</button>
-                <button v-else @click="stopGame">Stop Game</button>
+            <div class="d-flex align-items-start">
+                <ul class="nav nav-pills flex-column" role="tablist">
+                    <li class="nav-item" role="presentation" v-for="game in games">
+                        <button role="tab" class="nav-link" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div v-for="game in games" class="tab-pane fade" role="tabpanel" :id="'g' + game.gameId">
+                        <h1>{{ game.gameId }}</h1>
+                        <button v-if="gamePlaying !== game.gameId" @click="startGame(game.gameId)">Start Game</button>
+                        <button v-else @click="stopGame">Stop Game</button>
+                    </div>
+                </div>
             </div>
         </div>
         `,
     methods: {
         handleLogin: function () {
             if (!this.$checkLogin())
-                this.$router.push({name: 'Profile'})
+                this.$router.push({name: 'Store'})
         },
         getLibrary: function () {
             axios.get("http://localhost:3000/api/account/library")

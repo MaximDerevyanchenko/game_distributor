@@ -1,5 +1,5 @@
 module.exports = function (mongoose, io) {
-	let GameSchema = require("../models/gameModel.js")(mongoose);
+	const GameSchema = require("../models/gameModel.js")(mongoose)
 
 	const axios = require('axios')
 
@@ -19,6 +19,12 @@ module.exports = function (mongoose, io) {
 			.catch(error => res.send(error))
 	}
 
+	module.exports.countAll = function (req, res) {
+		GameSchema.estimatedDocumentCount()
+			.then(response => res.json(response))
+			.catch(error => res.send(error))
+	}
+
 	module.exports.searchGame = function (req, res) {
 		GameSchema.find({ name: { $regex: req.body.name } })
 			.sort({ name: "asc"})
@@ -29,10 +35,10 @@ module.exports = function (mongoose, io) {
 	}
 
 	module.exports.steam_game_info = function (req, res) {
-		axios.get("https://store.steampowered.com/api/appdetails?appids=" + req.params.game_id)
+		axios.get("https://store.steampowered.com/api/appdetails?appids=" + req.params.gameId)
 			.then(response => {
-				if (response.data[req.params.game_id].success)
-					res.json(response.data[req.params.game_id].data)
+				if (response.data[req.params.gameId].success)
+					res.json(response.data[req.params.gameId].data)
 				else
 					res.sendStatus(204)
 			})
@@ -40,7 +46,7 @@ module.exports = function (mongoose, io) {
 	}
 
 	module.exports.game_info = function (req, res) {
-		GameSchema.findOne({ appid: req.params.game_id})
+		GameSchema.findOne({ gameId: req.params.gameId})
 			.then(response => res.json(response))
 			.catch(error => res.send(error.response))
 	}

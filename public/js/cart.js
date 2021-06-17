@@ -37,12 +37,10 @@ const Cart = {
         }
     },
     mounted(){
-        if (!this.$checkLogin())
-            this.$router.push({ name: 'Profile'})
         this.getCart()
         this.$on('log-event', () => {
             if (!this.$checkLogin())
-                this.$router.push({ name: 'Profile'})
+                this.$router.push({ name: 'Store'})
         })
     }
 }

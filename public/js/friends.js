@@ -106,7 +106,7 @@ const Friends = {
         this.getPendingRequests()
         this.$on('log-event', () => {
             if (!this.$checkLogin())
-                this.$router.push({name: 'Profile'})
+                this.$router.push({name: 'Store'})
         })
     }
 }

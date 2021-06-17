@@ -21,7 +21,7 @@ const Games = {
                         <div class="d-flex justify-content-center">
                             <img :src="game.header_image" class="w-75" :alt="game.name" /> 
                             <div class="w-25">
-                                <router-link class="text-white" :to="{ name: 'Game', params: { game_id: game.steam_appid }}">{{ game.name }}</router-link>
+                                <router-link class="text-white" :to="{ name: 'Game', params: { gameId: game.steam_appid }}">{{ game.name }}</router-link>
                             </div>
                         </div>
                     </div>
@@ -40,11 +40,11 @@ const Games = {
                     let promises = []
                     response.data.forEach(game => {
                         if (game.isLocal)
-                            promises.push(axios.get("http://localhost:3000/api/game/" + game.appid)
+                            promises.push(axios.get("http://localhost:3000/api/game/" + game.gameId)
                                     .then(g => g)
                                     .catch(err => console.log(err)))
                         else
-                            promises.push(axios.get("http://localhost:3000/api/steam_game/" + game.appid)
+                            promises.push(axios.get("http://localhost:3000/api/steam_game/" + game.gameId)
                             .then(g => g)
                             .catch(err => console.log(err)))
                     })

@@ -4,5 +4,7 @@ $secondary: #5f0ee0;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 //@import "../../node_modules/font-awesome/scss/font-awesome";
-body {
+
+textarea {
+  height: 150px !important;
 }

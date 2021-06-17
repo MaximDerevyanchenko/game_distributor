@@ -9,24 +9,32 @@ module.exports = function(app, mongoose, io) {
 	wishlistController(mongoose, io)
 	const libraryController = require('../controllers/libraryController')
 	libraryController(mongoose, io)
+	const countryController = require('../controllers/countryController')
+	countryController(mongoose, io)
+
+	app.route('/api/countries')
+		.get(countryController.getCountries)
 
 	app.route('/api/games')
 		.get(gameController.list_games)
 		.post(gameController.searchGame)
 
+	app.route('/api/games/count')
+		.get(gameController.countAll)
+
 	app.route('/api/create_game')
 		.post(gameController.create_game)
 
-	app.route('/api/game/:game_id/count')
+	app.route('/api/game/:gameId/count')
 		.get(gameController.countPages)
 
-	app.route('/api/game/:game_id')
+	app.route('/api/game/:gameId')
 		.get(gameController.game_info)
 
-	app.route('/api/steam_game/:game_id')
+	app.route('/api/steam_game/:gameId')
 		.get(gameController.steam_game_info)
 
-	app.route('/api/steam_game/:game_id/players')
+	app.route('/api/steam_game/:gameId/players')
 		.get(gameController.online_players)
 
 	app.route('/api/account/login')

@@ -27,8 +27,9 @@ const Navbar = {
             </ul>
             <form class="d-flex">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="name"/>
-                <button class="btn btn-outline-light me-2" type="submit" @click.prevent="searchGame">Search</button>
+                <button class="btn btn-outline-light me-5" type="submit" @click.prevent="searchGame">Search</button>
             </form>
+            <router-link v-if="!logged" class="btn btn-outline-light navbar-right me-2" to="/signup">Sign up</router-link>
             <router-link v-if="!logged" class="btn btn-outline-light navbar-right" to="/login">Login</router-link>
             <button class="btn btn-outline-danger navbar-right" v-if="logged" @click.prevent="logout">Logout</button>
         </div>

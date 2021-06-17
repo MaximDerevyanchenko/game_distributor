@@ -26,7 +26,6 @@ const Login = {
             </div>
             <div class="mb-3 form-check">
                 <label for="showPassword" class="form-check-label">Show password</label>
-               
             </div>
             <button @click="login" type="submit" class="btn btn-dark">Login</button>
         </form>
@@ -36,11 +35,10 @@ const Login = {
     methods: {
         login: function (e) {
             const form = this.$refs["form"]
-            if (!form.checkValidity()) {
-                e.preventDefault()
+            if (!form.checkValidity())
                 e.stopPropagation()
-            }
 
+            e.preventDefault()
             form.classList.add('was-validated')
             axios.post('http://localhost:3000/api/account/login', this.account)
                 .then(response => {
