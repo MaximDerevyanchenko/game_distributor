@@ -5,6 +5,99 @@ const NavButton = {
                 </li>`
 }
 
+const Login = {
+    data() {
+        return {
+            account: {
+                username: "",
+                password: ""
+            },
+            typePassword: "password",
+            isValid: false
+        }
+    },
+    template: `
+    <div id="login" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <form class="modal-content needs-validation border border-dark border-2 shadow-lg rounded mt-4 p-4" ref="form" novalidate>
+                <div class="form-floating mb-3 has-validation">
+                    <input id="username" v-model="account.username" type="text" class="form-control" autocomplete="on" placeholder="Username" required />
+                    <label for="username">Username</label>
+                    <div class="invalid-feedback">Please choose a username.</div>
+                </div>
+                <div class="form-floating mb-4 has-validation">
+                    <input id="password" v-model="account.password" v-bind:type="typePassword" class="form-control" autocomplete="current-password" placeholder="Password" required />
+                    <label for="password">Password</label>
+                    <i ref="checkbox" class="form-check-label far fa-eye" @click="showPassword"></i>
+                    <div class="invalid-feedback">Please choose a password.</div>
+                </div>
+                <div class="mb-3 form-check">
+                    <label for="showPassword" class="form-check-label">Show password</label>
+                </div>
+                <div class="d-flex justify-content-around">
+                    <router-link class="btn btn-outline-primary" to="/signup">Not yet registered?</router-link>
+                    <button @click="login" type="submit" class="btn btn-outline-secondary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    `,
+    methods: {
+        login: function (e) {
+            if (this.isValidated(e))
+                axios.post('http://localhost:3000/api/account/login', this.account)
+                    .then(response => {
+                        this.$cookies.set("username", response.data.username, 7 * this.day)
+                        this.$emit('log-event')
+                        this.$parent.$children[0].$emit('log-event')
+                        axios.patch('http://localhost:3000/api/account/state', { state: "online" })
+                            .then(res => this.goToProfile())
+                            .catch(err => console.log(err))
+                        // const modal = new bootstrap.Modal(document.getElementById('login'))
+                        // TODO hide modal
+                    })
+                    .catch(err => console.log("l'utente non esiste"))
+        },
+        isValidated: function (e){
+            e.preventDefault()
+            let value = true
+
+            const username = document.querySelector('#username')
+            if (!username.checkValidity()){
+                username.classList.remove('is-valid')
+                username.classList.add('is-invalid')
+                value = false
+            } else {
+                username.classList.add('is-valid')
+                username.classList.remove('is-invalid')
+            }
+
+            const password = document.querySelector('#password')
+            if (!password.checkValidity()) {
+                password.classList.remove('is-valid')
+                password.classList.add('is-invalid')
+                value = false
+            } else {
+                password.classList.add('is-valid')
+                password.classList.remove('is-invalid')
+            }
+            return value
+        },
+        showPassword: function () {
+            this.typePassword = this.typePassword === "password" ? "text" : "password"
+            this.$refs['checkbox'].classList.toggle('fa-eye-slash')
+        },
+        goToProfile: function (){
+            this.$router.push({ name: 'Profile', params: { username: Vue.$cookies.get('username') }})
+        }
+    },
+    mounted() {
+        if (this.$checkLogin())
+            this.goToProfile()
+    }
+}
+
+
 const Navbar = {
     data: function (){
         return {
@@ -13,7 +106,8 @@ const Navbar = {
         }
     },
     components: {
-        'navbutton': NavButton
+        'navbutton': NavButton,
+        'login': Login
     },
     template: `
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
@@ -30,9 +124,10 @@ const Navbar = {
                 <button class="btn btn-outline-light me-5" type="submit" @click.prevent="searchGame">Search</button>
             </form>
             <router-link v-if="!logged" class="btn btn-outline-light navbar-right me-2" to="/signup">Sign up</router-link>
-            <router-link v-if="!logged" class="btn btn-outline-light navbar-right" to="/login">Login</router-link>
-            <button class="btn btn-outline-danger navbar-right" v-if="logged" @click.prevent="logout">Logout</button>
+            <button v-if="!logged" class="btn btn-outline-light navbar-right" data-bs-toggle="modal" data-bs-target="#login"><i class="fas fa-sign-in-alt me-1"></i>Login</button>
+            <button class="btn btn-outline-danger navbar-right" v-if="logged" @click.prevent="logout"><i class="fas fa-sign-out-alt">Logout</button>
         </div>
+        <login></login>
     </nav>`,
     methods: {
         logout: function () {
