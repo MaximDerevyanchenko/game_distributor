@@ -12,7 +12,7 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.getLibrary = function (req, res) {
-        GameLibrary.find({username: req.cookies.username})
+        GameLibrary.find({username: req.params.username})
             .then(library => res.json(library))
             .catch(err => res.send(err))
     }

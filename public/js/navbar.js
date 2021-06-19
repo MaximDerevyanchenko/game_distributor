@@ -104,8 +104,6 @@ const Login = {
             document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'))
             document.querySelectorAll('.is-valid').forEach(e => e.classList.remove('is-valid'))
         })
-        if (this.$checkLogin())
-            this.goToProfile()
     }
 }
 

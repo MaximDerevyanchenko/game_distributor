@@ -14,10 +14,10 @@ const Friends = {
         <button @click="addFriend">Add Friend</button>
         <h3>Friends</h3>
         <div v-for="friend in friends">
-            <div>
+            <div class="d-flex">
                  <router-link class="nav-link" :to="{ name: 'Profile', params: { username: friend.nickname }}">{{ friend.nickname }}</router-link>
+                 <span class="badge rounded-pill align-self-center" :class="friend.state == 'offline' ? 'bg-dark' : 'bg-success'">{{ friend.state }} {{ friend.inGame }}</span>
             </div>
-            <p>State: {{friend.state}} {{ friend.inGame}}</p>
             <button @click="removeFriend(friend.username)">Remove Friend</button>
         </div>
         <h4>Friend Requests</h4>
@@ -33,7 +33,7 @@ const Friends = {
     `,
     methods: {
         getFriends: function () {
-            axios.get('http://localhost:3000/api/account/friends')
+            axios.get('http://localhost:3000/api/account/friends/' + this.$cookies.get('username'))
                 .then(res => {
                     this.friends = res.data
                 })

@@ -11,7 +11,7 @@ const Library = {
             <div class="d-flex align-items-start">
                 <ul class="nav nav-pills flex-column" role="tablist">
                     <li class="nav-item" role="presentation" v-for="game in games">
-                        <button role="tab" class="nav-link" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
+                        <button role="tab" class="nav-link" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.gameId }}</button>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -30,7 +30,7 @@ const Library = {
                 this.$router.push({name: 'Store'})
         },
         getLibrary: function () {
-            axios.get("http://localhost:3000/api/account/library")
+            axios.get("http://localhost:3000/api/account/library/" + this.$cookies.get('username'))
                 .then(response => this.games = response.data)
                 .catch(err => console.log(err))
         },

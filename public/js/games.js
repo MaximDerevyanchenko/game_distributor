@@ -2,7 +2,6 @@ const Games = {
     data: function () {
         return {
             games: [],
-
             currentActive: 0
         }
     },
