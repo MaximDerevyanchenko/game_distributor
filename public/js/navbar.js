@@ -51,10 +51,14 @@ const Login = {
                 axios.post('http://localhost:3000/api/account/login', this.account)
                     .then(response => {
                         this.$cookies.set("username", response.data.username, 7 * this.day)
-                        this.$emit('log-event')
-                        this.$parent.$children[0].$emit('log-event')
+                        this.$parent.$emit('log-event')
                         axios.patch('http://localhost:3000/api/account/state', { state: "online" })
-                            .then(res => this.goToProfile())
+                            .then(res => {
+                                if (this.$router.currentRoute.path !== ('/profile/' + this.account.username))
+                                    this.goToProfile()
+                                else
+                                    this.$parent.$parent.$children[1].$emit('log-event')
+                            })
                             .catch(err => console.log(err))
                         this.closeModal()
                     })
@@ -104,8 +108,6 @@ const Login = {
             document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'))
             document.querySelectorAll('.is-valid').forEach(e => e.classList.remove('is-valid'))
         })
-        if (this.$checkLogin())
-            this.goToProfile()
     }
 }
 

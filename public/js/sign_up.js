@@ -8,7 +8,12 @@ const SignUp = {
                 'password': "",
                 'email': "",
                 'nickname': "",
-                'state': "offline"
+                'state': "offline",
+                'avatarImg': "",
+                'backgroundImg': "",
+                'bio': "",
+                'name': "",
+                'country': "",
             },
             typePassword: "password",
             typeConfirmPassword: "password",
