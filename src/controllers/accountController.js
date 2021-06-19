@@ -1,3 +1,4 @@
+const fs = require('fs')
 module.exports = function (mongoose, io) {
     let Account = require('../models/accountModel')(mongoose)
 
@@ -19,20 +20,50 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.getAccount = function (req, res) {
-        Account.findOne({username: req.params.username})
+        Account.findOne({ username: req.params.username })
             .then(acc => res.json(acc))
             .catch(err => res.send(err))
     }
 
     module.exports.signup = function (req, res) {
-        Account.findOne({username: req.body.username})
+        Account.findOne({ username: req.body.username })
             .then(acc => {
                 if (acc != null)
                     res.json({username: acc.username})
-                else
+                else {
+                    const userPath = './public/img/' + req.body.username
+                    const avatar = req.files.avatarImg
+                    if (avatar) {
+                        fs.mkdir(userPath, err => {
+                            if (err != null)
+                                res.send(err)
+                            else
+                                fs.rename(avatar.path, userPath + '/' + avatar.name, err => {
+                                    if (err != null)
+                                        res.send(err)
+                                })
+                        })
+                    }
+                    req.body['avatarImg'] = avatar ? avatar.name : ""
+
+                    const background = req.files.backgroundImg
+                    if (background) {
+                        fs.mkdir(userPath, err => {
+                            if (err != null)
+                                res.send(err)
+                            else
+                                fs.rename(background.path,userPath + '/' + background.name, err => {
+                                    if (err != null)
+                                        res.send(err)
+                                })
+                        })
+                    }
+                    req.body['backgroundImg'] = background ? background.name : ""
+
                     Account.create(req.body)
                         .then(account => res.status(201).json(account))
                         .catch(err => res.send(err))
+                }
             })
             .catch(err => res.send(err))
     }

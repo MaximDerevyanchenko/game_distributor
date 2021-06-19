@@ -8,6 +8,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const multipart = require('connect-multiparty');
 global.appRoot = path.resolve(__dirname);
 
 const PORT = 3000;
@@ -16,6 +17,7 @@ mongoose.connect('mongodb://localhost/steam', { useNewUrlParser: true, useFindAn
 
 app.use(cors())
 app.use(cookieParser())
+app.use(multipart({ }))
 
 //Per gestire i parametri passati nel corpo della richiesta http.
 app.use(express.json());
