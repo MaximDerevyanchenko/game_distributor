@@ -20,22 +20,25 @@ const Login = {
     <div id="login" class="modal fade">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <form class="modal-content needs-validation border border-dark border-2 shadow-lg rounded mt-4 p-4" ref="form" novalidate>
-                <div class="form-floating mb-3 has-validation">
+                <div class="form-floating mb-3 has-validation me-4">
                     <input id="username" v-model="account.username" type="text" class="form-control" autocomplete="on" placeholder="Username" required />
                     <label for="username">Username</label>
                     <div class="invalid-feedback">Please choose a username.</div>
                 </div>
-                <div class="form-floating mb-4 has-validation">
-                    <input id="password" v-model="account.password" v-bind:type="typePassword" class="form-control" autocomplete="current-password" placeholder="Password" required />
-                    <label for="password">Password</label>
-                    <i ref="checkbox" class="form-check-label far fa-eye" @click="showPassword"></i>
-                    <div class="invalid-feedback">Please choose a password.</div>
-                </div>
-                <div class="mb-3 form-check">
-                    <label for="showPassword" class="form-check-label">Show password</label>
+                <div class="row mb-3">
+                    <div class="col pe-1">
+                        <div class="form-floating has-validation">
+                            <input id="password" v-model="account.password" v-bind:type="typePassword" class="form-control" autocomplete="current-password" placeholder="Password" required />
+                            <label for="password">Password</label>
+                            <div class="invalid-feedback">Please choose a password.</div>
+                        </div>
+                    </div>
+                    <div class="col-auto d-flex ps-2 pe-1">
+                         <i ref="checkbox" class="far fa-eye align-self-center" @click="showPassword"></i>
+                    </div>
                 </div>
                 <div class="d-flex justify-content-around">
-                    <router-link class="btn btn-outline-primary" to="/signup">Not yet registered?</router-link>
+                    <router-link class="btn btn-outline-primary" @click.native="closeModal" to="/signup">Not yet registered?</router-link>
                     <button @click="login" type="submit" class="btn btn-outline-secondary">Login</button>
                 </div>
             </form>
@@ -53,8 +56,7 @@ const Login = {
                         axios.patch('http://localhost:3000/api/account/state', { state: "online" })
                             .then(res => this.goToProfile())
                             .catch(err => console.log(err))
-                        // const modal = new bootstrap.Modal(document.getElementById('login'))
-                        // TODO hide modal
+                        this.closeModal()
                     })
                     .catch(err => console.log("l'utente non esiste"))
         },
@@ -89,9 +91,19 @@ const Login = {
         },
         goToProfile: function (){
             this.$router.push({ name: 'Profile', params: { username: Vue.$cookies.get('username') }})
+        },
+        closeModal: function (){
+            bootstrap.Modal.getInstance(document.querySelector('#login')).hide()
         }
     },
     mounted() {
+        const modal = document.querySelector('#login')
+        modal.addEventListener('shown.bs.modal', () => document.querySelector('#username').focus())
+        modal.addEventListener('hidden.bs.modal', () => {
+            this.$refs.form.reset()
+            document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'))
+            document.querySelectorAll('.is-valid').forEach(e => e.classList.remove('is-valid'))
+        })
         if (this.$checkLogin())
             this.goToProfile()
     }

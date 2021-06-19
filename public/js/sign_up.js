@@ -24,8 +24,8 @@ const SignUp = {
         <div class="row mb-4">
             <div class="col">
                 <div class="form-floating">
-                    <input class="form-control" placeholder="username" id="username" v-model="account.username" type="text" @change="hideExists" required autocomplete="on"/>
-                    <label for="username">Username<span class="text-danger fw-bold ms-2">*</span></label>
+                    <input class="form-control" placeholder="username" id="usernameSignUp" v-model="account.username" type="text" @change="hideExists" required autocomplete="on"/>
+                    <label for="usernameSignUp">Username<span class="text-danger fw-bold ms-2">*</span></label>
                 </div>
             </div>
              <div class="col">
@@ -36,22 +36,23 @@ const SignUp = {
              </div>
         </div>
         <div class="row mb-4">
-            <div class="col">
+            <div class="col pe-1">
                 <div class="d-block">
                     <div class="form-floating d-flex">
-                        <input class="form-control flex-fill" id="password" placeholder="password" v-model="account.password" minlength="6" v-bind:type="typePassword" required autocomplete="on"/>
-                        <label for="password">Password<span class="text-danger fw-bold ms-2">*</span></label>
-                        <span ref="checkbox" class="far fa-eye input-group-text" @click="showPassword"></span>
+                        <input class="form-control flex-fill" id="passwordSignUp" placeholder="password" v-model="account.password" minlength="6" v-bind:type="typePassword" required autocomplete="on"/>
+                        <label for="passwordSignUp">Password<span class="text-danger fw-bold ms-2">*</span></label>
                         <div class="invalid-tooltip">Password MUST have minimum 6 characters!</div>
                     </div>
                 </div>
             </div>
-             <div class="col">
+            <div class="col-auto d-flex ps-1 pe-1">
+                <span ref="checkbox" class="far fa-eye align-self-center" @click="showPassword"></span>
+            </div>
+             <div class="col ps-1">
                 <div class="d-block">
                     <div class="form-floating d-flex">
-                        <input class="form-control flex-fill" id="confirmPassword" placeholder="confirmPassword" v-model="confirmPassword" required v-bind:type="typeConfirmPassword" autocomplete="current-password"/>
+                        <input class="form-control flex-fill" id="confirmPassword" placeholder="confirmPassword" v-model="confirmPassword" required v-bind:type="typePassword" autocomplete="current-password"/>
                         <label for="confirmPassword">Confirm Password<span class="text-danger fw-bold ms-2">*</span></label>
-                        <span ref="checkboxConfirm" class="input-group-text far fa-eye" @click="showConfirmPassword"></span>
                     </div>
                 </div>
              </div>
@@ -108,10 +109,10 @@ const SignUp = {
             </div>
         </div>
         <div class="row" v-if="avatarPreview || backgroundPreview">
-            <div class="col-4 d-flex" v-if="avatarPreview">
+            <div class="col-6 d-flex" v-if="avatarPreview">
                 <img class="img-thumbnail" :src="avatarPreview" :alt="avatarPreview"/>
             </div>
-            <div class="col-4" v-if="backgroundPreview">
+            <div class="col-6" v-if="backgroundPreview">
                 <img class="img-thumbnail" :src="backgroundPreview" :alt="backgroundPreview"/>
             </div>
         </div>
@@ -142,7 +143,7 @@ const SignUp = {
             e.preventDefault()
             let value = true
 
-            const username = document.querySelector('#username')
+            const username = document.querySelector('#usernameSignUp')
             if (!username.checkValidity()){
                 username.classList.remove('is-valid')
                 username.classList.add('is-invalid')
@@ -172,7 +173,7 @@ const SignUp = {
                 nickname.classList.remove('is-invalid')
             }
 
-            const password = document.querySelector('#password')
+            const password = document.querySelector('#passwordSignUp')
             if (!password.checkValidity()) {
                 password.classList.remove('is-valid')
                 password.classList.add('is-invalid')
@@ -245,10 +246,6 @@ const SignUp = {
         showPassword: function (){
             this.typePassword = this.typePassword === "password" ? "text" : "password"
             this.$refs['checkbox'].classList.toggle('fa-eye-slash')
-        },
-        showConfirmPassword: function (){
-            this.typeConfirmPassword = this.typeConfirmPassword === "password" ? "text" : "password"
-            this.$refs['checkboxConfirm'].classList.toggle('fa-eye-slash')
         },
         getCountries: function () {
             axios.get('http://localhost:3000/api/countries')
