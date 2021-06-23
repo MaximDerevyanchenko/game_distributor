@@ -7,7 +7,7 @@ module.exports = function (mongoose, io) {
 
     module.exports.addToLibrary = function (req, res) {
         GameLibrary.insertMany(req.body)
-            .then(_ => GameCart.deleteMany({username: req.cookies.username})
+            .then(games => GameCart.deleteMany({username: req.cookies.username, gameId: { $in: games.map(g => g.gameId) }})
                 .then(_ => res.status(201).json())
                 .catch(err => res.send(err)))
             .catch(err => res.send(err))

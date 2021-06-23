@@ -4,6 +4,8 @@ $secondary: #5f0ee0;
 $primary: #140330;
 $secondary: #160d27;
 
+$gradient: linear-gradient(180deg, rgba(20,3,48,1) 0%, rgba(82,82,238,1) 20%, rgba(0,0,0,1) 100%);
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 textarea {

@@ -60,7 +60,8 @@ const Games = {
                             res.filter(r => r.status === 200).forEach(game => this.games.push(game.data))
                             this.progress = 100
                             setTimeout(() => {
-                                document.querySelector('.progress').classList.add('d-none')
+                                if (document.querySelector('.progress') != null)
+                                    document.querySelector('.progress').classList.add('d-none')
                             }, 1200)
                         })
                         .catch(err => console.log(err))

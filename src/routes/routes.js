@@ -4,7 +4,7 @@ module.exports = function(app, mongoose, io) {
 	const gameController = require('../controllers/gameController')
 	gameController(mongoose, io)
 	const cartController = require('../controllers/cartController')
-
+	cartController(mongoose, io)
 	const wishlistController = require('../controllers/wishlistController')
 	wishlistController(mongoose, io)
 	const libraryController = require('../controllers/libraryController')
