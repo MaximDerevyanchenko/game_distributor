@@ -84,7 +84,7 @@ const Friends = {
     `,
     methods: {
         getFriends: function () {
-            axios.get('http://localhost:3000/api/account/friends')
+            axios.get('http://localhost:3000/api/account/friends/' + this.$cookies.get('username'))
                 .then(res => {
                     this.friends = res.data
                     this.onlineFriends = this.friends.filter(f => f.state === 'online')

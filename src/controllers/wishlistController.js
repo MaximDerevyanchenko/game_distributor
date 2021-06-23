@@ -3,7 +3,7 @@ module.exports = function (mongoose, io) {
     const GameWishlist = require('../models/gameWishlistModel')(mongoose)
 
     module.exports.addToWishlist = function (req, res) {
-        GameWishlist.create({username: req.cookies.username, gameId: req.body.data.gameId})
+        GameWishlist.create({username: req.cookies.username, gameId: req.body.steam_appid})
             .then(gameCart => res.status(201).json(gameCart))
             .catch(err => res.send(err))
     }

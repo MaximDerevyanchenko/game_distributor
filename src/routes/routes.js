@@ -55,8 +55,10 @@ module.exports = function(app, mongoose, io) {
 		.get(cartController.getCart)
 
 	app.route('/api/account/friends')
-		.get(accountController.getFriends)
 		.post(accountController.addFriend)
+
+	app.route('/api/account/friends/:username')
+		.get(accountController.getFriends)
 
 	app.route('/api/account/friends/:friend')
 		.delete(accountController.removeFriend)
@@ -71,12 +73,14 @@ module.exports = function(app, mongoose, io) {
 	app.route('/api/account/cart/:gameId')
 		.delete(cartController.deleteFromCart)
 
-	app.route('/api/account/library')
-		.post(libraryController.addToLibrary)
-		.get(libraryController.getLibrary)
+	app.route('/api/account/library/')
+		.post(libraryController.addToLibrary)//TODO apportare le modifiche all'utilizzo di addToLibrary (considerando username nel path)
 
 	app.route('/api/account/library/gift')
 		.post(libraryController.buyForFriend)
+
+	app.route('/api/account/library/:username')
+		.get(libraryController.getLibrary)
 
 	app.route('/api/account/wishlist/:gameId')
 		.delete(wishlistController.deleteFromWishlist)
@@ -89,6 +93,12 @@ module.exports = function(app, mongoose, io) {
 
 	app.route('/api/account/:username')
 		.get(accountController.getAccount)
+
+	app.route('/api/:username/game/:gameId/friends')
+		.get(libraryController.getFriendsWithGame)
+
+	app.route('/api/:username/game/:gameId/closed')
+		.post(libraryController.closedGame)
 
 	app.use(gameController.show_main)
 }

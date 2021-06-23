@@ -3,6 +3,7 @@ module.exports = function(mongoose) {
     const GameLibrarySchema = new Schema({
         username: String,
         gameId: Number,
+        timePlayed: Number,
         name: String
     });
     return mongoose.model('GameLibrary', GameLibrarySchema, 'library')

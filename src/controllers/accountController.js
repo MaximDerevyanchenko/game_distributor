@@ -64,7 +64,7 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.getFriends = function (req, res) {
-        Account.findOne({username: req.cookies.username})
+        Account.findOne({username: req.params.username})
             .then(acc => {
                 let promises = []
                 acc.friends.forEach(friend =>
