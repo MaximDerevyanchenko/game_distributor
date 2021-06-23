@@ -9,7 +9,7 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.changeState = function (req, res) {
-        Account.findOneAndUpdate({username: req.cookies.username}, { state: req.body.state}, { new: true})
+        Account.findOneAndUpdate({username: req.cookies.username}, { state: req.body.state, lastOnline: new Date().toLocaleString()}, { new: true})
             .then(acc => {
                 io.emit('friendStateChanged', acc)
                 res.json(acc)
@@ -33,31 +33,26 @@ module.exports = function (mongoose, io) {
                 else {
                     const userPath = './public/img/' + req.body.username
                     const avatar = req.files.avatarImg
-                    if (avatar) {
+                    const background = req.files.backgroundImg
+                    if (avatar || background) {
                         fs.mkdir(userPath, err => {
                             if (err != null)
                                 res.send(err)
-                            else
-                                fs.rename(avatar.path, userPath + '/' + avatar.name, err => {
-                                    if (err != null)
-                                        res.send(err)
-                                })
+                            else {
+                                if (avatar)
+                                    fs.rename(avatar.path, userPath + '/' + avatar.name, err => {
+                                        if (err != null)
+                                            res.send(err)
+                                    })
+                                if (background && background !== avatar)
+                                    fs.rename(background.path,userPath + '/' + background.name, err => {
+                                        if (err != null)
+                                            res.send(err)
+                                    })
+                            }
                         })
                     }
                     req.body['avatarImg'] = avatar ? avatar.name : ""
-
-                    const background = req.files.backgroundImg
-                    if (background) {
-                        fs.mkdir(userPath, err => {
-                            if (err != null)
-                                res.send(err)
-                            else
-                                fs.rename(background.path,userPath + '/' + background.name, err => {
-                                    if (err != null)
-                                        res.send(err)
-                                })
-                        })
-                    }
                     req.body['backgroundImg'] = background ? background.name : ""
 
                     Account.create(req.body)
