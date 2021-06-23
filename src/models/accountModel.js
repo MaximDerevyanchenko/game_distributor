@@ -15,7 +15,8 @@ module.exports = function(mongoose) {
         friendRequests: [String],
         state: String,
         inGame: String,
-        isDeveloper: Boolean
+        isDeveloper: Boolean,
+        lastOnline: String
     })
     return mongoose.model('AccountSchema', AccountSchema, 'accounts')
 }

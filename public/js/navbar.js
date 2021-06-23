@@ -1,10 +1,3 @@
-const NavButton = {
-    props: ['text', 'username'],
-    template: `<li class="nav-item">
-                    <router-link class="nav-link" :to="{ name: text , params: { username: username }}">{{ text }}</router-link>
-                </li>`
-}
-
 const Login = {
     data() {
         return {
@@ -13,33 +6,41 @@ const Login = {
                 password: ""
             },
             typePassword: "password",
-            isValid: false
+            error: false
         }
     },
     template: `
     <div id="login" class="modal fade">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <form class="modal-content needs-validation border border-dark border-2 shadow-lg rounded mt-4 p-4" ref="form" novalidate>
-                <div class="form-floating mb-3 has-validation me-4">
-                    <input id="username" v-model="account.username" type="text" class="form-control" autocomplete="on" placeholder="Username" required />
-                    <label for="username">Username</label>
-                    <div class="invalid-feedback">Please choose a username.</div>
+            <form class="modal-content needs-validation border border-light border-2 shadow-lg rounded mt-4 p-4 bg-secondary text-white" ref="form" novalidate>
+                <div class="modal-title text-center">
+                    <h5>Login</h5>
                 </div>
-                <div class="row mb-3">
-                    <div class="col pe-1">
-                        <div class="form-floating has-validation">
-                            <input id="password" v-model="account.password" v-bind:type="typePassword" class="form-control" autocomplete="current-password" placeholder="Password" required />
-                            <label for="password">Password</label>
-                            <div class="invalid-feedback">Please choose a password.</div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3 has-validation me-4">
+                        <input id="username" v-model="account.username" type="text" class="form-control bg-transparent text-white" autocomplete="off" placeholder="Username" required />
+                        <label for="username">Username</label>
+                        <div class="invalid-feedback">Please choose a username.</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col pe-1">
+                            <div class="form-floating has-validation">
+                                <input id="password" v-model="account.password" v-bind:type="typePassword" class="form-control bg-transparent text-white" autocomplete="off" placeholder="Password" required />
+                                <label for="password">Password</label>
+                                <div class="invalid-feedback">Please choose a password.</div>
+                            </div>
+                        </div>
+                        <div class="col-auto d-flex ps-2 pe-1">
+                             <i ref="checkbox" class="far fa-eye align-self-center" @click="showPassword"></i>
                         </div>
                     </div>
-                    <div class="col-auto d-flex ps-2 pe-1">
-                         <i ref="checkbox" class="far fa-eye align-self-center" @click="showPassword"></i>
+                    <div v-if="error" class="row text-danger" style="font-size: small">
+                        <p>Username and/or password are wrong!</p>
                     </div>
                 </div>
-                <div class="d-flex justify-content-around">
-                    <router-link class="btn btn-outline-primary" @click.native="closeModal" to="/signup">Not yet registered?</router-link>
-                    <button @click="login" type="submit" class="btn btn-outline-secondary">Login</button>
+                <div class="modal-footer justify-content-around"> 
+                    <button @click="login" type="submit" class="btn btn-outline-light">Login</button>
+                    <router-link class="btn btn-outline-light" @click.native="closeModal" to="/signup">Not yet signed up?</router-link>
                 </div>
             </form>
         </div>
@@ -57,12 +58,15 @@ const Login = {
                                 if (this.$router.currentRoute.path !== ('/profile/' + this.account.username))
                                     this.goToProfile()
                                 else
-                                    this.$parent.$parent.$children[1].$emit('log-event')
+                                    this.$parent.$parent.$children[2].$emit('log-event')
                             })
                             .catch(err => console.log(err))
                         this.closeModal()
                     })
-                    .catch(err => console.log("l'utente non esiste"))
+                    .catch(err => {
+                        this.resetForm()
+                        this.error = true
+                    })
         },
         isValidated: function (e){
             e.preventDefault()
@@ -98,6 +102,10 @@ const Login = {
         },
         closeModal: function (){
             bootstrap.Modal.getInstance(document.querySelector('#login')).hide()
+        },
+        resetForm: function (){
+            document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'))
+            document.querySelectorAll('.is-valid').forEach(e => e.classList.remove('is-valid'))
         }
     },
     mounted() {
@@ -105,8 +113,7 @@ const Login = {
         modal.addEventListener('shown.bs.modal', () => document.querySelector('#username').focus())
         modal.addEventListener('hidden.bs.modal', () => {
             this.$refs.form.reset()
-            document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'))
-            document.querySelectorAll('.is-valid').forEach(e => e.classList.remove('is-valid'))
+            this.resetForm()
         })
     }
 }
@@ -120,26 +127,31 @@ const Navbar = {
         }
     },
     components: {
-        'navbutton': NavButton,
         'login': Login
     },
     template: `
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+    <nav class="navbar navbar-expand-lg navbar-dark border border-2 rounded-pill border-light bg-secondary p-2">
         <div class="container-fluid">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <navbutton text="Store"></navbutton>
-                <navbutton v-if="logged" text="Library"></navbutton>
-                <navbutton v-if="logged" text="Profile" :username="Vue.$cookies.get('username')"></navbutton>
-                <navbutton v-if="logged" text="Cart"></navbutton>
-                <navbutton v-if="logged" text="Friends"></navbutton>
+                <li class="nav-item">
+                    <router-link class="nav-link active" to="/store">Store</router-link>
+                </li>
             </ul>
             <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="name"/>
+                <input class="form-control me-2 bg-primary text-white" type="search" placeholder="Type..." aria-label="Search" v-model="name"/>
                 <button class="btn btn-outline-light me-5" type="submit" @click.prevent="searchGame">Search</button>
             </form>
-            <router-link v-if="!logged" class="btn btn-outline-light navbar-right me-2" to="/signup">Sign up</router-link>
-            <button v-if="!logged" class="btn btn-outline-light navbar-right" data-bs-toggle="modal" data-bs-target="#login"><i class="fas fa-sign-in-alt me-1"></i>Login</button>
-            <button class="btn btn-outline-danger navbar-right" v-if="logged" @click.prevent="logout"><i class="fas fa-sign-out-alt">Logout</button>
+            <button class="btn btn-outline-light" v-if="!logged" data-bs-toggle="modal" data-bs-target="#login"><i class="fas fa-user-circle me-2"></i>Account</button>
+            <div v-else class="btn-group">
+                <button class="btn btn-outline-light" data-bs-toggle="dropdown"><i class="fas fa-user-circle me-2"></i>Account</button>
+                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary">
+                    <li><router-link :to="'/profile/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-user me-2"></i>Profile</router-link></li>
+                    <li><router-link to="/library" class="dropdown-item"><i class="fas fa-book-open me-2"></i>Library</router-link></li>
+                    <li><router-link to="/cart" class="dropdown-item"><i class="fas fa-shopping-cart me-2"></i>Cart</router-link></li>
+                    <li><router-link to="/friends" class="dropdown-item"><i class="fas fa-user-friends me-2"></i>Friends</router-link></li>
+                    <li><button class="dropdown-item text-danger" @click="logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</button></li>
+                </ul>
+            </div>
         </div>
         <login></login>
     </nav>`,
@@ -149,7 +161,7 @@ const Navbar = {
                 .then(() => {
                     this.$cookies.remove('username')
                     this.$emit("log-event")
-                    this.$parent.$children[1].$emit("log-event")
+                    this.$parent.$children[2].$emit("log-event")
                 })
                 .catch(err => console.log(err))
         },
@@ -157,7 +169,7 @@ const Navbar = {
             if (this.$router.currentRoute.name !== 'Search')
                 this.$router.push({name: 'Search', params: { name: this.name}})
             else
-                this.$parent.$children[1].$emit("query-event", this.name)
+                this.$parent.$children[2].$emit("query-event", this.name)
         }
     },
     mounted() {

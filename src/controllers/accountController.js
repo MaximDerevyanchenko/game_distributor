@@ -9,7 +9,7 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.changeState = function (req, res) {
-        Account.findOneAndUpdate({username: req.cookies.username}, { state: req.body.state}, { new: true})
+        Account.findOneAndUpdate({username: req.cookies.username}, { state: req.body.state, lastOnline: new Date().toLocaleString()}, { new: true})
             .then(acc => {
                 io.emit('friendStateChanged', acc)
                 res.json(acc)

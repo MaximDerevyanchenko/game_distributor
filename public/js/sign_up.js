@@ -14,6 +14,7 @@ const SignUp = {
                 'bio': "",
                 'name': "",
                 'country': "",
+                'lastOnline': null
             },
             typePassword: "password",
             typeConfirmPassword: "password",
@@ -25,17 +26,18 @@ const SignUp = {
     },
     template: `
 <div class="d-flex justify-content-center">
-    <form ref="form" class="needs-validation border border-dark border-2 shadow-lg rounded w-50 mt-4 p-4" novalidate>
+    <form ref="form" class="needs-validation bg-secondary border border-light border-2 shadow-lg rounded w-50 mt-4 p-4" novalidate>
+        <h4 class="display-4 text-center mb-4">Sign Up</h4>
         <div class="row mb-4">
             <div class="col">
                 <div class="form-floating">
-                    <input class="form-control" placeholder="username" id="usernameSignUp" v-model="account.username" type="text" @change="hideExists" required autocomplete="on"/>
+                    <input class="form-control bg-transparent text-white" placeholder="username" id="usernameSignUp" v-model="account.username" type="text" @change="hideExists" required autocomplete="on"/>
                     <label for="usernameSignUp">Username<span class="text-danger fw-bold ms-2">*</span></label>
                 </div>
             </div>
              <div class="col">
                 <div class="form-floating">
-                    <input class="form-control" placeholder="email@gmail.com" id="email" v-model="account.email" type="email" required/>
+                    <input class="form-control bg-transparent text-white" placeholder="email@gmail.com" id="email" v-model="account.email" type="email" required autocomplete="on"/>
                     <label for="email">Email<span class="text-danger fw-bold ms-2">*</span></label>
                 </div>
              </div>
@@ -44,7 +46,7 @@ const SignUp = {
             <div class="col pe-1">
                 <div class="d-block">
                     <div class="form-floating d-flex">
-                        <input class="form-control flex-fill" id="passwordSignUp" placeholder="password" v-model="account.password" minlength="6" v-bind:type="typePassword" required autocomplete="on"/>
+                        <input class="form-control flex-fill bg-transparent text-white" id="passwordSignUp" placeholder="password" v-model="account.password" minlength="6" v-bind:type="typePassword" required autocomplete="on"/>
                         <label for="passwordSignUp">Password<span class="text-danger fw-bold ms-2">*</span></label>
                         <div class="invalid-tooltip">Password MUST have minimum 6 characters!</div>
                     </div>
@@ -56,7 +58,7 @@ const SignUp = {
              <div class="col ps-1">
                 <div class="d-block">
                     <div class="form-floating d-flex">
-                        <input class="form-control flex-fill" id="confirmPassword" placeholder="confirmPassword" v-model="confirmPassword" required v-bind:type="typePassword" autocomplete="current-password"/>
+                        <input class="form-control bg-transparent text-white flex-fill" id="confirmPassword" placeholder="confirmPassword" v-model="confirmPassword" required v-bind:type="typePassword" autocomplete="current-password"/>
                         <label for="confirmPassword">Confirm Password<span class="text-danger fw-bold ms-2">*</span></label>
                     </div>
                 </div>
@@ -70,13 +72,13 @@ const SignUp = {
         <div class="row mb-4">
             <div class="col">
                 <div class="form-floating">
-                    <input class="form-control" placeholder="name" id="name" v-model="account.name" type="text" autocomplete="on"/>
-                    <label for="name">Your name</label>
+                    <input class="form-control bg-transparent text-white" placeholder="name" id="name" v-model="account.name" type="text" autocomplete="on"/>
+                    <label for="name">Name</label>
                 </div>
             </div>
              <div class="col">
                 <div class="form-floating">
-                    <input class="form-control" placeholder="nickname" id="nickname" v-model="account.nickname" required type="text" />
+                    <input class="form-control bg-transparent text-white" placeholder="nickname" id="nickname" v-model="account.nickname" required type="text" />
                     <label for="nickname">Nickname<span class="text-danger fw-bold ms-2">*</span></label>
                 </div>
              </div>
@@ -84,37 +86,37 @@ const SignUp = {
         <div class="row mb-4">
             <div class="col">
                 <div class="form-floating">
-                    <textarea class="form-control" placeholder="Your bio" id="bio" v-model="account.bio" type="text"></textarea>
-                    <label for="bio">Your bio</label>
+                    <textarea class="form-control bg-transparent text-white" placeholder="Your bio" id="bio" v-model="account.bio" type="text"></textarea>
+                    <label for="bio">Biography</label>
                 </div>
             </div>
             <div class="col">
                 <div class="form-floating">
-                    <select class="form-select pb-1" id="country" v-model="account.country">
-                        <option v-for="country in countries" :value="country.name">{{ country.name }}</option>
+                    <select class="form-select pb-1 bg-transparent text-white" id="country" v-model="account.country">
+                        <option class="bg-primary text-white" v-for="country in countries" :value="country.name">{{ country.name }}</option>
                     </select>
-                    <label for="country">Your country</label>
+                    <label for="country">Country</label>
                 </div>
             </div>
         </div>
          <div class="row mb-4">
             <div class="col">
-                <label for="avatar">Your avatar</label>
-                <input class="form-control" id="avatar" @change="uploadAvatar" type="file" accept="image/*"/>
+                <label class="input-group-text bg-transparent text-white border-0" for="avatar">Choose your avatar</label>
+                <input class="form-control bg-transparent text-white" id="avatar" @change="uploadAvatar" ref="avatarPreview" type="file" accept="image/*"/>
             </div>
             <div class="w-auto align-self-end">
                 <span class="fas fa-trash mb-2" role="button" @click="removeAvatar"></span>
             </div>
             <div class="col">
-                <label for="background">Your background</label>
-                <input class="form-control" id="background" @change="uploadBackground" type="file" accept="image/*" />
+                <label class="input-group-text bg-transparent text-white border-0" for="background">Choose your background</label>
+                <input class="form-control bg-transparent text-white" id="background" @change="uploadBackground" ref="backgroundPreview" type="file" accept="image/*" />
             </div>
             <div class="w-auto align-self-end">
                 <span class="fas fa-trash mb-2" role="button" @click="removeBackground"></span>
             </div>
         </div>
-        <div class="row" v-if="avatarPreview || backgroundPreview">
-            <div class="col-6 d-flex" v-if="avatarPreview">
+        <div class="row" :class="!avatarPreview && backgroundPreview ? 'flex-row-reverse' : ''" v-if="avatarPreview || backgroundPreview">
+            <div class="col-6" v-if="avatarPreview">
                 <img class="img-thumbnail" :src="avatarPreview" :alt="avatarPreview"/>
             </div>
             <div class="col-6" v-if="backgroundPreview">
@@ -125,7 +127,7 @@ const SignUp = {
             <div class="ms-2">
                 <em>All fields with <span class="text-danger">*</span> are required.</em>
             </div>
-            <button @click.prevent="signUp" class="btn btn-outline-primary" type="submit">Sign Up<i class="fas fa-pen-fancy ms-2"></i></button>
+            <button @click.prevent="signUp" class="btn btn-outline-light" type="submit">Sign Up<i class="fas fa-pen-fancy ms-2"></i></button>
         </div>
     </form>
 </div>`,
@@ -217,8 +219,8 @@ const SignUp = {
             axios.post('http://localhost:3000/api/account/login', this.account)
                 .then(response => {
                     this.$cookies.set("username", response.data.username, 7 * this.day)
-                    this.$emit('log-event')
-                    this.$parent.$children[0].$emit('log-event')
+                    //TODO cambiare l'emit, non arriva l'evento alla navbar
+                    this.$parent.$emit('log-event')
                     axios.patch('http://localhost:3000/api/account/state', { state: "online" })
                         .then(res => this.$router.push({ name: 'Profile', params: { username: this.account.username }}))
                         .catch(err => console.log(err))
@@ -239,11 +241,13 @@ const SignUp = {
         },
         removeAvatar: function (){
             this.account.avatarImg = ""
-            this.avatarPreview = ""
+            this.$refs.avatarPreview.value = ""
+            this.avatarPreview = null
         },
         removeBackground: function (){
             this.account.backgroundImg = ""
-            this.backgroundPreview = ""
+            this.$refs.backgroundPreview.value = ""
+            this.backgroundPreview = null
         },
         hideExists: function () {
             this.exists = false
@@ -269,6 +273,7 @@ const SignUp = {
             form.append('avatarImg', this.account.avatarImg)
             form.append('backgroundImg', this.account.backgroundImg)
             form.append('state', this.account.state)
+            form.append('lastOnline', new Date().toLocaleString())
             return form
         }
     },

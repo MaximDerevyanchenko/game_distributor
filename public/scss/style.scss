@@ -1,9 +1,10 @@
-
 $primary: #290661;
 $secondary: #5f0ee0;
 
+$primary: #140330;
+$secondary: #160d27;
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
-//@import "../../node_modules/font-awesome/scss/font-awesome";
 
 textarea {
   height: 150px !important;
@@ -12,3 +13,8 @@ textarea {
 .fa-eye {
   width: 20px;
 }
+
+.progress {
+  height: 7px;
+}
+
