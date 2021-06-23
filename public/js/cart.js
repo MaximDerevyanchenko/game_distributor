@@ -25,6 +25,7 @@ const Cart = {
         },
         buy: function (){
             if (confirm("Are you sure to buy these items?"))
+                this.games.forEach(game => game.timePlayed = 0)
                 axios.post("http://localhost:3000/api/account/library", this.games)
                     .then(response => this.games = response.data)
                     .catch(err => console.log(err))

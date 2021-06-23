@@ -94,5 +94,11 @@ module.exports = function(app, mongoose, io) {
 	app.route('/api/account/:username')
 		.get(accountController.getAccount)
 
+	app.route('/api/:username/game/:gameId/friends')
+		.get(libraryController.getFriendsWithGame)
+
+	app.route('/api/:username/game/:gameId/closed')
+		.post(libraryController.closedGame)
+
 	app.use(gameController.show_main)
 }

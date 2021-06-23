@@ -22,9 +22,9 @@ const Profile = {
                 <button v-if="logged && username == Vue.$cookies.get('username')" class="ms-auto align-self-center">Manage profile</button>
             </div>
             <div class="w-100">
-                <img class="rounded float-start img-thumbnail col-3" :src="account.avatarImg != '' ? '../static/img/no-profile-image.png' : account.avatarImg" alt=""/>
+                <img class="rounded float-start img-thumbnail col-3" :src="account.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + account.username + '/' + account.avatarImg" alt=""/>
                 <p>{{ account.name }}</p>
-                <p>{{ account.country }}</p>
+                <p>{{ account.country == 'undefined' ? '' : account.country }}</p>
             </div>
             <p>{{ account.bio }}</p>
             <div>
