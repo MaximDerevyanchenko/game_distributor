@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Game Distributor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.dark.min.css" rel="stylesheet" />-->
     <link rel="stylesheet" type="text/css" href="/static/scss/style.css">
 </head>
 
@@ -22,7 +21,6 @@
 <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/1.4.1/document-register-element.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-socket.io@3.0.10/dist/vue-socketio.min.js"></script>
 <script src="/static/js/home.js"></script>
@@ -38,6 +36,7 @@
 <script src="/static/js/friends.js"></script>
 <script src="/static/js/wishlist.js"></script>
 <script src="/static/js/search.js"></script>
+<script src="/static/js/login.js"></script>
 <script src="/static/js/router.js"></script>
 
 <script>
@@ -46,6 +45,10 @@
     Vue.use(new VueSocketIO({
         connection: io('localhost:3000')
     }))
+    Vue.component('friends', Friends)
+    Vue.component('login', Login)
+    Vue.component('library', Library)
+    Vue.component('wishlist', Wishlist)
     const app = new Vue({
         router,
         el: "#app",

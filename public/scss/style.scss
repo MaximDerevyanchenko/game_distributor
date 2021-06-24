@@ -35,3 +35,20 @@ textarea {
   width: 5rem;
   height: 5rem;
 }
+
+#lib, #fr, #wish {
+  color: white;
+  background-color: $primary;
+}
+
+#lib.active, #fr.active, #wish.active {
+  color: $primary;
+  background-color: white;
+}
+
+#backgroundImg {
+  z-index: -1;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  filter: blur(3px);
+}
