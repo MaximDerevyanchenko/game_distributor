@@ -4,7 +4,7 @@ module.exports = function(app, mongoose, io) {
 	const gameController = require('../controllers/gameController')
 	gameController(mongoose, io)
 	const cartController = require('../controllers/cartController')
-
+	cartController(mongoose, io)
 	const wishlistController = require('../controllers/wishlistController')
 	wishlistController(mongoose, io)
 	const libraryController = require('../controllers/libraryController')
@@ -53,6 +53,9 @@ module.exports = function(app, mongoose, io) {
 	app.route('/api/account/cart')
 		.post(cartController.addToCart)
 		.get(cartController.getCart)
+
+	app.route('/api/account/cart/removeAll')
+		.post(cartController.deleteManyFromCart)
 
 	app.route('/api/account/friends')
 		.post(accountController.addFriend)

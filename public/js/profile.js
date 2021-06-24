@@ -3,7 +3,6 @@ const Profile = {
     data: function() {
         return {
             account: {},
-            day: 24*60*60,
             logged: false,
             viewedData: [],
             game: {

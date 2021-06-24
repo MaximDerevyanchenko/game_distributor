@@ -71,7 +71,7 @@ const Friends = {
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure to remove {{ friendToRemove.nickname }}?</p>
+                        <p>Are you sure to remove <em>{{ friendToRemove.nickname }}<em>?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>

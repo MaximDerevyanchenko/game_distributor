@@ -4,6 +4,8 @@ $secondary: #5f0ee0;
 $primary: #140330;
 $secondary: #160d27;
 
+$gradient: linear-gradient(180deg, rgba(20,3,48,1) 0%, rgba(82,82,238,1) 20%, rgba(0,0,0,1) 100%);
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 textarea {
@@ -14,7 +16,22 @@ textarea {
   width: 20px;
 }
 
-.progress {
-  height: 7px;
+.carousel-item {
+  background-image: url("../img/background.jpg");
 }
 
+.carousel-control {
+  background: none;
+  border: 0;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.carousel-indicators {
+  bottom: -50px;
+}
+
+.spinner-grow {
+  width: 5rem;
+  height: 5rem;
+}

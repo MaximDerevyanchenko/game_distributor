@@ -6,7 +6,8 @@ const Login = {
                 password: ""
             },
             typePassword: "password",
-            error: false
+            error: false,
+            day: 24*60*60
         }
     },
     template: `
@@ -130,7 +131,7 @@ const Navbar = {
         'login': Login
     },
     template: `
-    <nav class="navbar navbar-expand-lg navbar-dark border border-2 rounded-pill border-light bg-secondary p-2">
+    <nav class="navbar navbar-expand-lg navbar-dark border border-2 rounded-pill border-light bg-secondary p-2 mt-3">
         <div class="container-fluid">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
