@@ -54,6 +54,9 @@ module.exports = function(app, mongoose, io) {
 		.post(cartController.addToCart)
 		.get(cartController.getCart)
 
+	app.route('/api/account/cart/removeAll')
+		.post(cartController.deleteManyFromCart)
+
 	app.route('/api/account/friends')
 		.post(accountController.addFriend)
 

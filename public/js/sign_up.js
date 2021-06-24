@@ -21,7 +21,8 @@ const SignUp = {
             confirmPassword: "",
             countries: [],
             avatarPreview: null,
-            backgroundPreview: null
+            backgroundPreview: null,
+            day: 24*60*60
         }
     },
     template: `
@@ -219,8 +220,7 @@ const SignUp = {
             axios.post('http://localhost:3000/api/account/login', this.account)
                 .then(response => {
                     this.$cookies.set("username", response.data.username, 7 * this.day)
-                    //TODO cambiare l'emit, non arriva l'evento alla navbar
-                    this.$parent.$emit('log-event')
+                    this.$parent.$children[1].$emit('log-event')
                     axios.patch('http://localhost:3000/api/account/state', { state: "online" })
                         .then(res => this.$router.push({ name: 'Profile', params: { username: this.account.username }}))
                         .catch(err => console.log(err))

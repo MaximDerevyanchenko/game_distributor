@@ -16,7 +16,22 @@ textarea {
   width: 20px;
 }
 
-.progress {
-  height: 7px;
+.carousel-item {
+  background-image: url("../img/background.jpg");
 }
 
+.carousel-control {
+  background: none;
+  border: 0;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.carousel-indicators {
+  bottom: -50px;
+}
+
+.spinner-grow {
+  width: 5rem;
+  height: 5rem;
+}

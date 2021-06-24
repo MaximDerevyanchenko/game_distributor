@@ -6,7 +6,8 @@ const Login = {
                 password: ""
             },
             typePassword: "password",
-            error: false
+            error: false,
+            day: 24*60*60
         }
     },
     template: `

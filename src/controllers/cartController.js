@@ -34,4 +34,10 @@ module.exports = function (mongoose, io) {
             .then(() => res.json())
             .catch(err => console.log(err))
     }
+
+    module.exports.deleteManyFromCart = function (req, res) {
+        GameCart.deleteMany({username: req.cookies.username, gameId: { $in: req.body.map(g => g.steam_appid) }})
+            .then(() => res.json())
+            .catch(err => console.log(err))
+    }
 }
