@@ -1,4 +1,6 @@
 module.exports = function(app, mongoose, io) {
+	const countryController = require('../controllers/countryController')
+	countryController(mongoose, io)
 	const accountController = require('../controllers/accountController')
 	accountController(mongoose, io)
 	const gameController = require('../controllers/gameController')
@@ -9,8 +11,6 @@ module.exports = function(app, mongoose, io) {
 	wishlistController(mongoose, io)
 	const libraryController = require('../controllers/libraryController')
 	libraryController(mongoose, io)
-	const countryController = require('../controllers/countryController')
-	countryController(mongoose, io)
 
 	app.route('/api/countries')
 		.get(countryController.getCountries)

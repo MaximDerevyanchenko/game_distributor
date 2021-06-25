@@ -1,6 +1,6 @@
 const fs = require('fs')
 module.exports = function (mongoose, io) {
-    let Account = require('../models/accountModel')(mongoose)
+    const Account = require('../models/accountModel')(mongoose)
 
     module.exports.login = function (req, res) {
         Account.findOne({username: req.body.username, password: req.body.password})
@@ -14,9 +14,7 @@ module.exports = function (mongoose, io) {
                 io.emit('friendStateChanged', acc)
                 res.json(acc)
             })
-            .catch(err =>
-                res.send(err)
-            )
+            .catch(err => res.send(err))
     }
 
     module.exports.getAccount = function (req, res) {

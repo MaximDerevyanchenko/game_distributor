@@ -21,6 +21,7 @@ const Cart = {
                         <div class="card-body bg-secondary text-white text-center" @click="goToGame(index)" role="button">
                             <h5 class="card-title mt-2 mb-4">{{game.name}}</h5>
                             <p class="card-text">{{game.short_description | escape }}</p>
+                            <small class="card-text text-muted">Price: {{ game.price_overview.final_formatted }}</small>
                         </div>
                          <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
                             <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
@@ -34,6 +35,7 @@ const Cart = {
             </div>
             <div class="w-100 d-flex justify-content-between mt-5">
                 <button v-if="games.length !== 0" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemoveAll">Remove all items</button>
+                <p v-if="games.length !== 0">Total: {{ games | computePrice }}</p>
                 <button v-if="games.length !== 0" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#confirmPurchaseAll">Purchase all items</button>
             </div>
         </div>
@@ -161,6 +163,10 @@ const Cart = {
     filters: {
         escape: function (string){
             return new DOMParser().parseFromString(string, 'text/html').body.textContent
+        },
+        computePrice: function (games){
+            const price = games.map(g => g.price_overview.final).reduce((acc, curr) => acc + curr)
+            return new Intl.NumberFormat('it-IT', {style: 'currency', currency: 'EUR', minimumFractionDigits: 2}).format(price/100)
         }
     },
     mounted(){

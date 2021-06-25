@@ -93,7 +93,7 @@ const SignUp = {
             </div>
             <div class="col">
                 <div class="form-floating">
-                    <select class="form-select pb-1 bg-transparent text-white" id="country" v-model="account.country">
+                    <select class="form-select pb-1 bg-transparent text-white" id="country" v-model="account.countryName">
                         <option class="bg-primary text-white" v-for="country in countries" :value="country.name">{{ country.name }}</option>
                     </select>
                     <label for="country">Country</label>
@@ -269,7 +269,8 @@ const SignUp = {
             form.append('name', this.account.name)
             form.append('nickname', this.account.nickname)
             form.append('bio', this.account.bio)
-            form.append('country', this.account.country)
+            form.append('countryCode', this.countries.filter(c => c.name === this.account.countryName)[0])
+            form.append('countryName', this.account.countryName)
             form.append('avatarImg', this.account.avatarImg)
             form.append('backgroundImg', this.account.backgroundImg)
             form.append('state', this.account.state)
