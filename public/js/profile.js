@@ -2,97 +2,126 @@ const Profile = {
     props: ['username'],
     data: function() {
         return {
-            account: {},
+            account: {
+                countryCode: "IT"
+            },
             logged: false,
-            viewedData: [],
             game: {
                 gameId: -1,
                 name: "",
                 isLocal: true
-            }
+            },
+            isEditOn: false,
+            accountChanges: {
+                countryCode: null
+            },
+            countries: [],
+            oldBio: ""
         }
     },
     template: `
-    <div class="d-flex justify-content-center">
-        <div class="d-flex border flex-column w-75 p-3">
-            <div class="d-flex flex-row align-self-start w-100">
-                <h2 class="pe-3">{{ account.nickname }}</h2>
-                <span class="badge rounded-pill align-self-center" :class="account.state == 'offline' ? 'bg-dark' : 'bg-success'">{{ account.state }}</span>
-                <button v-if="logged && username == Vue.$cookies.get('username')" class="ms-auto align-self-center">Manage profile</button>
-            </div>
-            <div class="w-100">
-                <img class="rounded float-start img-thumbnail col-3" :src="account.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + account.username + '/' + account.avatarImg" alt=""/>
-                <p>{{ account.name }}</p>
-                <p>{{ account.country == 'undefined' ? '' : account.country }}</p>
-            </div>
-            <p>{{ account.bio }}</p>
-            <div>
-            
-            </div>
-<!--            <div v-if="logged && username == Vue.$cookies.get('username')">-->
-<!--                <div v-if="account.isDeveloper">-->
-<!--                    <h2>New Game</h2>-->
-<!--                    <form>-->
-<!--                        <label for="gameId">GameId: </label>-->
-<!--                        <input id="gameId" type="number" v-model="game.gameId" />-->
-<!--                        <label for="name">Name:</label>-->
-<!--                        <input id="name" type="text" v-model="game.name">-->
-<!--                        <input type="submit" @click.prevent="createGame"/>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--                <div v-else>-->
-<!--                    <button @click="becomeDeveloper">Become developer</button>-->
-<!--                </div>-->
-<!--            </div>-->
-
-            <ul class="nav nav-pills mb-3" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button ref="library_tab" class="nav-link active" data-bs-toggle="pill" data-bs-target="#library" role="tab" @click="getLibrary">Library</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#friends" role="tab" @click="getFriends">Friends</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#wishlist" role="tab" @click="getWishlist">Wishlist</button>
-                </li>
-            </ul>
-            <div class="tab-content border p-2" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="library" role="tabpanel">
-                    <div class="d-flex align-items-start">
-                        <ul class="nav nav-pills flex-column" role="tablist">
-                            <li class="nav-item" role="presentation" v-for="game in viewedData">
-                                <button role="tab" class="nav-link" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.gameId }}</button>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div v-for="game in viewedData" class="tab-pane fade" role="tabpanel" :id="'g' + game.gameId">
-                                <h4>{{ game.gameId }}</h4>
+    <div class="position-relative">
+        <div class="w-100 h-100 position-absolute top-50 start-50 translate-middle" id="backgroundImg"></div>
+        <div class="d-flex col justify-content-center mt-4">
+            <div class="d-flex flex-column p-3 col-7 mt-5 bg-primary border rounded m-auto">
+                <div class="card bg-transparent text-white">
+                    <div class="row g-0">
+                        <div class="col">
+                            <img id="avatarImg" class="card-img-top rounded p-0 img-thumbnail" :src="account.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + account.username + '/' + account.avatarImg" alt="" >
+                            <div v-if="isEditOn" class="mt-2">
+                                <div class="row">
+                                    <label class="input-group-text bg-transparent text-white border-0" for="avatar">Choose your avatar</label>
+                                </div>
+                                <div class="row ms-1">
+                                    <input class="form-control bg-transparent text-white" id="avatar" @change="changeAvatarPreview" type="file" accept="image/*"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-between ms-3 col-5">
+                            <div v-if="!isEditOn" class="card-title">
+                                <h2>{{ account.nickname }} <span class="badge rounded-pill fs-6" :class="account.state == 'offline' ? 'bg-dark' : 'bg-success'">{{ account.state }}</span></h2>
+<!--                             TODO developer-->
+                            </div>
+                            <div v-else class="form-floating col-2">
+                                <input class="form-control bg-transparent text-white" placeholder="nickname" id="nickname" :value="account.nickname" v-model="account.nickname" required type="text" />
+                                <label for="nickname">Nickname</label>
+                            </div>
+                            <p class="card-text">{{ account.name }}</p>
+                            <div v-if="!isEditOn" class="row g-0">
+                                <p class="col-4 mb-0" v-if="!isEditOn && account.countryName">Country: {{ account.countryName }}</p>
+                                <img class="w-auto" :src="'https://www.countryflags.io/' + account.countryCode + '/shiny/48.png'" />
+                            </div>
+                            <div v-else class="row align-items-center">
+                                <div class="form-floating col-6">
+                                    <select class="form-select pb-1 bg-transparent text-white" id="country" v-model="accountChanges.countryCode">
+                                        <option class="bg-secondary text-white" v-for="country in countries" :selected="country.code === accountChanges.countryCode" :value="country.code">{{ country.name }}</option>
+                                    </select>
+                                    <label class="ms-3" for="country">Country</label>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <img class="w-auto" :src="'https://www.countryflags.io/' + accountChanges.countryCode + '/shiny/48.png'" />
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="bio" class="card-text mb-0 mt-1">Bio</label>
+                            <p v-if="!isEditOn">{{ account.bio }}</p>
+                            <textarea v-else class="bg-transparent text-white mt-1" placeholder="Your bio" id="bio" v-model="account.bio"></textarea>
+                            <div v-if="isEditOn" class="row row-cols-2 my-4 justify-content-center">
+                                <div class="col-4">
+                                    <label class="input-group-text bg-transparent text-white border-0" for="background">Choose your background</label>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control bg-transparent text-white" id="background" @change="changeBackgroundPreview" type="file" accept="image/*"/>
+                                </div>
+                            </div>
+                             <div class="row justify-content-end me-2">
+                                <button v-if="logged && username == Vue.$cookies.get('username') && !isEditOn" class="w-auto btn btn-outline-light" @click="isEditOn = true">Edit profile</button>
+                                <button v-if="isEditOn" class="w-auto btn btn-outline-danger me-3" @click="discardChanges">Discard changes</button>
+                                <button v-if="isEditOn" class="w-auto btn btn-outline-success" @click="saveChanges">Save changes</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="friends" role="tabpanel">
-                    <div v-for="friend in viewedData">
-                        <div class="d-flex">
-                            <router-link class="nav-link" :to="{ name: 'Profile', params: { username: friend.username }}"">{{ friend.nickname }}</router-link>
-                            <span class="badge rounded-pill align-self-center" :class="friend.state == 'offline' ? 'bg-dark' : 'bg-success'">{{ friend.state }} {{ friend.inGame }}</span>
-                        </div>
+    <!--            <div v-if="logged && username == Vue.$cookies.get('username')">-->
+    <!--                <div v-if="account.isDeveloper">-->
+    <!--                    <h2>New Game</h2>-->
+    <!--                    <form>-->
+    <!--                        <label for="gameId">GameId: </label>-->
+    <!--                        <input id="gameId" type="number" v-model="game.gameId" />-->
+    <!--                        <label for="name">Name:</label>-->
+    <!--                        <input id="name" type="text" v-model="game.name">-->
+    <!--                        <input type="submit" @click.prevent="createGame"/>-->
+    <!--                    </form>-->
+    <!--                </div>-->
+    <!--                <div v-else>-->
+    <!--                    <button @click="becomeDeveloper">Become developer</button>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    
+                <ul v-if="!isEditOn" class="nav nav-pills mt-3 mb-3 p-2 justify-content-center" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button ref="library_tab" class="nav-link active m-1" id="lib" data-bs-toggle="pill" data-bs-target="#library" role="tab">Library</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link m-1" data-bs-toggle="pill" id="fr" data-bs-target="#friends" role="tab">Friends</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link m-1" data-bs-toggle="pill" id="wish" data-bs-target="#wishlist" role="tab">Wishlist</button>
+                    </li>
+                </ul>
+                <div v-if="!isEditOn" class="tab-content border rounded bg-secondary p-3" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="library" role="tabpanel">
+                        <library></library>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="wishlist" role="tabpanel">
-                    <div v-for="(game, index) in viewedData">
-                        <p>{{ game.gameId }}</p>
-                        <button v-if="username == Vue.$cookies.get('username')" @click="remove(index)">Remove</button>
-                        <button v-if="username == Vue.$cookies.get('username')" @click="addToCart(index)">Add to cart</button>
-                        <button v-else @click="giveTo(index)">Buy</button>
+                    <div class="tab-pane fade" id="friends" role="tabpanel">
+                        <friends></friends>
+                    </div>
+                    <div class="tab-pane fade" id="wishlist" role="tabpanel">
+                        <wishlist></wishlist>
                     </div>
                 </div>
             </div>
-<!--            <div>-->
-<!--                <div>-->
-<!--                    <router-link class="nav-button" :to="{ name: 'Wishlist', params: { username: username }}">Wishlist</router-link>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
     </div>`,
     watch: {
@@ -106,7 +135,16 @@ const Profile = {
             axios.get('http://localhost:3000/api/account/' + this.username)
                 .then(res => {
                     this.account = res.data
-                    this.getLibrary()
+                    this.oldBio = this.account.bio
+                    this.accountChanges.countryCode = this.account.countryCode
+                    const background = document.querySelector('#backgroundImg')
+                    if (this.account.backgroundImg !== '') {
+                        const url = '../static/img/' + this.account.username + '/' + this.account.backgroundImg
+                        background.style.backgroundImage = 'url(' + url + ')'
+                        let image = new Image();
+                        image.src = url
+                        image.onload = () => document.querySelector('.position-relative').style.height = image.naturalHeight + 'px'
+                    }
                 })
                 .catch(err => console.log(err))
         },
@@ -120,23 +158,42 @@ const Profile = {
                 .then(() => this.$router.push({ name: 'Game', params: { game_id: this.game.gameId }}))
                 .catch(err => console.log(err))
         },
-        getLibrary: function () {
-            axios.get("http://localhost:3000/api/account/library/" + this.account.username)
-                .then(res => {
-                    this.viewedData = res.data
-                })
+        changeAvatarPreview: function (e){
+            this.accountChanges.avatarImg = e.target.files[0]
+            const reader = new FileReader()
+            reader.onload = ev => document.querySelector('#avatarImg').src = ev.target.result
+            reader.readAsDataURL(this.accountChanges.avatarImg)
+        },
+        changeBackgroundPreview: function (e){
+            this.accountChanges.backgroundImg = e.target.files[0]
+            const reader = new FileReader()
+            reader.onload = ev => {
+                document.querySelector('#backgroundImg').style.backgroundImage = 'url(' + ev.target.result + ')'
+                let image = new Image();
+                image.src =  ev.target.result.toString()
+                image.onload = () =>  document.querySelector('.position-relative').style.height = image.naturalHeight + 'px'
+            }
+            reader.readAsDataURL(this.accountChanges.backgroundImg)
+        },
+        saveChanges: function (){
+            this.isEditOn = false
+            this.accountChanges.bio = this.account.bio
+            this.accountChanges.countryName = this.countries.filter(c => c.code === this.accountChanges.countryCode)[0].name
+            axios.post('http://localhost:3000/api/account', this.accountChanges)
+                .then(() => this.getAccount())
                 .catch(err => console.log(err))
         },
-        getFriends: function () {
-            axios.get('http://localhost:3000/api/account/friends/' + this.account.username)
-                .then(res => this.viewedData = res.data )
+        discardChanges: function (){
+            this.isEditOn = false
+            this.account.bio = this.oldBio
+            document.querySelector('#avatarImg').src = '../static/img/' + this.account.username + '/' + this.account.avatarImg
+            document.querySelector('#backgroundImg').style.backgroundImage = 'url(../static/img/' + this.account.username + '/' + this.account.backgroundImg + ')'
+        },
+        getCountries: function () {
+            axios.get('http://localhost:3000/api/countries')
+                .then(res => this.countries = res.data)
                 .catch(err => console.log(err))
         },
-        getWishlist: function (){
-            axios.get("http://localhost:3000/api/account/wishlist/" + this.account.username)
-                .then(res => this.viewedData = res.data)
-                .catch(error => console.log(error))
-        }
     },
     mounted() {
         this.logged = this.$checkLogin()
@@ -144,7 +201,7 @@ const Profile = {
             this.logged = this.$checkLogin()
         })
         this.getAccount()
-    },
-
+        this.getCountries()
+    }
 }
 
