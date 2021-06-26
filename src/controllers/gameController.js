@@ -14,7 +14,7 @@ module.exports = function (mongoose, io) {
 	}
 
 	module.exports.countPages = function (req, res) {
-		GameSchema.countDocuments({ name: { $regex : req.params.game_id }})
+		GameSchema.countDocuments({ name: { $regex : req.params.name }})
 			.then(response => res.json(response))
 			.catch(error => res.send(error))
 	}
