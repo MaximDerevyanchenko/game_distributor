@@ -6,11 +6,6 @@ const Profile = {
                 countryCode: "IT"
             },
             logged: false,
-            game: {
-                gameId: -1,
-                name: "",
-                isLocal: true
-            },
             isEditOn: false,
             accountChanges: {
                 countryCode: null
@@ -38,9 +33,11 @@ const Profile = {
                             </div>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between ms-3 col-5">
-                            <div v-if="!isEditOn" class="card-title">
+                            <div v-if="!isEditOn" class="card-title d-flex justify-content-between">
                                 <h2>{{ account.nickname }} <span class="badge rounded-pill fs-6" :class="account.state == 'offline' ? 'bg-dark' : 'bg-success'">{{ account.state }}</span></h2>
-<!--                             TODO developer-->
+                                <div>
+                                    <router-link v-if="Vue.$cookies.get('username') === username" class="btn btn-outline-info" to="/dev">Dev Page</router-link>
+                                </div>
                             </div>
                             <div v-else class="form-floating col-2">
                                 <input class="form-control bg-transparent text-white" placeholder="nickname" id="nickname" :value="account.nickname" v-model="account.nickname" required type="text" />
@@ -83,22 +80,6 @@ const Profile = {
                         </div>
                     </div>
                 </div>
-    <!--            <div v-if="logged && username == Vue.$cookies.get('username')">-->
-    <!--                <div v-if="account.isDeveloper">-->
-    <!--                    <h2>New Game</h2>-->
-    <!--                    <form>-->
-    <!--                        <label for="gameId">GameId: </label>-->
-    <!--                        <input id="gameId" type="number" v-model="game.gameId" />-->
-    <!--                        <label for="name">Name:</label>-->
-    <!--                        <input id="name" type="text" v-model="game.name">-->
-    <!--                        <input type="submit" @click.prevent="createGame"/>-->
-    <!--                    </form>-->
-    <!--                </div>-->
-    <!--                <div v-else>-->
-    <!--                    <button @click="becomeDeveloper">Become developer</button>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    
                 <ul v-if="!isEditOn" class="nav nav-pills mt-3 mb-3 p-2 justify-content-center" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button ref="library_tab" class="nav-link active m-1" id="lib" data-bs-toggle="pill" data-bs-target="#library" role="tab">Library</button>
@@ -118,7 +99,7 @@ const Profile = {
                         <friends></friends>
                     </div>
                     <div class="tab-pane fade" id="wishlist" role="tabpanel">
-                        <wishlist></wishlist>
+                        <wishlist :username="username" size="2"></wishlist>
                     </div>
                 </div>
             </div>
@@ -146,16 +127,6 @@ const Profile = {
                         image.onload = () => document.querySelector('.position-relative').style.height = image.naturalHeight + 'px'
                     }
                 })
-                .catch(err => console.log(err))
-        },
-        becomeDeveloper: function (){
-            axios.patch('http://localhost:3000/api/account', { isDeveloper: true })
-                .then(() => this.account.isDeveloper = true)
-                .catch(err => console.log(err))
-        },
-        createGame: function (){
-            axios.post('http://localhost:3000/api/create_game', this.game)
-                .then(() => this.$router.push({ name: 'Game', params: { game_id: this.game.gameId }}))
                 .catch(err => console.log(err))
         },
         changeAvatarPreview: function (e){

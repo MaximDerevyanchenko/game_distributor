@@ -24,6 +24,7 @@ const Navbar = {
                     <li><router-link :to="'/profile/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-user me-2"></i>Profile</router-link></li>
                     <li><router-link to="/library" class="dropdown-item"><i class="fas fa-book-open me-2"></i>Library</router-link></li>
                     <li><router-link to="/cart" class="dropdown-item"><i class="fas fa-shopping-cart me-2"></i>Cart</router-link></li>
+                    <li><router-link :to="'/wishlist/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-clipboard-list me-2"></i>Wishlist</router-link></li>
                     <li><router-link to="/friends" class="dropdown-item"><i class="fas fa-user-friends me-2"></i>Friends</router-link></li>
                     <li><button class="dropdown-item text-danger" @click="logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</button></li>
                 </ul>

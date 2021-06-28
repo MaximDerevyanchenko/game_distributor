@@ -50,6 +50,9 @@ module.exports = function(app, mongoose, io) {
 	app.route('/api/account/signup')
 		.post(accountController.signup)
 
+	app.route('/api/account/myGames')
+		.get(gameController.getMyGames)
+
 	app.route('/api/account/cart')
 		.post(cartController.addToCart)
 		.get(cartController.getCart)
