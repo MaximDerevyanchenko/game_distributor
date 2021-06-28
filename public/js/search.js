@@ -12,7 +12,7 @@ const Search = {
         <div v-for="game in games">
             <div>
                 <div>
-                    <router-link class="nav-link" :to="{ name: 'Game', params: { game_id: game.gameId }}">{{ game.name }}</router-link>
+                    <router-link class="nav-link text-light" :to="{ name: 'Game', params: { gameId: game.gameId }}">{{ game.name }}</router-link>
                 </div>
             </div>
         </div>

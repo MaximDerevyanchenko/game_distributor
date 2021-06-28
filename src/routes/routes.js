@@ -25,7 +25,7 @@ module.exports = function(app, mongoose, io) {
 	app.route('/api/create_game')
 		.post(gameController.create_game)
 
-	app.route('/api/game/:gameId/count')
+	app.route('/api/game/:name/count')
 		.get(gameController.countPages)
 
 	app.route('/api/game/:gameId')
