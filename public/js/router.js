@@ -9,6 +9,7 @@ const router = new VueRouter({
         { path: '/cart', name: 'Cart', component: Cart },
         { path: '/wishlist/:username', name: 'Wishlist', component: Wishlist, props: true },
         { path: '/friends', name: 'Friends', component: Friends },
+        { path: '/dev', name: 'Dev', component: Dev },
         { path: '/game/:gameId', name: 'Game', component: Game, props: true },
         { path: '/search', name: 'Search', component: Search, props: true },
         { path: '/404', component: NotFound },

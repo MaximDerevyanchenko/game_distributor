@@ -1,6 +1,6 @@
 module.exports = function (mongoose, io) {
 	const GameSchema = require("../models/gameModel.js")(mongoose)
-
+	const fs = require('fs')
 	const axios = require('axios')
 
 	module.exports.show_main = function (req, res) {
@@ -77,9 +77,36 @@ module.exports = function (mongoose, io) {
 	}
 
 	module.exports.create_game = function (req, res) {
-		GameSchema.create(req.body)
-			.then(game => res.status(201).json(game))
+		GameSchema.findOne({ isLocal: true }, {}, { sort: { gameId: "desc"}})
+			.then(lastInserted => {
+				if (lastInserted === null)
+					req.body.gameId = 1
+				else
+					req.body.gameId = lastInserted.gameId + 1
+				const header = req.files.header_image
+				req.body.header_image = header ? header.name : ""
+				const gamePath = './public/img/' + req.body.gameId
+				if (header)
+					fs.mkdir(gamePath, err => {
+						if (err != null)
+							res.send(err)
+						else
+							fs.rename(header.path, gamePath + '/' + header.name, err => {
+								if (err != null)
+									res.send(err)
+							})
+					})
+				GameSchema.create(req.body)
+					.then(game => res.status(201).json(game))
+					.catch(err => res.send(err))
+				}
+			)
 			.catch(err => res.send(err))
 	}
 
+	module.exports.getMyGames = function (req, res) {
+		GameSchema.find({ developer: req.cookies.username })
+			.then(games => res.json(games))
+			.catch(err => res.send(err))
+	}
 }
