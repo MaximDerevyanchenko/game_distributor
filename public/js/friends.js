@@ -1,4 +1,5 @@
 const Friends = {
+    props: ['username'],
     data: function (){
         return {
             friends: [],
@@ -30,7 +31,7 @@ const Friends = {
         <div class="card bg-dark text-white border-secondary p-3" v-for="friend in onlineFriends" role="button">
             <div class="row g-0">
                 <div class="col-3">
-                    <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
+                    <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
                 </div>
                 <div class="card-body col-9">
                     <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.nickname"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
@@ -44,7 +45,7 @@ const Friends = {
         <div class="card bg-dark text-white border-secondary p-3" v-for="friend in offlineFriends" role="button">
             <div class="row g-0">
                 <div class="col-3">
-                    <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
+                    <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
                 </div>
                 <div class="card-body col-9">
                     <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.nickname"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
@@ -82,12 +83,19 @@ const Friends = {
         </div>
     </div>
     `,
+    watch: {
+        $route: function (to, from){
+            this.getFriends()
+            this.getFriendRequests()
+            this.getPendingRequests()
+        }
+    },
     methods: {
         getFriends: function () {
-            axios.get('http://localhost:3000/api/account/friends/' + this.$cookies.get('username'))
+            axios.get('http://localhost:3000/api/account/friends/' + this.$props.username)
                 .then(res => {
                     this.friends = res.data
-                    this.onlineFriends = this.friends.filter(f => f.state === 'online')
+                    this.onlineFriends = this.friends.filter(f => f.state === 'online' || f.state === 'in game')
                     this.offlineFriends = this.friends.filter(f => f.state === 'offline')
                 })
                 .catch(err => console.log(err))
@@ -107,7 +115,7 @@ const Friends = {
                 .catch(err => console.log(err))
         },
         addFriend: function (){
-            if (this.friendToAdd !== this.$cookies.get('username')) {
+            if (this.friendToAdd !== this.$props.username) {
                 if (this.friends.includes({ username: this.friendToAdd }))
                     alert('You already added ' + this.friendToAdd + ' as a friend!')
                 else if (this.friendRequests.includes({ username: this.friendToAdd }))
@@ -149,9 +157,22 @@ const Friends = {
         friendAdded: function () {
             this.getFriendRequests()
         },
-        friendStateChanged: function (friend){
-            const index = this.friends.indexOf(this.friends.filter(v => v.username === friend.username)[0])
-            Vue.set(this.friends, index, friend)
+        friendStateChanged: function (change){
+            const friend = change[0]
+            const body = change[1]
+            if (this.$cookies.isKey('username') && friend.username !== this.$cookies.get('username') && this.account.friends.includes(friend.username)) {
+                friend.state = body.state
+                friend.inGame = body.inGame
+                const index = this.friends.indexOf(this.friends.filter(v => v.username === friend.username)[0])
+                Vue.set(this.friends, index, friend)
+                if (friend.state === 'online') {
+                    this.onlineFriends.push(friend)
+                    this.offlineFriends = this.offlineFriends.filter(f => f.username !== friend.username)
+                } else {
+                    this.offlineFriends.push(friend)
+                    this.onlineFriends = this.onlineFriends.filter(f => f.username !== friend.username)
+                }
+            }
         }
     },
     mounted(){
@@ -159,8 +180,7 @@ const Friends = {
         this.getFriendRequests()
         this.getPendingRequests()
         this.$on('log-event', () => {
-            if (!this.$checkLogin())
-                this.$router.push({name: 'Store'})
+
         })
     }
 }

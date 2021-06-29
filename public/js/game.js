@@ -10,7 +10,7 @@ const Game = {
         }
     },
     template: `
-        <div class="d-flex flex-column align-items-center" v-if="game">
+        <div class="d-flex flex-column align-items-center mt-3" v-if="game">
             <div class="justify-content-around">
                 <h3>{{ game.name }}</h3>
             </div>
@@ -32,10 +32,10 @@ const Game = {
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <div class="carousel-indicators">
-                        <button v-for="screenshot in game.screenshots" ref="indicators" type="button" :class="screenshot.id == 0 ? 'active' : ''" :aria-current="screenshot.id == 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="screenshot.id" :aria-label="screenshot.id"></button>
+                        <button v-for="(screenshot, index) in game.screenshots" ref="indicators" type="button" :class="index == 0 ? 'active' : ''" :aria-current="index == 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="index"></button>
                     </div>
                     <div class="carousel-inner mx-auto">
-                        <div class="carousel-item" data-bs-interval="3000" v-for="screenshot in game.screenshots" ref="items" :class="screenshot.id == 0 ? 'active' : ''">
+                        <div class="carousel-item" data-bs-interval="3000" v-for="(screenshot, index) in game.screenshots" ref="items" :class="index == 0 ? 'active' : ''">
                             <div class="d-flex justify-content-center">
                                 <img :src="screenshot.path_thumbnail" class="w-75" alt="Game screenshot" />
                             </div>
@@ -103,7 +103,7 @@ const Game = {
                         <p v-if="game.about_the_game != game.detailed_description" v-html="game.detailed_description"></p>
                         
                         <h4>System Requirements</h4>
-                        <ul class="nav nav-tabs" role="tablist">
+                        <ul class="nav nav-pills" role="tablist">
                             <li v-if="game.platforms && game.platforms.windows" class="nav-item" role="presentation">
                                 <button class="nav-link active" id="windows-tab" data-bs-toggle="tab" data-bs-target="#windows" type="button" role="tab" aria-controls="windows" aria-selected="true">Windows</button>
                             </li>
@@ -183,6 +183,7 @@ const Game = {
             axios.get("http://localhost:3000/api/game/" + this.$props.gameId)
                 .then(response => {
                     this.game = response.data
+                    //TODO DEVELOP ELSE
                     if (!this.game.isLocal)
                         axios.get("http://localhost:3000/api/steam_game/" + this.game.gameId)
                             .then(response => {

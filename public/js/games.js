@@ -12,7 +12,7 @@ const Games = {
                 <strong class="fs-4 me-4 align-middle">Loading...</strong>
                 <div class="spinner-grow ms-4" role="status" aria-hidden="true"></div>
             </div>
-            <div v-if="progress === 100" id="carousel" ref="carousel" class="carousel slide carousel-fade mt-5 d-flex justify-content-center" data-bs-ride="carousel">
+            <div v-if="progress == 100" id="carousel" ref="carousel" class="carousel slide carousel-fade mt-5 d-flex justify-content-center" data-bs-ride="carousel">
                 <button class="carousel-control" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
@@ -23,7 +23,7 @@ const Games = {
                 <div class="carousel-inner bg-dark w-50">
                     <div class="carousel-item p-1" @click="goToGame(game)" role="button" data-bs-interval="3000" v-for="(game,index) in games" ref="items" :class="index == 0 ? 'active' : ''">
                         <div class="d-flex justify-content-center">
-                            <img :src="game.header_image" class="col-8" :alt="game.name" /> 
+                            <img :src="game.header_image" class="col-8 ps-3" :alt="game.name" /> 
                             <div class="m-3 col-4 d-flex flex-column justify-content-between">
                                 <h4>{{ game.name }}</h4>
                                 <small v-if="game.is_free" class="text-muted mt-5">Free to play</small>

@@ -9,9 +9,9 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.changeState = function (req, res) {
-        Account.findOneAndUpdate({username: req.cookies.username}, { state: req.body.state, lastOnline: new Date().toLocaleString()}, { new: true})
+        Account.findOneAndUpdate({username: req.cookies.username}, { state: req.body.state, lastOnline: new Date().toLocaleString()})
             .then(acc => {
-                io.emit('friendStateChanged', acc)
+                io.emit('friendStateChanged', acc, req.body)
                 res.json(acc)
             })
             .catch(err => res.send(err))
@@ -153,9 +153,9 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.updateMyAccount = function (req, res) {
-        Account.findOneAndUpdate({username: req.cookies.username}, req.body, {new: true})
+        Account.findOneAndUpdate({username: req.cookies.username}, req.body)
             .then(acc => {
-                io.emit('friendStateChanged', acc)
+                io.emit('friendStateChanged', acc, req.body)
                 res.json(acc)
             })
             .catch(err => res.send(err))

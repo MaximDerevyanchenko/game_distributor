@@ -1,4 +1,5 @@
 const Profile = {
+    //TODO Rivedere la library
     props: ['username'],
     data: function() {
         return {
@@ -93,10 +94,10 @@ const Profile = {
                 </ul>
                 <div v-if="!isEditOn" class="tab-content border rounded bg-secondary p-3" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="library" role="tabpanel">
-                        <library></library>
+                        <library :username="username"></library>
                     </div>
                     <div class="tab-pane fade" id="friends" role="tabpanel">
-                        <friends></friends>
+                        <friends :username="username"></friends>
                     </div>
                     <div class="tab-pane fade" id="wishlist" role="tabpanel">
                         <wishlist :username="username" size="2"></wishlist>
@@ -170,6 +171,7 @@ const Profile = {
         this.logged = this.$checkLogin()
         this.$on('log-event', () => {
             this.logged = this.$checkLogin()
+            this.$children.forEach(ch => ch.$emit('log-event'))
         })
         this.getAccount()
         this.getCountries()

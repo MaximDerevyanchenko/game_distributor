@@ -39,7 +39,7 @@ const Search = {
                     .catch(error => console.log(error))
             else
                 axios.get("http://localhost:3000/api/game/" + this.name + "/count")
-                    .then(response => {this.pageCount = Math.floor(response.data / 10) + 1; console.log(this.pageCount)})
+                    .then(response => this.pageCount = Math.floor(response.data / 10) + 1)
                     .catch(error => console.log(error))
         },
         searchGame: function () {

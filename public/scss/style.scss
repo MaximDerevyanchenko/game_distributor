@@ -36,14 +36,14 @@ textarea {
   height: 5rem;
 }
 
-#lib, #fr, #wish {
-  color: white;
-  background-color: $primary;
+.nav-link:not(#store) {
+  color: white !important;
+  background-color: $primary !important;
 }
 
-#lib.active, #fr.active, #wish.active {
-  color: $primary;
-  background-color: white;
+.nav-link.active:not(#store) {
+  color: $primary !important;
+  background-color: white !important;
 }
 
 #backgroundImg {
@@ -51,4 +51,8 @@ textarea {
   background-repeat: no-repeat;
   background-size: 100%;
   filter: blur(3px);
+}
+
+.toast {
+  z-index: 2000;
 }

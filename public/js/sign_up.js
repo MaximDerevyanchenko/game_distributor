@@ -13,7 +13,7 @@ const SignUp = {
                 'backgroundImg': "",
                 'bio': "",
                 'name': "",
-                'country': "",
+                'countryName': "Italy",
                 'lastOnline': null
             },
             typePassword: "password",

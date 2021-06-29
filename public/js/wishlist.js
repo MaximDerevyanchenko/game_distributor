@@ -6,6 +6,11 @@ const Wishlist = {
             gameToRemove: { }
         }
     },
+    watch: {
+        $route: function (to, from){
+            this.getWishlist()
+        }
+    },
     template: `
     <div class="m-4 bg-gradient p-5">
         <h4 class="text-center">Wishlist</h4>
