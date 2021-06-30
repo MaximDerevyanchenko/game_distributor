@@ -4,7 +4,8 @@ module.exports = function (mongoose, io) {
     const axios = require('axios')
 
     module.exports.addToWishlist = function (req, res) {
-        GameWishlist.create({username: req.cookies.username, gameId: req.body.steam_appid})
+        const gameId = req.body.isLocal ? req.body.gameId : req.body.steam_appid
+        GameWishlist.create({username: req.cookies.username, gameId: gameId})
             .then(gameCart => res.status(201).json(gameCart))
             .catch(err => res.send(err))
     }
@@ -15,14 +16,20 @@ module.exports = function (mongoose, io) {
                 const promises = []
                 games.forEach(game =>
                     promises.push(
-                        axios.get("https://store.steampowered.com/api/appdetails?appids=" + game.gameId)
-                            .then(response => {
-                                if (response.data[game.gameId].success)
-                                    return response.data[game.gameId].data
+                        GameSchema.findOne({ gameId: game.gameId })
+                            .then(g => {
+                                if (!g.isLocal)
+                                    axios.get("https://store.steampowered.com/api/appdetails?appids=" + game.gameId)
+                                        .then(response => {
+                                            if (response.data[game.gameId].success)
+                                                return response.data[game.gameId].data
+                                            else
+                                                return 204
+                                        })
                                 else
-                                    return 204
+                                    return g
                             })
-                            .catch(err => res.send(err))))
+                           .catch(err => res.send(err))))
                 Promise.all(promises)
                     .then(games => res.json(games))
                     .catch(err => res.send(err))

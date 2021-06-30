@@ -13,7 +13,11 @@ module.exports = function(mongoose) {
             final_formatted: String,
             discount_percent: Number
         },
-        header_image: String
+        header_image: String,
+        release_date: {
+            coming_soon: Boolean,
+            date: String
+        }
     })
     return mongoose.model('GameSchema', GameSchema, 'games')
 }

@@ -142,10 +142,12 @@ const Dev = {
             form.append('isLocal', true.toString())
             form.append('is_free', this.game.is_free)
             if (!this.game.is_free) {
-                form.append('price_overview.final', this.game.price_overview.final)
+                form.append('price_overview.final', this.game.price_overview.final * 100)
                 form.append('price_overview.final_formatted', new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2}).format(this.game.price_overview.final))
                 form.append('price_overview.discount_percent', 0)
             }
+            form.append('release_date.coming_soon', false.toString())
+            form.append('release_date.date', new Date().toLocaleDateString('en-GB', {day: "numeric", month: 'short', year: 'numeric'}))
             return form
         }
     },
