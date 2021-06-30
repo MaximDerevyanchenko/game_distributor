@@ -21,7 +21,7 @@ module.exports = function (mongoose, io) {
 
     module.exports.buyForFriend = function (req, res) {
         GameLibrary.create(req.body)
-            .then(_ => GameWishlist.deleteOne({username: req.body.username, gameId: req.body.gameId})
+            .then(_ => GameWishlist.deleteOne({ username: req.body.username, gameId: req.body.gameId })
                 .then(_ => {
                     io.emit('gameGifted')
                     res.status(201).json()

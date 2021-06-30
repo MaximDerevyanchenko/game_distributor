@@ -3,7 +3,8 @@ const Wishlist = {
     data() {
         return {
             games: [],
-            gameToRemove: { }
+            gameToRemove: { },
+            gameToGift: { }
         }
     },
     watch: {
@@ -24,12 +25,17 @@ const Wishlist = {
                         <small class="card-text text-muted">Price: {{ game.price_overview.final_formatted }}</small>
                     </div>
                      <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
-                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
-                        <button class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
+                        <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
+                        <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
+                        <button v-else class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
                      </div>
                 </div>
             </div>
         </div>
+        <div v-else class="mt-3 text-center">
+            <p>The wishlist is empty!</p>
+        </div>
+        
         <div id="confirmRemove" class="modal fade" tabindex="-1" aria-labelledby="confirmRemove" aria-hidden="true">
             <div class="modal-dialog border border-light border-3 rounded rounded-3 modal-sm">
                 <div class="modal-content bg-secondary text-white">
@@ -43,6 +49,24 @@ const Wishlist = {
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
                         <button type="button" class="btn btn-outline-light" @click="remove">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+         <div id="confirmGift" class="modal fade" tabindex="-1" aria-labelledby="confirmGift" aria-hidden="true">
+            <div class="modal-dialog border border-light border-3 rounded rounded-3">
+                <div class="modal-content bg-secondary text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm gift</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure to gift <em>{{gameToGift.name}}</em> to {{ username }}?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-outline-light" @click="giftGame">Yes</button>
                     </div>
                 </div>
             </div>
@@ -70,8 +94,9 @@ const Wishlist = {
                 .then(() => this.$router.push({ name: 'Cart' }))
                 .catch(error => console.log(error))
         },
-        giveTo: function (index) {
-            axios.post("http://localhost:3000/api/account/library/gift", { username: this.$props.username, gameId: this.games[index].gameId })
+        giftGame: function () {
+            axios.post("http://localhost:3000/api/account/library/gift", { username: this.$props.username, gameId: this.gameToGift.steam_appid, timePlayed: 0, name: this.gameToGift.name })
+                .then(() => bootstrap.Modal.getInstance(document.querySelector('#confirmGift')).hide())
                 .catch(error => console.log(error))
         },
         goToGame: function (index) {

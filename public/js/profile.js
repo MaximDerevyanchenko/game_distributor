@@ -114,7 +114,7 @@ const Profile = {
     },
     methods: {
         getAccount: function () {
-            axios.get('http://localhost:3000/api/account/' + this.username)
+            axios.get('http://localhost:3000/api/account/' + this.$props.username)
                 .then(res => {
                     this.account = res.data
                     this.oldBio = this.account.bio

@@ -13,14 +13,14 @@ const Library = {
     },
     template: `
         <div>
-            <p>Library</p>
+            <p class="text-center">Library</p>
             <div class="d-flex w-75 justify-content-center">
                 <ul class="nav nav-pills flex-column w-25 me-auto" role="tablist">
                     <li class="nav-item" role="presentation" v-for="(game, index) in games">
                         <button @click="getFriendsWithGame(game.steam_appid)" role="tab" class="nav-link w-100" data-bs-toggle="pill" :data-bs-target="'#g' + game.steam_appid">{{ game.name }}</button>
                     </li>
                 </ul>
-                <div ref="tab_content" class="tab-content border bg-secondary p-2 w-75">
+                <div ref="tab_content" class="tab-content bg-secondary p-2 w-75" :class="games.length > 0 ? 'border' : ''">
                     <div v-for="game in games" class="tab-pane fade card bg-primary" role="tabpanel" :id="'g' + game.steam_appid">
                         <img :src="game.header_image" alt="game.name" class="w-100">
                         <div class="p-3">
@@ -78,8 +78,10 @@ const Library = {
                             .catch(err => console.log(err)))
                     })
                     Promise.all(promises).then(games => {
-                        document.querySelector('button[data-bs-target="#g' + games[0].steam_appid + '"]').classList.add('active')
-                        document.querySelector('#g' + games[0].steam_appid).classList.add('active', 'show')
+                        if (games.length > 0) {
+                            document.querySelector('button[data-bs-target="#g' + games[0].steam_appid + '"]').classList.add('active')
+                            document.querySelector('#g' + games[0].steam_appid).classList.add('active', 'show')
+                        }
                     })
                 })
                 .catch(err => console.log(err))
@@ -148,6 +150,9 @@ const Library = {
                     this.friendsInGame = this.friendsInGame.filter(f => f.username !== user.username)
                 }
             }
+        },
+        gameGifted: function () {
+            this.getLibrary()
         }
     },
     mounted() {

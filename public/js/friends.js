@@ -13,7 +13,7 @@ const Friends = {
     },
     template: `
     <div class="mt-4">
-        <form class="d-flex justify-content-around">
+        <form v-if="username == Vue.$cookies.get('username')" class="d-flex justify-content-around">
             <div class="row col-3">
                 <div class="col">
                     <div class="form-floating">
@@ -27,6 +27,7 @@ const Friends = {
             </div>
         </form>
         <h3 v-if="friends.length !== 0">Your friends</h3>
+        <h3 v-else class="text-center">{{ username }} doesn't have friends yet.</h3>
         <h4 v-if="onlineFriends.length !== 0">Online</h4>
         <div class="card bg-dark text-white border-secondary p-3" v-for="friend in onlineFriends" role="button">
             <div class="row g-0">
@@ -34,7 +35,7 @@ const Friends = {
                     <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
                 </div>
                 <div class="card-body col-9">
-                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.nickname"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
+                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
                     <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                     <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
                     <button class="btn btn-outline-danger" @click="removeFriend(friend.username)">Remove Friend</button>
@@ -48,10 +49,10 @@ const Friends = {
                     <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
                 </div>
                 <div class="card-body col-9">
-                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.nickname"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
+                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
                     <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                     <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
+                    <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
                 </div>
             </div>
         </div>

@@ -141,7 +141,7 @@ const Cart = {
                 game.username = this.$cookies.get('username')
             })
             axios.post("http://localhost:3000/api/account/library", this.games)
-                .then(() => this.$router.push({ name: 'Library'}))
+                .then(() => this.$router.push({ name: 'Library', params: { username: Vue.$cookies.get('username')}}))
                 .catch(err => console.log(err))
             bootstrap.Modal.getInstance(document.querySelector('#confirmPurchaseAll')).hide()
         },
@@ -152,7 +152,7 @@ const Cart = {
                 name: this.gameToBuy.name,
                 gameId: this.gameToBuy.steam_appid
             })
-                .then(() => this.$router.push({ name: 'Library'}))
+                .then(() => this.$router.push({ name: 'Library', params: { username: Vue.$cookies.get('username')}}))
                 .catch(err => console.log(err))
             bootstrap.Modal.getInstance(document.querySelector('#confirmPurchase')).hide()
         },

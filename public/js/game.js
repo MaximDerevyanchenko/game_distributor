@@ -234,7 +234,7 @@ const Game = {
                 timePlayed: 0
             }]
             axios.post("http://localhost:3000/api/account/library", gameToAdd)
-                .then(_ => this.$router.push({ name: 'Library' }))
+                .then(_ => this.$router.push({ name: 'Library', params: { username: Vue.$cookies.get('username')}}))
                 .catch(err => console.log(err))
         }
     },
