@@ -17,7 +17,7 @@ const Game = {
             <div class="w-75">
                 <div class="d-flex">
                     <p class="me-auto w-75">{{ game.short_description }}</p>
-                    <div class="card bg-primary border-0 mb-3 ms-2 w-25 align-self-start">
+                    <div v-if="game.genres" class="card bg-primary border-0 mb-3 ms-2 w-25 align-self-start">
                         <div class="card-body p-0">
                             <p class="card-title">Genres</p>
                             <div class="card-text">
@@ -108,8 +108,8 @@ const Game = {
                         <p v-html="game.about_the_game"></p>
                         <p v-if="game.about_the_game != game.detailed_description" v-html="game.detailed_description"></p>
                         
-                        <h4>System Requirements</h4>
-                        <ul class="nav nav-pills" role="tablist">
+                        <h4 v-if="game.platforms">System Requirements</h4>
+                        <ul v-if="game.platforms" class="nav nav-pills" role="tablist">
                             <li v-if="game.platforms && game.platforms.windows" class="nav-item" role="presentation">
                                 <button class="nav-link active" id="windows-tab" data-bs-toggle="tab" data-bs-target="#windows" type="button" role="tab" aria-controls="windows" aria-selected="true">Windows</button>
                             </li>
@@ -141,17 +141,17 @@ const Game = {
                             </div>
                         </div>
                         
-                        <div class="mt-3">
+                        <div v-if="game.legal_notice" class="mt-3">
                             <h5>Legal notice</h5>
                             <p class="" v-html="game.legal_notice"></p>
                         </div>
                     </div>
                     <div class="border border-end-0 border-top-0 border-bottom-0 w-25 bg-primary">
-                        <a v-if="game.website" :href="game.website" style="button" class="btn btn-outline-light w-100">Game site</a>
-                        <div class="card bg-primary border-0">
+                        <a v-if="game.website" :href="game.website" class="btn btn-outline-light w-100">Game site</a>
+                        <div v-if="game.platforms" class="card bg-primary border-0">
                             <div class="card-body ps-0">
                                 <h5 class="card-title">Supported OS</h5>
-                                <div v-if="game.platforms" class="col card-text w-75">
+                                <div  class="col card-text w-75">
                                     <div class="d-flex text-light justify-content-between">Windows<i class="fas" :class="game.platforms.windows ? 'fa-check text-success' : 'fa-times text-danger'"></i></div>
                                     <div class="d-flex text-light justify-content-between">MAC<i class="fas" :class="game.platforms.mac ? 'fa-check text-success' : 'fa-times text-danger'"></i></div>
                                     <div class="d-flex text-light justify-content-between">Linux<i class="fas" :class="game.platforms.linux ? 'fa-check text-success' : 'fa-times text-danger'"></i></div>
@@ -189,7 +189,6 @@ const Game = {
             axios.get("http://localhost:3000/api/game/" + this.$props.gameId)
                 .then(response => {
                     this.game = response.data
-                    //TODO DEVELOP ELSE
                     if (!this.game.isLocal)
                         axios.get("http://localhost:3000/api/steam_game/" + this.game.gameId)
                             .then(response => {

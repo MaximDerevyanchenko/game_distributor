@@ -1,5 +1,4 @@
 const Profile = {
-    //TODO Rivedere la library
     props: ['username'],
     data: function() {
         return {

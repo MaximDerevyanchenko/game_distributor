@@ -16,6 +16,7 @@ textarea {
   width: 20px;
 }
 
+//TODO aggiungere immagine
 .carousel-item {
   background-image: url("../img/background.jpg");
 }
@@ -53,6 +54,6 @@ textarea {
   filter: blur(3px);
 }
 
-.toast {
-  z-index: 2000;
+.toast-container {
+  z-index: 5000;
 }

@@ -150,7 +150,6 @@ const Friends = {
         }
     },
     sockets: {
-        // TODO non richiamare i metodi ma aggiungere parametri
         friendAccept: function () {
             this.getFriends()
             this.getPendingRequests()
