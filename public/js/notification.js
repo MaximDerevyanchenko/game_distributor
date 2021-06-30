@@ -6,6 +6,7 @@ const Notification = {
             game: {},
             text: '',
             friendRequest: 'Sent you a friend request',
+            friendAccepted: 'Accepted your friend request',
             online: 'Is now online',
             inGame: 'Is now playing ',
             gifted: 'Gifted you ',
@@ -106,6 +107,9 @@ const Notification = {
             toast += '<div class="toast-body">' +
                 '                    ' + this.text
 
+            if (this.game.gameId !== undefined)
+                toast += ' ' + this.game.name
+
             toast += '' +
                 '</div>' +
                 '</div>'
@@ -142,6 +146,18 @@ const Notification = {
                 this.addToast()
             }
         },
+        friendAccept: function (acceptDetails) {
+            const acceptedBy = acceptDetails[0]
+            const friend = acceptDetails[1]
+            if (this.$cookies.get('username') === friend.username) {
+                this.game = {}
+                this.user = {}
+                this.getUser(acceptedBy)
+                this.text = this.friendAccepted
+
+                this.addToast()
+            }
+        },
         gameGifted: function (giftDetails) {
             const giftedBy = giftDetails[0]
             const game = giftDetails[1]
@@ -151,6 +167,18 @@ const Notification = {
                 this.getGame(game.gameId)
                 this.getUser(giftedBy)
                 this.text = this.gifted
+
+                this.addToast()
+            }
+        },
+        gameBought: function (purchaseData) {
+            const user = purchaseData[0]
+            const game = purchaseData[1]
+            if (this.$cookies.get('username') === game.developer){
+                this.game = game
+                this.user = {}
+                this.getUser(user)
+                this.text = this.bought
 
                 this.addToast()
             }

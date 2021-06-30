@@ -136,6 +136,7 @@ const Cart = {
         },
         buyAll: function (){
             this.games.forEach(game => {
+                game.startedAt = 0
                 game.timePlayed = 0
                 game.gameId = game.steam_appid
                 game.username = this.$cookies.get('username')
@@ -148,6 +149,7 @@ const Cart = {
         buy: function (){
             axios.post("http://localhost:3000/api/account/library", {
                 username: this.$cookies.get('username'),
+                startedAt: 0,
                 timePlayed: 0,
                 name: this.gameToBuy.name,
                 gameId: this.gameToBuy.steam_appid

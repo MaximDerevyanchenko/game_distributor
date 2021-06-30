@@ -7,15 +7,15 @@ const Navbar = {
     },
     template: `
     <nav class="navbar navbar-expand-lg navbar-dark border border-2 rounded-pill border-light bg-secondary p-2 mt-3">
-        <div class="container-fluid">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <div class="container-fluid justify-content-between">
+            <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
                     <router-link class="nav-link active" id="store" to="/store">Store</router-link>
                 </li>
             </ul>
             <form class="d-flex">
                 <input class="form-control me-2 bg-primary text-white" type="search" placeholder="Type..." aria-label="Search" v-model="name"/>
-                <button class="btn btn-outline-light me-5" type="submit" @click.prevent="searchGame">Search</button>
+                <button class="btn btn-outline-light" type="submit" @click.prevent="searchGame">Search</button>
             </form>
             <button class="btn btn-outline-light" v-if="!logged" data-bs-toggle="modal" data-bs-target="#login"><i class="fas fa-user-circle me-2"></i>Account</button>
             <div v-else class="btn-group">

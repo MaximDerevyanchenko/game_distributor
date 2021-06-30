@@ -8,13 +8,14 @@ const Friends = {
             friendToAdd: "",
             friendRequests: [],
             pendingRequests: [],
-            friendToRemove: { }
+            friendToRemove: { },
+            logged: false
         }
     },
     template: `
     <div class="mt-4">
-        <form v-if="username == Vue.$cookies.get('username')" class="d-flex justify-content-around">
-            <div class="row col-3">
+        <form v-if="logged && username == Vue.$cookies.get('username')" class="d-flex justify-content-around">
+            <div class="row col-5">
                 <div class="col">
                     <div class="form-floating">
                         <input id="friend" class="form-control bg-secondary text-white" placeholder="friend" v-model="friendToAdd" required type="text"/>
@@ -22,7 +23,7 @@ const Friends = {
                     </div>
                 </div>
                 <div class="w-auto align-self-center">
-                    <button class="btn btn-outline-light" @click="addFriend">Add Friend<i class="fas fa-user-plus ms-2"></i></button>
+                    <button class="btn btn-outline-light" @click.prevent="addFriend">Add Friend<i class="fas fa-user-plus ms-2"></i></button>
                 </div>
             </div>
         </form>
@@ -38,7 +39,7 @@ const Friends = {
                     <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
                     <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                     <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                    <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
+                    <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
                 </div>
             </div>
         </div>
@@ -52,16 +53,16 @@ const Friends = {
                     <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
                     <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                     <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                    <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
+                    <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
                 </div>
             </div>
         </div>
-        <h4 v-if="friendRequests.length !== 0">Friend Requests</h4>
+        <h4 v-if="logged && friendRequests.length !== 0">Friend Requests</h4>
         <div v-for="friendRequest in friendRequests">
             <h2>{{ friendRequest.nickname }}</h2>
             <button @click="acceptFriend(friendRequest.username)">Accept Friend</button>
         </div>
-        <h4 v-if="pendingRequests.length !== 0">Pending Requests</h4>
+        <h4 v-if="logged && pendingRequests.length !== 0">Pending Requests</h4>
         <div v-for="pendingRequest in pendingRequests">
             <h2>{{ pendingRequest.nickname }}</h2>
         </div>
@@ -163,7 +164,7 @@ const Friends = {
         friendStateChanged: function (change){
             const friend = change[0]
             const body = change[1]
-            if (this.$cookies.isKey('username') && friend.username !== this.$cookies.get('username') && this.friends.includes(friend.username)) {
+            if (this.$cookies.isKey('username') && this.friends.map(f => f.username).includes(friend.username)) {
                 friend.state = body.state
                 friend.inGame = body.inGame
                 const index = this.friends.indexOf(this.friends.filter(v => v.username === friend.username)[0])
@@ -179,11 +180,15 @@ const Friends = {
         }
     },
     mounted(){
+        this.logged = this.$checkLogin()
         this.getFriends()
         this.getFriendRequests()
         this.getPendingRequests()
         this.$on('log-event', () => {
-
+            this.logged = this.$checkLogin()
+            this.getFriends()
+            this.getFriendRequests()
+            this.getPendingRequests()
         })
     }
 }

@@ -172,6 +172,7 @@ const Profile = {
         this.$on('log-event', () => {
             this.logged = this.$checkLogin()
             this.$children.forEach(ch => ch.$emit('log-event'))
+            this.getAccount()
         })
         this.getAccount()
         this.getCountries()

@@ -6,13 +6,12 @@ const Library = {
             games: [],
             friends: [],
             friendsInGame: [],
-            gameStarted: -1,
             gamePlaying: "",
             logged: false
         }
     },
     template: `
-        <div>
+        <div class="mt-2">
             <p class="text-center">Library</p>
             <div class="d-flex w-75 justify-content-center">
                 <ul class="nav nav-pills flex-column w-25 me-auto" role="tablist">
@@ -88,12 +87,14 @@ const Library = {
         },
         startGame: function (gameId){
             if (this.gamePlaying === '') {
-                this.gameStarted = Date.now()
+                axios.post('http://localhost:3000/api/' + this.$props.username + '/game/' + gameId + '/started', { started: Date.now() })
+                    .then(_ => {})
+                    .catch(err => console.log(err))
                 axios.post("http://localhost:3000/api/account", {state: "in game", inGame: gameId})
                     .then(() => {
                         this.gamePlaying = gameId
                         window.addEventListener('beforeunload', _ => {
-                            axios.post('http://localhost:3000/api/' + this.$props.username + '/game/' + this.gamePlaying + '/closed', { started: this.gameStarted } )
+                            axios.post('http://localhost:3000/api/' + this.$props.username + '/game/' + this.gamePlaying + '/closed')
                                 .then(_ => {})
                                 .catch(err => console.log(err))
                         })
@@ -102,7 +103,7 @@ const Library = {
             }
         },
         stopGame: function (){
-            axios.post('http://localhost:3000/api/' + this.$props.username + '/game/' + this.gamePlaying + '/closed', { started: this.gameStarted } )
+            axios.post('http://localhost:3000/api/' + this.$props.username + '/game/' + this.gamePlaying + '/closed')
                 .then(_ => {})
                 .catch(err => console.log(err))
 

@@ -145,7 +145,7 @@ module.exports = function (mongoose, io) {
                     $pull: {pendingRequests: req.cookies.username}
                 })
                     .then(friend => {
-                        io.emit('friendAccept')
+                        io.emit('friendAccept', req.cookies.username, friend)
                         res.json(friend)
                     })
                     .catch(err => res.send(err)))

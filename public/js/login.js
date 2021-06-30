@@ -115,6 +115,7 @@ const Login = {
         modal.addEventListener('hidden.bs.modal', () => {
             this.$refs.form.reset()
             this.resetForm()
+            this.account = {}
         })
     }
 }

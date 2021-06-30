@@ -6,6 +6,11 @@ const Games = {
             currentActive: 0
         }
     },
+    watch: {
+        $route: function (to, from){
+            this.getGames()
+        }
+    },
     template: `
         <div class="bg-primary">
             <div id="progress" class="d-flex justify-content-center align-items-center text-white mt-5">

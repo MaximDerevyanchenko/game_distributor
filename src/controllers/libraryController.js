@@ -1,5 +1,6 @@
 module.exports = function (mongoose, io) {
     const GameLibrary = require('../models/gameLibraryModel')(mongoose)
+    const GameSchema = mongoose.model('GameSchema')
     const GameCart = mongoose.model('GameCart')
     const GameWishlist = mongoose.model('GameWishlist')
     const Accounts = mongoose.model('AccountSchema')
@@ -8,7 +9,16 @@ module.exports = function (mongoose, io) {
     module.exports.addToLibrary = function (req, res) {
         GameLibrary.insertMany(req.body)
             .then(games => GameCart.deleteMany({username: req.cookies.username, gameId: { $in: games.map(g => g.gameId) }})
-                .then(_ => res.status(201).json())
+                .then(_ => {
+                    res.status(201).json()
+                    games.forEach(game => {
+                        if (game.isLocal) {
+                            GameSchema.find({ gameId: game.gameId })
+                                .then(response => io.emit('gameBought', req.cookies.username, response))
+                                .catch(error => res.send(error))
+                        }
+                    })
+                })
                 .catch(err => res.send(err)))
             .catch(err => res.send(err))
     }
@@ -47,11 +57,17 @@ module.exports = function (mongoose, io) {
 
     }
 
+    module.exports.startGame = function (req, res) {
+        GameLibrary.findOneAndUpdate({ username: req.params.username, gameId: req.params.gameId }, { startedAt: req.body.started })
+                .then(_ => res.sendStatus(200))
+                .catch(err => console.log(err))
+    }
+
     module.exports.closedGame = function (req, res) {
         GameLibrary.findOne({ username: req.params.username, gameId: req.params.gameId })
             .then(userGame => {
                 let totalTimePlayed = userGame.timePlayed
-                const timePlayed = Date.now() - req.body.started
+                const timePlayed = Date.now() - userGame.startedAt
                 totalTimePlayed = totalTimePlayed + Math.floor((timePlayed / millisToMins))
                 GameLibrary.findOneAndUpdate({ username: req.params.username, gameId: req.params.gameId }, { timePlayed: totalTimePlayed })
                     .then(_ => res.sendStatus(200))
