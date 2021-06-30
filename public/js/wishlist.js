@@ -14,26 +14,32 @@ const Wishlist = {
     },
     template: `
     <div class="m-4 bg-gradient p-5">
-        <h4 class="text-center">Wishlist</h4>
-        <div v-if="games.length !== 0" :class="'row row-cols-' + size + ' g-4 mb-2'">
-            <div class="col" v-for="(game,index) in games">
-                <div class="card h-100 m-4">
-                    <img :src="game.header_image" :alt="game.name" class="card-img-top" @click="goToGame(index)" role="button"/>
-                    <div class="card-body bg-secondary text-white text-center" @click="goToGame(index)" role="button">
-                        <h5 class="card-title mt-2 mb-4">{{game.name}}</h5>
-                        <p class="card-text">{{game.short_description | escape }}</p>
-                        <small class="card-text text-muted">Price: {{ game.price_overview.final_formatted }}</small>
+        <div id="spinner" class="d-flex justify-content-center align-items-center">
+            <strong>Loading... </strong>
+            <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
+        </div>
+        <div id="wishlistComp" class="d-none">
+            <h4 class="text-center">Wishlist</h4>
+            <div v-if="games.length !== 0" :class="'row row-cols-' + size + ' g-4 mb-2'">
+                <div class="col" v-for="(game,index) in games">
+                    <div class="card h-100 m-4">
+                        <img :src="game.header_image" :alt="game.name" class="card-img-top" @click="goToGame(index)" role="button"/>
+                        <div class="card-body bg-secondary text-white text-center" @click="goToGame(index)" role="button">
+                            <h5 class="card-title mt-2 mb-4">{{game.name}}</h5>
+                            <p class="card-text">{{game.short_description | escape }}</p>
+                            <small class="card-text text-muted">Price: {{ game.price_overview.final_formatted }}</small>
+                        </div>
+                         <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
+                            <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
+                            <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
+                            <button v-else class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
+                         </div>
                     </div>
-                     <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
-                        <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
-                        <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
-                        <button v-else class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
-                     </div>
                 </div>
             </div>
-        </div>
-        <div v-else class="mt-3 text-center">
-            <p>The wishlist is empty!</p>
+            <div v-else class="mt-3 text-center">
+                <p>The wishlist is empty!</p>
+            </div>
         </div>
         
         <div id="confirmRemove" class="modal fade" tabindex="-1" aria-labelledby="confirmRemove" aria-hidden="true">
@@ -78,6 +84,8 @@ const Wishlist = {
             axios.get("http://localhost:3000/api/account/wishlist/" + this.$props.username)
                 .then(response => {
                     this.games = response.data
+                    document.querySelector('#spinner').classList.add('d-none')
+                    document.querySelector('#wishlistComp').classList.remove('d-none')
                 })
                 .catch(error => console.log(error))
         },
