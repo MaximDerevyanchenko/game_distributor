@@ -32,9 +32,15 @@ const Game = {
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <div class="carousel-indicators">
+                        <button v-if="game.isLocal" ref="indicators" type="button" class="active" aria-current="true" data-bs-target="#carousel" data-bs-slide-to="0" aria-label="0"></button>
                         <button v-for="(screenshot, index) in game.screenshots" ref="indicators" type="button" :class="index == 0 ? 'active' : ''" :aria-current="index == 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="index"></button>
                     </div>
                     <div class="carousel-inner mx-auto">
+                        <div class="carousel-item" data-bs-interval="3000" v-if="game.isLocal" ref="items" class="active">
+                            <div class="d-flex justify-content-center">
+                                <img :src="'../../static/img/' + game.gameId + '/' + game.header_image" class="w-75" alt="Game screenshot" />
+                            </div>
+                        </div>
                         <div class="carousel-item" data-bs-interval="3000" v-for="(screenshot, index) in game.screenshots" ref="items" :class="index == 0 ? 'active' : ''">
                             <div class="d-flex justify-content-center">
                                 <img :src="screenshot.path_thumbnail" class="w-75" alt="Game screenshot" />

@@ -1,9 +1,11 @@
 module.exports = function (mongoose, io) {
     const GameCart = require('../models/gameCartModel')(mongoose)
+    const GameSchema = mongoose.model('GameSchema')
     const axios = require('axios')
 
     module.exports.addToCart = function (req, res) {
-        GameCart.create({username: req.cookies.username, gameId: req.body.steam_appid})
+        const gameId = req.body.isLocal ? req.body.gameId : req.body.steam_appid
+        GameCart.create({username: req.cookies.username, gameId: gameId})
             .then(gameCart => res.status(201).json(gameCart))
             .catch(err => res.send(err))
     }
@@ -12,16 +14,24 @@ module.exports = function (mongoose, io) {
         GameCart.find({username: req.cookies.username})
             .then(games => {
                 const promises = []
-                games.forEach(game =>
+                games.forEach(game => {
                     promises.push(
-                        axios.get("https://store.steampowered.com/api/appdetails?appids=" + game.gameId)
-                            .then(response => {
-                                if (response.data[game.gameId].success)
-                                    return response.data[game.gameId].data
-                                else
-                                    return 204
-                            })
-                            .catch(err => res.send(err))))
+                    GameSchema.findOne({gameId: game.gameId})
+                        .then(g => {
+                            if (!g.isLocal) {
+                                axios.get("https://store.steampowered.com/api/appdetails?appids=" + g.gameId)
+                                    .then(response => {
+                                        if (response.data[g.gameId].success)
+                                            return response.data[g.gameId].data
+                                        else
+                                            return 204
+                                    })
+                                    .catch(err => res.send(err))
+                            } else {
+                                return g
+                            }
+                    }))
+                })
                 Promise.all(promises)
                     .then(games => res.json(games))
                     .catch(err => res.send(err))
