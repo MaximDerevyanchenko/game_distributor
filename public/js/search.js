@@ -20,11 +20,13 @@ const Search = {
             <ul class="pagination">
                 <li class="page-item" :class="page != 1 ? '': 'disabled'"><a class="page-link" @click="setPage(1)">First</a></li>
                 <li class="page-item" :class="page != 1 ? '': 'disabled'"><a class="page-link" v-if="" @click="setPage(page-1)">Previous</a></li>
-                <li class="page-item"><a class="page-link" v-if="page == pageCount" @click="setPage(page-2)">{{page-2}}</a></li>
+                
+                <li class="page-item"><a class="page-link" v-if="page == pageCount && page != 1" @click="setPage(page-2)">{{page-2}}</a></li>
                 <li class="page-item"><a class="page-link" v-if="page != 1" @click="setPage(page-1)">{{page-1}}</a></li>
                 <li class="page-item active"><a class="page-link" @click="setPage(page)">{{page}}</a></li>
                 <li class="page-item"><a class="page-link" v-if="page != pageCount" @click="setPage(page+1)">{{page+1}}</a></li>
-                <li class="page-item"><a class="page-link" v-if="page == 1" @click="setPage(page+2)">{{page+2}}</a></li>
+                <li class="page-item"><a class="page-link" v-if="page == 1 && pageCount >= page + 2" @click="setPage(page+2)">{{page+2}}</a></li>
+                
                 <li class="page-item" :class="page != pageCount ? '': 'disabled'"><a class="page-link" @click="setPage(page+1)">Next</a></li>
                 <li class="page-item" :class="page != pageCount ? '': 'disabled'"><a class="page-link" @click="setPage(pageCount)">Last</a></li>
             </ul>
@@ -57,6 +59,7 @@ const Search = {
         this.countPages()
         this.searchGame()
         this.$on('query-event', name => {
+            this.page = 1
             this.name = name
             this.countPages()
             this.searchGame()

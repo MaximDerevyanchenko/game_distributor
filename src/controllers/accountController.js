@@ -114,7 +114,7 @@ module.exports = function (mongoose, io) {
             .then(() =>
                 Account.findOneAndUpdate({username: req.body.username}, {$addToSet: {friendRequests: [req.cookies.username]}})
                     .then(friend => {
-                        io.emit('friendAdded')
+                        io.emit('friendAdded', req.cookies.username, friend)
                         res.json(friend)
                     })
                     .catch(err => res.send(err)))

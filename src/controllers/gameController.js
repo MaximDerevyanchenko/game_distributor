@@ -14,7 +14,7 @@ module.exports = function (mongoose, io) {
 	}
 
 	module.exports.countPages = function (req, res) {
-		GameSchema.countDocuments({ name: { $regex : req.params.name }})
+		GameSchema.countDocuments({ name: { $regex : req.params.name, $options: 'i' }})
 			.then(response => res.json(response))
 			.catch(error => res.send(error))
 	}
@@ -26,7 +26,7 @@ module.exports = function (mongoose, io) {
 	}
 
 	module.exports.searchGame = function (req, res) {
-		GameSchema.find({ name: { $regex: req.body.name } })
+		GameSchema.find({ name: { $regex: req.body.name, $options: 'i' } })
 			.sort({ name: "asc"})
 			.limit(10)
 			.skip(10 * (req.body.page - 1))

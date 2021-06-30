@@ -37,7 +37,22 @@ const Notification = {
         },
         getUser: function (username){
             axios.get('http://localhost:3000/api/account/' + username)
-                .then(res => this.user = res.data)
+                .then(res => {
+                    this.user = res.data
+                    const nodeList = document.querySelectorAll('.toast-header')
+                    let elem = ""
+                    elem += '<img src="'
+
+                    if (this.user.avatarImg === "")
+                        elem += '../static/img/no-profile-image.png'
+                    else
+                        elem += '../static/img/' + this.user.username + '/' + this.user.avatarImg
+
+                    elem += '" width="20" height="20" class="rounded me-2" alt="' + this.user.nickname + ' avatar">' +
+                        '                    <strong class="me-auto">' + this.user.nickname + '</strong>' +
+                        '                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>'
+                    nodeList.item(nodeList.length - 1).innerHTML = elem
+                })
                 .catch(error => console.log(error))
         },
         getGame: function (gameId){
@@ -59,10 +74,19 @@ const Notification = {
                 })
                 .catch(error => console.log(error))
         },
+        addToast: function () {
+            document.querySelector('.toast-container').insertAdjacentHTML('beforeend', this.buildToast())
+
+            const html = document.querySelector('.toast-container').lastChild
+            html.addEventListener('hidden.bs.toast', () => {
+                html.remove()
+            })
+            new bootstrap.Toast(html).show()
+        },
         buildToast: function () {
             let toast = '<div class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true">\n'
 
-            if (this.user !== undefined) {
+            if (this.user.username !== undefined) {
                 toast += '<div class="toast-header">' +
                     '<img src="'
 
@@ -75,7 +99,9 @@ const Notification = {
                     '                    <strong class="me-auto">' + this.user.nickname + '</strong>' +
                     '                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>' +
                     '                </div>'
-            }
+            } else
+                toast += '<div class="toast-header">' +
+                    '                </div>'
 
             toast += '<div class="toast-body">' +
                 '                    ' + this.text
@@ -101,23 +127,41 @@ const Notification = {
                 } else if (body.state === 'online')
                     this.text = this.online
 
-                document.querySelector('.toast-container').insertAdjacentHTML('beforeend', this.buildToast())
+                this.addToast()
+            }
+        },
+        friendAdded: function (requestDetails) {
+            const sender = requestDetails[0]
+            const friend = requestDetails[1]
+            if (this.$cookies.get('username') === friend.username) {
+                this.game = {}
+                this.user = {}
+                this.getUser(sender)
+                this.text = this.friendRequest
 
-                const html = document.querySelector('.toast-container').lastChild
-                html.addEventListener('hidden.bs.toast', () => {
-                    html.remove()
-                })
-                new bootstrap.Toast(html).show()
+                this.addToast()
+            }
+        },
+        gameGifted: function (giftDetails) {
+            const giftedBy = giftDetails[0]
+            const game = giftDetails[1]
+            if (this.$cookies.get('username') === game.username) {
+                this.game = {}
+                this.user = {}
+                this.getGame(game.gameId)
+                this.getUser(giftedBy)
+                this.text = this.gifted
+
+                this.addToast()
             }
         }
-
     },
     mounted() {
         this.getMyAccount()
     }
-    <!-- Friend request -->
-    <!-- Gift -->
-    <!-- Went Online -->
-    <!-- Started playing -->
+    <!-- Friend request V -->
+    <!-- Gift V -->
+    <!-- Went Online V -->
+    <!-- Started playing V -->
     <!-- Developed game was bought -->
 }

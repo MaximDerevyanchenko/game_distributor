@@ -4,7 +4,8 @@ module.exports = function(mongoose) {
         username: String,
         gameId: Number,
         timePlayed: Number,
-        name: String
+        name: String,
+        giftedBy: String
     });
     return mongoose.model('GameLibrary', GameLibrarySchema, 'library')
 }

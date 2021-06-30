@@ -269,7 +269,7 @@ const SignUp = {
             form.append('name', this.account.name)
             form.append('nickname', this.account.nickname)
             form.append('bio', this.account.bio)
-            form.append('countryCode', this.countries.filter(c => c.name === this.account.countryName)[0])
+            form.append('countryCode', this.countries.filter(c => c.name === this.account.countryName)[0].code)
             form.append('countryName', this.account.countryName)
             form.append('avatarImg', this.account.avatarImg)
             form.append('backgroundImg', this.account.backgroundImg)

@@ -95,7 +95,7 @@ const Wishlist = {
                 .catch(error => console.log(error))
         },
         giftGame: function () {
-            axios.post("http://localhost:3000/api/account/library/gift", { username: this.$props.username, gameId: this.gameToGift.steam_appid, timePlayed: 0, name: this.gameToGift.name })
+            axios.post("http://localhost:3000/api/account/library/gift", { username: this.$props.username, gameId: this.gameToGift.steam_appid, timePlayed: 0, name: this.gameToGift.name, giftedBy: this.$cookies.get('username') })
                 .then(() => bootstrap.Modal.getInstance(document.querySelector('#confirmGift')).hide())
                 .catch(error => console.log(error))
         },

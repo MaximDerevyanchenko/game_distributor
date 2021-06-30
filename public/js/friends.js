@@ -38,7 +38,7 @@ const Friends = {
                     <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
                     <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                     <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                    <button class="btn btn-outline-danger" @click="removeFriend(friend.username)">Remove Friend</button>
+                    <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
                 </div>
             </div>
         </div>
@@ -132,9 +132,11 @@ const Friends = {
                 alert('You cannot add yourself as a friend!')
         },
         removeFriend: function () {
-            bootstrap.Modal.getInstance(document.querySelector('#confirmRemove')).hide()
             axios.delete('http://localhost:3000/api/account/friends/' + this.friendToRemove.username)
-                .then(() => this.friends = this.friends.filter(v => v.username !== this.friendToRemove.username))
+                .then(() => {
+                    this.friends = this.friends.filter(v => v.username !== this.friendToRemove.username)
+                    bootstrap.Modal.getInstance(document.querySelector('#confirmRemove')).hide()
+                })
                 .catch(err => console.log(err))
         },
         acceptFriend: function (username) {
@@ -161,7 +163,7 @@ const Friends = {
         friendStateChanged: function (change){
             const friend = change[0]
             const body = change[1]
-            if (this.$cookies.isKey('username') && friend.username !== this.$cookies.get('username') && this.account.friends.includes(friend.username)) {
+            if (this.$cookies.isKey('username') && friend.username !== this.$cookies.get('username') && this.friends.includes(friend.username)) {
                 friend.state = body.state
                 friend.inGame = body.inGame
                 const index = this.friends.indexOf(this.friends.filter(v => v.username === friend.username)[0])
