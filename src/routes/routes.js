@@ -12,6 +12,7 @@ module.exports = function(app, mongoose, io) {
 	const libraryController = require('../controllers/libraryController')
 	libraryController(mongoose, io)
 
+	//TODO rivedere le rotte
 	app.route('/api/countries')
 		.get(countryController.getCountries)
 
@@ -80,7 +81,7 @@ module.exports = function(app, mongoose, io) {
 		.delete(cartController.deleteFromCart)
 
 	app.route('/api/account/library/')
-		.post(libraryController.addToLibrary)//TODO apportare le modifiche all'utilizzo di addToLibrary (considerando username nel path)
+		.post(libraryController.addToLibrary)
 
 	app.route('/api/account/library/gift')
 		.post(libraryController.buyForFriend)

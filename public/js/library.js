@@ -160,7 +160,6 @@ const Library = {
         this.logged = this.$checkLogin()
         this.getLibrary()
         this.getMyAccount()
-        //TODO crash durante login
         this.$on('log-event', () => {
             this.getMyAccount()
             this.logged = this.$checkLogin()
