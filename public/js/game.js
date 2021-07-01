@@ -1,4 +1,5 @@
 const Game = {
+    // TODO giocatori online
     props: ['gameId'],
     data: function () {
         return {
@@ -190,7 +191,7 @@ const Game = {
                 .then(response => {
                     this.game = response.data
                     //TODO DEVELOP ELSE
-                    if (!this.game.isLocal)
+                    if (this.game !== null && !this.game.isLocal)
                         axios.get("http://localhost:3000/api/steam_game/" + this.game.gameId)
                             .then(response => {
                                 if (response.status === 200) {
@@ -205,9 +206,11 @@ const Game = {
                                         .then(res => this.isInLibrary = res.data.map(val => val.gameId).includes(this.game.steam_appid))
                                         .catch(error => console.log(error))
                                 } else
-                                    console.log("game non trovato")
+                                    this.$router.push({ name: '404' })
                             })
                             .catch(error => console.log(error))
+                    else
+                        this.$router.push({ name: '404' })
                 })
                 .catch(error => console.log(error))
         },

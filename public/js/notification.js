@@ -1,4 +1,5 @@
 const Notification = {
+    // TODO stile notifiche
     data: function() {
         return {
             myAccount: {},

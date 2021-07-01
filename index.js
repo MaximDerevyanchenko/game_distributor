@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
-const cors = require('cors')
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const http = require('http');
@@ -15,7 +14,6 @@ const PORT = 3000;
 
 mongoose.connect('mongodb://localhost/steam', { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true });
 
-app.use(cors())
 app.use(cookieParser())
 app.use(multipart({ }))
 

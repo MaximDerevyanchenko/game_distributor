@@ -1,4 +1,5 @@
 const Friends = {
+    // TODO rimozione di richiesta
     props: ['username'],
     data: function (){
         return {
