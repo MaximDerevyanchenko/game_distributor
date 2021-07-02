@@ -11,7 +11,7 @@ const Library = {
         }
     },
     template: `
-        <div class="mt-2">
+        <div class="mt-3">
             <p class="text-center">Library</p>
             <div class="d-flex w-75 justify-content-center">
                 <ul class="nav nav-pills flex-column w-25 me-auto" role="tablist">

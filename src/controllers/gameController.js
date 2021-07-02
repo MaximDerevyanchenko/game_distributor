@@ -86,7 +86,7 @@ module.exports = function (mongoose, io) {
 	}
 
 	module.exports.create_game = function (req, res) {
-		GameSchema.findOne({ isLocal: true }, {}, { sort: { gameId: "desc"}})
+		GameSchema.findOne({}, {}, { sort: { gameId: "desc"}})
 			.then(lastInserted => {
 				if (lastInserted === null)
 					req.body.gameId = 1
@@ -114,7 +114,7 @@ module.exports = function (mongoose, io) {
 	}
 
 	module.exports.getMyGames = function (req, res) {
-		GameSchema.find({ developer: req.cookies.username })
+		GameSchema.find({ developers: req.cookies.username })
 			.then(games => res.json(games))
 			.catch(err => res.send(err))
 	}

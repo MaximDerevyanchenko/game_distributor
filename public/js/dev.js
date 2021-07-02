@@ -14,24 +14,27 @@ const Dev = {
         }
     },
     template: `
-    <div class="d-flex align-items-start border rounded-pill border-light m-4 p-2">
-        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-            <button class="nav-link active" role="tab" type="button" data-bs-target="#myGames" id="my-games-tab" data-bs-toggle="pill" aria-selected="true" aria-controls="myGames">My games</button>
-        </nav>
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="myGames" role="tabpanel" aria-labelledby="my-games-tab">
-                <div v-if="account.isDeveloper">
-                    <div class="text-center">
-                        <button class="btn btn-outline-light" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game in ...?</button>
+    <div class="border rounded border-light m-4 p-3">
+         <div v-if="account.isDeveloper" class="d-flex flex-column justify-content-center">
+            <h2 class="text-center mb-3">My Games</h2>
+            <div class="text-center">
+                <button class="btn btn-outline-light" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game in ...?</button>
+            </div>
+            <div class="d-flex flex-column bg-secondary m-5">
+                <router-link v-for="game in games" class="p-1 border rounded border-1 text-light" :to="{ name: 'Game', params: { gameId: game.gameId }}">
+                    <div class="d-flex justify-content-between">
+                        <div>{{ game.name }}</div>
+                        <div v-if="game.is_free">Free to play</div>
+                        <div v-else-if="game.price_overview">{{ game.price_overview.final_formatted }}</div>
+                        <div v-else>N/A</div>
                     </div>
-                    <div v-for="games in games">
-                        
-                    </div>
-                </div>
-                <div v-else class="border rounded border-white">
-                    <p class="">You're not yet a developer. Come on, click below and become a developer to add your games into ...!</p>
-                    <button class="btn btn-outline-light" @click="becomeDeveloper">Become a developer</button>
-                </div>
+                </router-link>
+            </div>
+        </div>
+        <div v-else class="d-flex flex-column">
+            <p class="text-center">You're not yet a developer. Come on, click below and become a developer to add your games into ...!</p>
+            <div class="text-center">
+                <button class="btn btn-outline-light" @click="becomeDeveloper">Become a developer</button>
             </div>
         </div>
         
@@ -104,7 +107,7 @@ const Dev = {
         },
         becomeDeveloper: function (){
             axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username'), { isDeveloper: true })
-                .then(() => this.account.isDeveloper = true)
+                .then(() => this.$emit('becameDeveloper'))
                 .catch(err => console.log(err))
         },
         getMyGames: function (){
@@ -154,5 +157,6 @@ const Dev = {
     },
     mounted(){
         this.getAccount()
+        this.$on('becameDeveloper', () => this.account.isDeveloper = true)
     }
 }

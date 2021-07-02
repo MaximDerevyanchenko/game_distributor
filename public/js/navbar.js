@@ -14,12 +14,12 @@ const Navbar = {
                 </li>
             </ul>
             <form class="d-flex">
-                <input class="form-control me-2 bg-primary text-white" type="search" placeholder="Type..." aria-label="Search" v-model="name"/>
+                <input class="form-control me-2 bg-primary text-white col-3" type="search" placeholder="Type..." aria-label="Search" v-model="name"/>
                 <button class="btn btn-outline-light" type="submit" @click.prevent="searchGame">Search</button>
             </form>
             <button class="btn btn-outline-light" v-if="!logged" data-bs-toggle="modal" data-bs-target="#login"><i class="fas fa-user-circle me-2"></i>Account</button>
             <div v-else class="btn-group">
-                <button class="btn btn-outline-light" data-bs-toggle="dropdown"><i class="fas fa-user-circle me-2"></i>Account</button>
+                <button class="btn btn-outline-light" data-bs-toggle="dropdown"><i class="fas fa-user-circle me-2"></i>{{ logged ? Vue.$cookies.get('username') : 'Account'}}</button>
                 <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary">
                     <li><router-link :to="'/profile/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-user me-2"></i>Profile</router-link></li>
                     <li><router-link :to="'/library/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-book-open me-2"></i>Library</router-link></li>
