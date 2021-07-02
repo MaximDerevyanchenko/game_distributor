@@ -47,13 +47,13 @@ const Games = {
                     let promises = []
                     response.data.forEach(game => {
                         if (game.isLocal)
-                            promises.push(axios.get("http://localhost:3000/api/game/" + game.gameId, {
+                            promises.push(axios.get("http://localhost:3000/api/games/" + game.gameId + "/local", {
                                     onDownloadProgress: progressEvent => this.progress = ((this.progress / promises.length) + 1) * 100 / promises.length
                                 })
                                     .then(g => g)
                                     .catch(err => console.log(err)))
                         else
-                            promises.push(axios.get("http://localhost:3000/api/steam_game/" + game.gameId, {
+                            promises.push(axios.get("http://localhost:3000/api/games/" + game.gameId + "/steam", {
                                     onDownloadProgress: progressEvent => this.progress = ((this.progress / promises.length) + 1) * 100 / promises.length
                                 })
                                 .then(g => g)

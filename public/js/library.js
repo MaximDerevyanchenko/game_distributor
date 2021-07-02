@@ -63,12 +63,12 @@ const Library = {
     },
     methods: {
         getLibrary: function () {
-            axios.get("http://localhost:3000/api/account/library/" + this.$props.username)
+            axios.get("http://localhost:3000/api/account/"  + this.$props.username + "/library")
                 .then(response => {
                     const promises = []
                     response.data.forEach((game, index) => {
                         promises.push(
-                        axios.get("http://localhost:3000/api/steam_game/" + game.gameId)
+                        axios.get("http://localhost:3000/api/games/" + game.gameId + "/steam")
                             .then(res => {
                                 res.data.timePlayed = game.timePlayed < 60 ? game.timePlayed + " minutes" : Math.floor(game.timePlayed / 6) / 10 + " hours"
                                 this.games.push(res.data)
@@ -87,14 +87,14 @@ const Library = {
         },
         startGame: function (gameId){
             if (this.gamePlaying === '') {
-                axios.post('http://localhost:3000/api/' + this.$props.username + '/game/' + gameId + '/started', { started: Date.now() })
+                axios.post('http://localhost:3000/api/account/' + this.$props.username + '/library/' + gameId + '/start', { started: Date.now() })
                     .then(_ => {})
                     .catch(err => console.log(err))
-                axios.post("http://localhost:3000/api/account", {state: "in game", inGame: gameId})
+                axios.post("http://localhost:3000/api/account/" + this.$props.username, {state: "in game", inGame: gameId})
                     .then(() => {
                         this.gamePlaying = gameId
                         window.addEventListener('beforeunload', _ => {
-                            axios.post('http://localhost:3000/api/' + this.$props.username + '/game/' + this.gamePlaying + '/closed')
+                            axios.post('http://localhost:3000/api/account/' + this.$props.username + '/library/' + this.gamePlaying + '/close')
                                 .then(_ => {})
                                 .catch(err => console.log(err))
                         })
@@ -107,7 +107,7 @@ const Library = {
                 .then(_ => {})
                 .catch(err => console.log(err))
 
-            axios.post("http://localhost:3000/api/account", { state: "online", inGame: ""})
+            axios.post("http://localhost:3000/api/account/" + this.$props.username, { state: "online", inGame: ""})
                 .then(() => this.gamePlaying = "")
                 .catch(err => console.log(err))
         },
@@ -121,7 +121,7 @@ const Library = {
         },
         getFriendsWithGame: function (gameId) {
             this.$refs['tab_content'].classList.remove("invisible")
-            axios.get('http://localhost:3000/api/' + this.$props.username + '/game/' + gameId + '/friends')
+            axios.get('http://localhost:3000/api/account/' + this.$props.username + '/friends/game/' + gameId)
                 .then(res => {
                     this.friends = []
                     this.friendsInGame = []

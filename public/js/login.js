@@ -50,11 +50,11 @@ const Login = {
     methods: {
         login: function (e) {
             if (this.isValidated(e))
-                axios.post('http://localhost:3000/api/account/login', this.account)
+                axios.post('http://localhost:3000/api/account', this.account)
                     .then(response => {
                         this.$cookies.set("username", response.data.username, 7 * this.day)
                         this.$parent.$emit('log-event')
-                        axios.patch('http://localhost:3000/api/account/state', { state: "online" })
+                        axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/state', { state: "online" })
                             .then(() => {
                                 if (this.$router.currentRoute.path !== ('/profile/' + this.account.username))
                                     this.goToProfile()

@@ -12,10 +12,11 @@ module.exports = function(app, mongoose, io) {
 	const libraryController = require('../controllers/libraryController')
 	libraryController(mongoose, io)
 
-	//TODO rivedere le rotte
+	//Countries
 	app.route('/api/countries')
 		.get(countryController.getCountries)
 
+	//Games
 	app.route('/api/games')
 		.get(gameController.list_games)
 		.post(gameController.searchGame)
@@ -23,95 +24,94 @@ module.exports = function(app, mongoose, io) {
 	app.route('/api/games/count')
 		.get(gameController.countAll)
 
-	app.route('/api/create_game')
+	app.route('/api/games/create')
 		.post(gameController.create_game)
 
-	app.route('/api/game/:name/count')
-		.get(gameController.countPages)
+	app.route('/api/games/:name/count')
+		.get(gameController.countEntries)
 
-	app.route('/api/game/:gameId')
+	app.route('/api/games/:gameId/local')
 		.get(gameController.game_info)
 
-	app.route('/api/steam_game/:gameId')
+	app.route('/api/games/:gameId/local_count')
+		.get(gameController.local_online_players)
+
+	app.route('/api/games/:gameId/steam')
 		.get(gameController.steam_game_info)
 
-	app.route('/api/steam_game/:gameId/players')
+	app.route('/api/games/:gameId/steam_count')
 		.get(gameController.online_players)
 
-	app.route('/api/account/login')
+	//Accounts
+	app.route('/api/account')
 		.post(accountController.login)
 
-	app.route('/api/account')
-		.post(accountController.updateMyAccount)
-		.patch(accountController.becomeDeveloper)
-
-	app.route('/api/account/state')
-		.patch(accountController.changeState)
-
-	app.route('/api/account/signup')
+	app.route('/api/account/create')
 		.post(accountController.signup)
-
-	app.route('/api/account/myGames')
-		.get(gameController.getMyGames)
-
-	app.route('/api/account/cart')
-		.post(cartController.addToCart)
-		.get(cartController.getCart)
-
-	app.route('/api/account/cart/removeAll')
-		.post(cartController.deleteManyFromCart)
-
-	app.route('/api/account/friends')
-		.post(accountController.addFriend)
-
-	app.route('/api/account/friends/:username')
-		.get(accountController.getFriends)
-
-	app.route('/api/account/friends/:friend')
-		.delete(accountController.removeFriend)
-
-	app.route('/api/account/friendRequests')
-		.get(accountController.getFriendRequests)
-		.patch(accountController.acceptFriend)
-
-	app.route('/api/account/friendRequests/:username')
-		.delete(accountController.denyFriend)
-
-	app.route('/api/account/pendingRequests')
-		.get(accountController.getPendingRequests)
-
-	app.route('/api/account/cart/:gameId')
-		.delete(cartController.deleteFromCart)
-
-	app.route('/api/account/library/')
-		.post(libraryController.addToLibrary)
-
-	app.route('/api/account/library/gift')
-		.post(libraryController.buyForFriend)
-
-	app.route('/api/account/library/:username')
-		.get(libraryController.getLibrary)
-
-	app.route('/api/account/wishlist/:gameId')
-		.delete(wishlistController.deleteFromWishlist)
-
-	app.route('/api/account/wishlist')
-		.post(wishlistController.addToWishlist)
-
-	app.route('/api/account/wishlist/:username')
-		.get(wishlistController.getWishlist)
 
 	app.route('/api/account/:username')
 		.get(accountController.getAccount)
+		.post(accountController.updateMyAccount)
+		.patch(accountController.becomeDeveloper)
 
-	app.route('/api/:username/game/:gameId/friends')
+	app.route('/api/account/:username/state')
+		.patch(accountController.changeState)
+
+	app.route('/api/account/:username/developed')
+		.get(gameController.getMyGames)
+
+	//Cart
+	app.route('/api/account/:username/cart')
+		.post(cartController.addToCart)
+		.get(cartController.getCart)
+		.delete(cartController.deleteManyFromCart)
+
+	app.route('/api/account/:username/cart/:gameId')
+		.delete(cartController.deleteFromCart)
+
+	//Friends
+	app.route('/api/account/:username/friends')
+		.post(accountController.addFriend)
+		.get(accountController.getFriends)
+
+	app.route('/api/account/:username/friends/:friend')
+		.delete(accountController.removeFriend)
+
+	app.route('/api/account/:username/friends/game/:gameId')
 		.get(libraryController.getFriendsWithGame)
 
-	app.route('/api/:username/game/:gameId/started')
+	//Friend requests
+	app.route('/api/account/:username/friends/requests')
+		.get(accountController.getFriendRequests)
+		.patch(accountController.acceptFriend)
+
+	app.route('/api/account/:username/friends/requests/:username')
+		.delete(accountController.denyFriend)
+
+	app.route('/api/account/:username/friends/pending')
+		.get(accountController.getPendingRequests)
+
+	//Library
+	app.route('/api/account/:username/library')
+		.get(libraryController.getLibrary)
+		.post(libraryController.addToLibrary)
+
+	app.route('/api/account/:username/library/gift')
+		.post(libraryController.buyForFriend)
+
+	app.route('/api/account/:username/library/:gameId/start')
 		.post(libraryController.startGame)
 
-	app.route('/api/:username/game/:gameId/closed')
+	app.route('/api/account/:username/library/:gameId/close')
 		.post(libraryController.closedGame)
+
+	//Wishlist
+	app.route('/api/account/:username/wishlist')
+		.get(wishlistController.getWishlist)
+		.post(wishlistController.addToWishlist)
+
+	app.route('/api/account/:username/wishlist/:gameId')
+		.delete(wishlistController.deleteFromWishlist)
 
 	app.use(gameController.show_main)
 }

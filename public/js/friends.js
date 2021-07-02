@@ -113,7 +113,7 @@ const Friends = {
     },
     methods: {
         getFriends: function () {
-            axios.get('http://localhost:3000/api/account/friends/' + this.$props.username)
+            axios.get('http://localhost:3000/api/account/' + this.$props.username + '/friends')
                 .then(res => {
                     this.friends = res.data
                     this.onlineFriends = this.friends.filter(f => f.state === 'online' || f.state === 'in game')
@@ -122,14 +122,14 @@ const Friends = {
                 .catch(err => console.log(err))
         },
         getFriendRequests: function (){
-            axios.get("http://localhost:3000/api/account/friendRequests")
+            axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/friends/requests")
                 .then(res => {
                     this.friendRequests = res.data
                 })
                 .catch(err => console.log(err))
         },
         getPendingRequests: function (){
-            axios.get("http://localhost:3000/api/account/pendingRequests")
+            axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/pendingRequests")
                 .then(res => {
                     this.pendingRequests = res.data
                 })
@@ -142,7 +142,7 @@ const Friends = {
                 else if (this.friendRequests.includes({ username: this.friendToAdd }))
                     alert('You already send a friend request to ' + this.friendToAdd)
                 else
-                    axios.post("http://localhost:3000/api/account/friends", { username: this.friendToAdd})
+                    axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/friends", { username: this.friendToAdd})
                         .then(res => {
                             this.friendToAdd = ""
                             if (!this.pendingRequests.map(p => p.username).includes(res.data.username))
@@ -153,7 +153,7 @@ const Friends = {
                 alert('You cannot add yourself as a friend!')
         },
         removeFriend: function () {
-            axios.delete('http://localhost:3000/api/account/friends/' + this.friendToRemove.username)
+            axios.delete('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/friends/' + this.friendToRemove.username)
                 .then(() => {
                     this.friends = this.friends.filter(v => v.username !== this.friendToRemove.username)
                     bootstrap.Modal.getInstance(document.querySelector('#confirmRemove')).hide()
@@ -161,7 +161,7 @@ const Friends = {
                 .catch(err => console.log(err))
         },
         acceptFriend: function (username) {
-            axios.patch('http://localhost:3000/api/account/friendRequests', { username: username })
+            axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/friends/requests', { username: username })
                 .then(res => {
                     this.friendRequests = this.friendRequests.filter(v => v.username !== username)
                     this.friends.push(res.data)
@@ -169,7 +169,7 @@ const Friends = {
                 .catch(err => console.log(err))
         },
         denyFriend: function (username) {
-            axios.delete('http://localhost:3000/api/account/friendRequests/' + username)
+            axios.delete('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/friends/requests/' + username)
                 .then(() => this.friendRequests = this.friendRequests.filter(v => v.username !== username))
                 .catch(err => console.log(err))
         },

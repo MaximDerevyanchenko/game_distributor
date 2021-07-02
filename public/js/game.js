@@ -187,23 +187,26 @@ const Game = {
     methods: {
         getGame: function () {
             this.dlcs = []
-            axios.get("http://localhost:3000/api/game/" + this.$props.gameId)
+            axios.get("http://localhost:3000/api/games/" + this.$props.gameId + "/local")
                 .then(response => {
                     this.game = response.data
+
                     if (this.game == null)
                         this.$router.push({ name: '404' })
+
+                    this.getOnlinePlayers()
+
                     if (!this.game.isLocal)
-                        axios.get("http://localhost:3000/api/steam_game/" + this.game.gameId)
+                        axios.get("http://localhost:3000/api/games/" + this.game.gameId + "/steam")
                             .then(response => {
                                 if (response.status === 200) {
                                     this.game = response.data
-                                    this.getOnlinePlayers()
                                     if (this.game.dlc && this.game.dlc.length > 0)
-                                        this.game.dlc.forEach(dlc => axios.get("http://localhost:3000/api/steam_game/" + dlc)
+                                        this.game.dlc.forEach(dlc => axios.get("http://localhost:3000/api/games/" + dlc + "/steam")
                                             .then(res => this.dlcs.push(res.data))
                                             .catch(error => console.log(error)))
 
-                                    axios.get("http://localhost:3000/api/account/library/" + this.$cookies.get('username'))
+                                    axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library")
                                         .then(res => this.isInLibrary = res.data.map(val => val.gameId).includes(this.game.steam_appid))
                                         .catch(error => console.log(error))
                                 } else
@@ -214,22 +217,29 @@ const Game = {
                 .catch(error => console.log(error))
         },
         getOnlinePlayers: function () {
-            axios.get("http://localhost:3000/api/steam_game/" + this.game.steam_appid + "/players")
-                .then(response => {
-                    if (response.data.hasOwnProperty('player_count'))
-                        this.onlinePlayers = response.data.player_count
-                })
+            this.onlinePlayers = 0
+
+            if (!this.game.isLocal)
+                axios.get('http://localhost:3000/api/games/' + this.game.gameId + '/steam_count')
+                    .then(response => {
+                        if (response.data.hasOwnProperty('player_count'))
+                            this.onlinePlayers = this.onlinePlayers + response.data.player_count
+                    })
+                    .catch(error => console.log(error))
+
+            axios.get('http://localhost:3000/api/games/' + this.game.gameId + '/local_count')
+                .then(response => this.onlinePlayers = this.onlinePlayers + response.data)
                 .catch(error => console.log(error))
         },
         addToCart: function (){
-            axios.post("http://localhost:3000/api/account/cart", this.game)
+            axios.post('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/cart', this.game)
                 .then(() => {
                     this.$router.push({ name: 'Cart' })
                 })
                 .catch(error => console.log(error))
         },
         addToWishlist: function (){
-            axios.post("http://localhost:3000/api/account/wishlist", this.game)
+            axios.post('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/wishlist', this.game)
                 .then(() => {
                     this.$router.push({ name: 'Wishlist', params: { username: Vue.$cookies.get('username')}})
                 })
@@ -241,7 +251,7 @@ const Game = {
                 gameId: this.game.steam_appid,
                 timePlayed: 0
             }]
-            axios.post("http://localhost:3000/api/account/library", gameToAdd)
+            axios.post('http://localhost:3000/api/account/library', gameToAdd)
                 .then(_ => this.$router.push({ name: 'Library', params: { username: Vue.$cookies.get('username')}}))
                 .catch(err => console.log(err))
         }

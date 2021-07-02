@@ -136,7 +136,7 @@ const SignUp = {
         signUp: function (e) {
             if (this.isValidated(e)){
                 this.exists = false
-                axios.post('http://localhost:3000/api/account/signup', this.buildForm())
+                axios.post('http://localhost:3000/api/account/create', this.buildForm())
                     .then(res => {
                         if (!res.data.hasOwnProperty("password")) {
                             this.existingId = res.data.username
@@ -217,11 +217,11 @@ const SignUp = {
             return value
         },
         login: function (){
-            axios.post('http://localhost:3000/api/account/login', this.account)
+            axios.post('http://localhost:3000/api/account', this.account)
                 .then(response => {
                     this.$cookies.set("username", response.data.username, 7 * this.day)
                     this.$parent.$children[1].$emit('log-event')
-                    axios.patch('http://localhost:3000/api/account/state', { state: "online" })
+                    axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/state', { state: "online" })
                         .then(res => this.$router.push({ name: 'Profile', params: { username: this.account.username }}))
                         .catch(err => console.log(err))
                 })

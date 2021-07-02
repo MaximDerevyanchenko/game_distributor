@@ -1,3 +1,4 @@
+//TODO ricontrollare gli steam_appid per i giochi locali anche nel cart
 const Wishlist = {
     props: ['username', 'size'],
     data() {
@@ -81,7 +82,7 @@ const Wishlist = {
     `,
     methods: {
         getWishlist: function (){
-            axios.get("http://localhost:3000/api/account/wishlist/" + this.$props.username)
+            axios.get("http://localhost:3000/api/account/" + this.$props.username + "/wishlist")
                 .then(response => {
                     this.games = response.data
                     document.querySelector('#spinner').classList.add('d-none')
@@ -90,7 +91,7 @@ const Wishlist = {
                 .catch(error => console.log(error))
         },
         remove: function () {
-            axios.delete("http://localhost:3000/api/account/wishlist/" + this.gameToRemove.steam_appid)
+            axios.delete("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/wishlist/" + this.gameToRemove.steam_appid)
                 .then(() => {
                     this.games = this.games.filter(g => g.steam_appid !== this.gameToRemove.steam_appid)
                     bootstrap.Modal.getInstance(document.querySelector('#confirmRemove')).hide()
@@ -98,12 +99,12 @@ const Wishlist = {
                 .catch(error => console.log(error))
         },
         addToCart: function (index) {
-            axios.post("http://localhost:3000/api/account/cart", { steam_appid: this.games[index].steam_appid })
+            axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart", { steam_appid: this.games[index].steam_appid })
                 .then(() => this.$router.push({ name: 'Cart' }))
                 .catch(error => console.log(error))
         },
         giftGame: function () {
-            axios.post("http://localhost:3000/api/account/library/gift", { username: this.$props.username, gameId: this.gameToGift.steam_appid, timePlayed: 0, name: this.gameToGift.name, giftedBy: this.$cookies.get('username') })
+            axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library/gift", { username: this.$props.username, gameId: this.gameToGift.steam_appid, timePlayed: 0, name: this.gameToGift.name, giftedBy: this.$cookies.get('username') })
                 .then(() => bootstrap.Modal.getInstance(document.querySelector('#confirmGift')).hide())
                 .catch(error => console.log(error))
         },

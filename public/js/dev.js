@@ -103,18 +103,18 @@ const Dev = {
                 .catch(err => console.log(err))
         },
         becomeDeveloper: function (){
-            axios.patch('http://localhost:3000/api/account', { isDeveloper: true })
+            axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username'), { isDeveloper: true })
                 .then(() => this.account.isDeveloper = true)
                 .catch(err => console.log(err))
         },
         getMyGames: function (){
-            axios.get('http://localhost:3000/api/account/myGames')
+            axios.get('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/developed')
                 .then(res => this.games = res.data)
                 .catch(err => console.log(err))
         },
         addGame: function (){
             if (this.$refs.form.checkValidity()) {
-                axios.post('http://localhost:3000/api/create_game', this.buildForm())
+                axios.post('http://localhost:3000/api/games/create', this.buildForm())
                     .then(res => {
                         bootstrap.Modal.getInstance(document.querySelector('#addGame')).hide()
                         this.$router.push({ name: 'Game', params: { gameId: res.data.gameId }})

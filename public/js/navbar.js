@@ -35,7 +35,7 @@ const Navbar = {
     </nav>`,
     methods: {
         logout: function () {
-            axios.patch('http://localhost:3000/api/account/state', { state: "offline" })
+            axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/state', { state: "offline" })
                 .then(() => {
                     this.$cookies.remove('username')
                     this.$emit("log-event")

@@ -44,11 +44,11 @@ const Notification = {
                 .catch(error => console.log(error))
         },
         getGame: function (gameId){
-            axios.get("http://localhost:3000/api/game/" + gameId)
+            axios.get("http://localhost:3000/api/games/" + gameId + "/local")
                 .then(response => {
                     this.game = response.data
                     if (!this.game.isLocal)
-                        axios.get("http://localhost:3000/api/steam_game/" + gameId)
+                        axios.get("http://localhost:3000/api/games/" + gameId + "/steam")
                             .then(response => {
                                 this.game = response.data
                                 const nodeList = document.querySelectorAll('.toast-body')

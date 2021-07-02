@@ -1,5 +1,6 @@
 module.exports = function (mongoose, io) {
 	const GameSchema = require("../models/gameModel.js")(mongoose)
+	const Accounts = mongoose.model('AccountSchema')
 	const fs = require('fs')
 	const axios = require('axios')
 
@@ -13,7 +14,7 @@ module.exports = function (mongoose, io) {
 			.catch(err => res.send(err))
 	}
 
-	module.exports.countPages = function (req, res) {
+	module.exports.countEntries = function (req, res) {
 		GameSchema.countDocuments({ name: { $regex : req.params.name, $options: 'i' }})
 			.then(response => res.json(response))
 			.catch(error => res.send(error))
@@ -49,6 +50,12 @@ module.exports = function (mongoose, io) {
 		GameSchema.findOne({ gameId: req.params.gameId})
 			.then(response => res.json(response))
 			.catch(error => res.send(error.response))
+	}
+
+	module.exports.local_online_players = function (req, res) {
+		Accounts.countDocuments({ inGame: req.params.gameId })
+			.then(response => res.json(response))
+			.catch(error => res.send(error))
 	}
 
 	module.exports.online_players = function (req, res) {

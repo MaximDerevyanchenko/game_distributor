@@ -150,7 +150,7 @@ const Profile = {
             this.isEditOn = false
             this.accountChanges.bio = this.account.bio
             this.accountChanges.countryName = this.countries.filter(c => c.code === this.accountChanges.countryCode)[0].name
-            axios.post('http://localhost:3000/api/account', this.accountChanges)
+            axios.post('http://localhost:3000/api/account/' + this.$props.username, this.accountChanges)
                 .then(() => this.getAccount())
                 .catch(err => console.log(err))
         },

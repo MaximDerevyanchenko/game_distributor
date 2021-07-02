@@ -114,7 +114,7 @@ const Cart = {
     `,
     methods: {
         getCart: function (){
-            axios.get("http://localhost:3000/api/account/cart")
+            axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart")
                 .then(response => {
                     this.games = response.data
                     document.querySelector('#spinner').classList.add('d-none')
@@ -123,13 +123,13 @@ const Cart = {
                 .catch(error => console.log(error))
         },
         remove: function (){
-            axios.delete("http://localhost:3000/api/account/cart/" + this.gameToRemove.steam_appid)
+            axios.delete("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart/" + this.gameToRemove.steam_appid)
                 .then(_ => this.games = this.games.filter(g => g.steam_appid !== this.gameToRemove.steam_appid))
                 .catch(err => console.log(err))
             bootstrap.Modal.getInstance(document.querySelector('#confirmRemove')).hide()
         },
         removeAll: function (){
-            axios.post("http://localhost:3000/api/account/cart/removeAll", this.games)
+            axios.delete("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart")
                 .then(_ => this.games = [])
                 .catch(err => console.log(err))
             bootstrap.Modal.getInstance(document.querySelector('#confirmRemoveAll')).hide()
@@ -141,13 +141,13 @@ const Cart = {
                 game.gameId = game.steam_appid
                 game.username = this.$cookies.get('username')
             })
-            axios.post("http://localhost:3000/api/account/library", this.games)
+            axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library", this.games)
                 .then(() => this.$router.push({ name: 'Library', params: { username: Vue.$cookies.get('username')}}))
                 .catch(err => console.log(err))
             bootstrap.Modal.getInstance(document.querySelector('#confirmPurchaseAll')).hide()
         },
         buy: function (){
-            axios.post("http://localhost:3000/api/account/library", {
+            axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library", {
                 username: this.$cookies.get('username'),
                 startedAt: 0,
                 timePlayed: 0,
