@@ -39,7 +39,7 @@ const Game = {
                     <div class="carousel-inner mx-auto">
                         <div class="carousel-item" data-bs-interval="3000" v-if="game.isLocal" ref="items" class="active">
                             <div class="d-flex justify-content-center">
-                                <img :src="'../../static/img/' + game.gameId + '/' + game.header_image" class="w-75" alt="Game screenshot" />
+                                <img v-if="game.header_image !== ''" :src="'../../static/img/' + game.gameId + '/' + game.header_image" class="w-75" alt="Game screenshot" />
                             </div>
                         </div>
                         <div class="carousel-item" data-bs-interval="3000" v-for="(screenshot, index) in game.screenshots" ref="items" :class="index == 0 ? 'active' : ''">
@@ -190,8 +190,9 @@ const Game = {
             axios.get("http://localhost:3000/api/game/" + this.$props.gameId)
                 .then(response => {
                     this.game = response.data
-                    //TODO DEVELOP ELSE
-                    if (this.game !== null && !this.game.isLocal)
+                    if (this.game == null)
+                        this.$router.push({ name: '404' })
+                    if (!this.game.isLocal)
                         axios.get("http://localhost:3000/api/steam_game/" + this.game.gameId)
                             .then(response => {
                                 if (response.status === 200) {
@@ -209,8 +210,6 @@ const Game = {
                                     this.$router.push({ name: '404' })
                             })
                             .catch(error => console.log(error))
-                    else
-                        this.$router.push({ name: '404' })
                 })
                 .catch(error => console.log(error))
         },

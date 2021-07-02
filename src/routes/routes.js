@@ -74,6 +74,9 @@ module.exports = function(app, mongoose, io) {
 		.get(accountController.getFriendRequests)
 		.patch(accountController.acceptFriend)
 
+	app.route('/api/account/friendRequests/:username')
+		.delete(accountController.denyFriend)
+
 	app.route('/api/account/pendingRequests')
 		.get(accountController.getPendingRequests)
 

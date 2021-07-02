@@ -152,6 +152,22 @@ module.exports = function (mongoose, io) {
             .catch(err => res.send(err))
     }
 
+    module.exports.denyFriend = function (req, res) {
+        Account.findOneAndUpdate({username: req.cookies.username}, {
+            $pull: {friendRequests: req.params.username}
+        })
+            .then(f =>
+                Account.updateOne({username: req.params.username}, {
+                    $pull: {pendingRequests: req.cookies.username}
+                })
+                    .then(() => {
+                        io.emit('friendDenied', f)
+                        res.json(f)
+                    })
+                    .catch(err => res.send(err)))
+            .catch(err => res.send(err))
+    }
+
     module.exports.updateMyAccount = function (req, res) {
         Account.findOneAndUpdate({username: req.cookies.username}, req.body)
             .then(acc => {

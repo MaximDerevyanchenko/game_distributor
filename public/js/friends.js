@@ -1,5 +1,4 @@
 const Friends = {
-    // TODO rimozione di richiesta
     props: ['username'],
     data: function (){
         return {
@@ -28,8 +27,8 @@ const Friends = {
                 </div>
             </div>
         </form>
-        <h3 v-if="friends.length !== 0">Your friends</h3>
-        <h3 v-else class="text-center">{{ username }} doesn't have friends yet.</h3>
+        <h3 class="mt-3" v-if="friends.length !== 0">Your friends</h3>
+        <h3 v-else class="text-center mt-3">{{ username }} doesn't have friends yet.</h3>
         <h4 v-if="onlineFriends.length !== 0">Online</h4>
         <div class="card bg-dark text-white border-secondary p-3" v-for="friend in onlineFriends" role="button">
             <div class="row g-0">
@@ -59,13 +58,32 @@ const Friends = {
             </div>
         </div>
         <h4 v-if="logged && friendRequests.length !== 0">Friend Requests</h4>
-        <div v-for="friendRequest in friendRequests">
-            <h2>{{ friendRequest.nickname }}</h2>
-            <button @click="acceptFriend(friendRequest.username)">Accept Friend</button>
+        <div class="card bg-dark text-white border-secondary p-3" v-for="friendRequest in friendRequests" role="button">
+            <div class="row g-0">
+                <div class="col-3">
+                    <img v-if="friendRequest.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friendRequest.username + '/' + friendRequest.avatarImg" :alt="friendRequest.nickname" />
+                </div>
+                <div class="card-body col-9">
+                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friendRequest.username"><h3 class="w-25">{{ friendRequest.nickname }}</h3></router-link>
+                    <p class="card-text">State: {{friendRequest.state}} {{ friendRequest.inGame}}</p>
+                    <p class="card-text"><small class="text-muted">Last online {{ friendRequest.lastOnline}}</small></p>
+                    <button @click="acceptFriend(friendRequest.username)" class="btn btn-outline-success">Accept Friend</button>
+                    <button @click="denyFriend(friendRequest.username)" class="btn btn-outline-danger">Deny Friend</button>
+                </div>
+            </div>
         </div>
         <h4 v-if="logged && pendingRequests.length !== 0">Pending Requests</h4>
-        <div v-for="pendingRequest in pendingRequests">
-            <h2>{{ pendingRequest.nickname }}</h2>
+         <div class="card bg-dark text-white border-secondary p-3" v-for="pendingRequest in pendingRequests" role="button">
+            <div class="row g-0">
+                <div class="col-3">
+                    <img v-if="pendingRequest.avatarImg" class="card-img col-md-2" :src="'../static/img/' + pendingRequest.username + '/' + pendingRequest.avatarImg" :alt="pendingRequest.nickname" />
+                </div>
+                <div class="card-body col-9">
+                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + pendingRequest.username"><h3 class="w-25">{{ pendingRequest.nickname }}</h3></router-link>
+                    <p class="card-text">State: {{pendingRequest.state}} {{ pendingRequest.inGame}}</p>
+                    <p class="card-text"><small class="text-muted">Last online {{ pendingRequest.lastOnline}}</small></p>
+                </div>
+            </div>
         </div>
         <div id="confirmRemove" class="modal fade" tabindex="-1" aria-labelledby="confirmRemove" aria-hidden="true">
             <div class="modal-dialog border border-light border-3 rounded rounded-3 modal-sm">
@@ -127,7 +145,8 @@ const Friends = {
                     axios.post("http://localhost:3000/api/account/friends", { username: this.friendToAdd})
                         .then(res => {
                             this.friendToAdd = ""
-                            this.pendingRequests.push(res.data)
+                            if (!this.pendingRequests.map(p => p.username).includes(res.data.username))
+                                this.pendingRequests.push(res.data)
                         })
                         .catch(err => console.log(err))
             } else
@@ -148,7 +167,12 @@ const Friends = {
                     this.friends.push(res.data)
                 })
                 .catch(err => console.log(err))
-        }
+        },
+        denyFriend: function (username) {
+            axios.delete('http://localhost:3000/api/account/friendRequests/' + username)
+                .then(() => this.friendRequests = this.friendRequests.filter(v => v.username !== username))
+                .catch(err => console.log(err))
+        },
     },
     sockets: {
         friendAccept: function () {
@@ -176,6 +200,11 @@ const Friends = {
                     this.offlineFriends.push(friend)
                     this.onlineFriends = this.onlineFriends.filter(f => f.username !== friend.username)
                 }
+            }
+        },
+        friendDenied: function (friend) {
+            if (this.$cookies.isKey('username') && this.pendingRequests.map(f => f.username).includes(friend.username)){
+                this.pendingRequests = this.pendingRequests.filter(r => r.username !== friend.username)
             }
         }
     },

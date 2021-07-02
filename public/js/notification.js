@@ -1,5 +1,4 @@
 const Notification = {
-    // TODO stile notifiche
     data: function() {
         return {
             myAccount: {},
@@ -16,19 +15,6 @@ const Notification = {
     },
     template: `
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
-<!--            <div class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true">-->
-<!--                <div v-if="user.nickname" class="toast-header">-->
-<!--                    <img :src="user.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + user.username + '/' + user.avatarImg" width="20" height="20" class="rounded me-2" :alt="user.nickname + 'avatar' ">-->
-<!--                    <strong class="me-auto">{{ user.nickname }}</strong>-->
-<!--                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
-<!--                </div>-->
-<!--                <div v-if="game.name" class="toast-body">-->
-<!--                    {{ text }} {{ game.name }}-->
-<!--                </div>-->
-<!--                <div v-else class="toast-body">-->
-<!--                    {{ text }}-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
     `,
     methods: {
@@ -52,7 +38,7 @@ const Notification = {
 
                     elem += '" width="20" height="20" class="rounded me-2" alt="' + this.user.nickname + ' avatar">' +
                         '                    <strong class="me-auto">' + this.user.nickname + '</strong>' +
-                        '                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>'
+                        '                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>'
                     nodeList.item(nodeList.length - 1).innerHTML = elem
                 })
                 .catch(error => console.log(error))
@@ -69,7 +55,7 @@ const Notification = {
                                 nodeList.item(nodeList.length - 1).innerHTML += ' ' + this.game.name
                             })
                             .catch(error => console.log(error))
-                    else{
+                    else {
                         const nodeList = document.querySelectorAll('.toast-body')
                         nodeList.item(nodeList.length - 1).innerHTML += ' ' + this.game.name
                     }
@@ -86,10 +72,10 @@ const Notification = {
             new bootstrap.Toast(html).show()
         },
         buildToast: function () {
-            let toast = '<div class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true">\n'
+            let toast = '<div class="toast fade hide bg-dark" role="alert" aria-live="assertive" aria-atomic="true">\n'
 
             if (this.user.username !== undefined) {
-                toast += '<div class="toast-header">' +
+                toast += '<div class="toast-header bg-dark">' +
                     '<img src="'
 
                 if (this.user.avatarImg === "")
@@ -99,10 +85,10 @@ const Notification = {
 
                 toast += '" width="20" height="20" class="rounded me-2" alt="' + this.user.nickname + ' avatar">' +
                     '                    <strong class="me-auto">' + this.user.nickname + '</strong>' +
-                    '                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>' +
+                    '                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>' +
                     '                </div>'
             } else
-                toast += '<div class="toast-header">' +
+                toast += '<div class="toast-header bg-dark">' +
                     '                </div>'
 
             toast += '<div class="toast-body">' +

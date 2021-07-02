@@ -23,7 +23,7 @@ const Wishlist = {
             <div v-if="games.length !== 0" :class="'row row-cols-' + size + ' g-4 mb-2'">
                 <div class="col" v-for="(game,index) in games">
                     <div class="card h-100 m-4">
-                        <img :src="game.isLocal ? '../static/img/' + game.gameId + '/' + game.header_image : game.header_image" :alt="game.name" class="card-img-top" @click="goToGame(index)" role="button"/>
+                        <img v-if="game.header_image !== ''" :src="game.isLocal ? '../static/img/' + game.gameId + '/' + game.header_image : game.header_image" :alt="game.name" class="card-img-top" @click="goToGame(index)" role="button"/>
                         <div class="card-body bg-secondary text-white text-center" @click="goToGame(index)" role="button">
                             <h5 class="card-title mt-2 mb-4">{{game.name}}</h5>
                             <p class="card-text">{{game.short_description | escape }}</p>
@@ -108,7 +108,7 @@ const Wishlist = {
                 .catch(error => console.log(error))
         },
         goToGame: function (index) {
-            this.$router.push({ name: 'Game', params: { gameId: this.games[index].steam_appid}})
+            this.$router.push({ name: 'Game', params: { gameId: this.games[index].isLocal ? this.games[index].gameId : this.games[index].steam_appid}})
         }
     },
     filters: {

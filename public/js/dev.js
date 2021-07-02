@@ -4,6 +4,7 @@ const Dev = {
             account: { },
             games: [],
             game: {
+                short_description: "",
                 is_free: false,
                 price_overview: {
                     final: 20

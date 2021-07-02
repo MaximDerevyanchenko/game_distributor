@@ -1,6 +1,7 @@
 module.exports = function (mongoose, io) {
 
     const GameWishlist = require('../models/gameWishlistModel')(mongoose)
+    const GameSchema = mongoose.model('GameSchema')
     const axios = require('axios')
 
     module.exports.addToWishlist = function (req, res) {
@@ -14,22 +15,23 @@ module.exports = function (mongoose, io) {
         GameWishlist.find({username: req.params.username})
             .then(games => {
                 const promises = []
-                games.forEach(game =>
+                games.forEach(game => {
                     promises.push(
-                        GameSchema.findOne({ gameId: game.gameId })
+                        GameSchema.findOne({gameId: game.gameId})
                             .then(g => {
-                                if (!g.isLocal)
-                                    axios.get("https://store.steampowered.com/api/appdetails?appids=" + game.gameId)
+                                if (!g.isLocal) {
+                                    return axios.get("https://store.steampowered.com/api/appdetails?appids=" + g.gameId)
                                         .then(response => {
-                                            if (response.data[game.gameId].success)
-                                                return response.data[game.gameId].data
+                                            if (response.data[g.gameId].success)
+                                                return response.data[g.gameId].data
                                             else
                                                 return 204
                                         })
-                                else
+                                        .catch(err => res.send(err))
+                                } else
                                     return g
-                            })
-                           .catch(err => res.send(err))))
+                            }))
+                })
                 Promise.all(promises)
                     .then(games => res.json(games))
                     .catch(err => res.send(err))
