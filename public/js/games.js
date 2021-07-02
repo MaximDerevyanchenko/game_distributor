@@ -79,7 +79,7 @@ const Games = {
                 .catch(error => console.log(error))
         },
         goToGame: function (game) {
-            this.$router.push({ name: 'Game', params: { gameId: game.steam_appid}})
+            this.$router.push({ name: 'Game', params: { gameId: game.gameId}})
         }
     },
     mounted() {

@@ -1,4 +1,3 @@
-//TODO ricontrollare gli steam_appid per i giochi locali anche nel cart
 const Wishlist = {
     props: ['username', 'size'],
     data() {
@@ -91,25 +90,25 @@ const Wishlist = {
                 .catch(error => console.log(error))
         },
         remove: function () {
-            axios.delete("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/wishlist/" + this.gameToRemove.steam_appid)
+            axios.delete("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/wishlist/" + this.gameToRemove.gameId)
                 .then(() => {
-                    this.games = this.games.filter(g => g.steam_appid !== this.gameToRemove.steam_appid)
+                    this.games = this.games.filter(g => g.gameId !== this.gameToRemove.gameId)
                     bootstrap.Modal.getInstance(document.querySelector('#confirmRemove')).hide()
                 })
                 .catch(error => console.log(error))
         },
         addToCart: function (index) {
-            axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart", { steam_appid: this.games[index].steam_appid })
+            axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart", { gameId: this.games[index].gameId })
                 .then(() => this.$router.push({ name: 'Cart' }))
                 .catch(error => console.log(error))
         },
         giftGame: function () {
-            axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library/gift", { username: this.$props.username, gameId: this.gameToGift.steam_appid, timePlayed: 0, name: this.gameToGift.name, giftedBy: this.$cookies.get('username') })
+            axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library/gift", { username: this.$props.username, gameId: this.gameToGift.gameId, timePlayed: 0, name: this.gameToGift.name, giftedBy: this.$cookies.get('username') })
                 .then(() => bootstrap.Modal.getInstance(document.querySelector('#confirmGift')).hide())
                 .catch(error => console.log(error))
         },
         goToGame: function (index) {
-            this.$router.push({ name: 'Game', params: { gameId: this.games[index].isLocal ? this.games[index].gameId : this.games[index].steam_appid}})
+            this.$router.push({ name: 'Game', params: { gameId: this.games[index].gameId }})
         }
     },
     filters: {

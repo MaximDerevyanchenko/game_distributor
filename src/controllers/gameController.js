@@ -38,9 +38,11 @@ module.exports = function (mongoose, io) {
 	module.exports.steam_game_info = function (req, res) {
 		axios.get("https://store.steampowered.com/api/appdetails?appids=" + req.params.gameId)
 			.then(response => {
-				if (response.data[req.params.gameId].success)
-					res.json(response.data[req.params.gameId].data)
-				else
+				if (response.data[req.params.gameId].success) {
+					let result = response.data[req.params.gameId].data
+					result.gameId = result.steam_appid
+					res.json(result)
+				} else
 					res.sendStatus(204)
 			})
 			.catch(error => res.send(error))

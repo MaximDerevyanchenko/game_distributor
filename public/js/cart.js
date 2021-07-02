@@ -123,8 +123,8 @@ const Cart = {
                 .catch(error => console.log(error))
         },
         remove: function (){
-            axios.delete("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart/" + this.gameToRemove.steam_appid)
-                .then(_ => this.games = this.games.filter(g => g.steam_appid !== this.gameToRemove.steam_appid))
+            axios.delete("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart/" + this.gameToRemove.gameId)
+                .then(_ => this.games = this.games.filter(g => g.gameId !== this.gameToRemove.gameId))
                 .catch(err => console.log(err))
             bootstrap.Modal.getInstance(document.querySelector('#confirmRemove')).hide()
         },
@@ -138,7 +138,6 @@ const Cart = {
             this.games.forEach(game => {
                 game.startedAt = 0
                 game.timePlayed = 0
-                game.gameId = game.steam_appid
                 game.username = this.$cookies.get('username')
             })
             axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library", this.games)
@@ -152,14 +151,14 @@ const Cart = {
                 startedAt: 0,
                 timePlayed: 0,
                 name: this.gameToBuy.name,
-                gameId: this.gameToBuy.steam_appid
+                gameId: this.gameToBuy.gameId
             })
                 .then(() => this.$router.push({ name: 'Library', params: { username: Vue.$cookies.get('username')}}))
                 .catch(err => console.log(err))
             bootstrap.Modal.getInstance(document.querySelector('#confirmPurchase')).hide()
         },
         goToGame: function (index) {
-            this.$router.push({ name: 'Game', params: { gameId: this.games[index].isLocal ? this.games[index].gameId : this.games[index].steam_appid}})
+            this.$router.push({ name: 'Game', params: { gameId: this.games[index].gameId }})
         }
     },
     filters: {

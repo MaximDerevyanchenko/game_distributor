@@ -16,19 +16,19 @@ const Library = {
             <div class="d-flex w-75 justify-content-center">
                 <ul class="nav nav-pills flex-column w-25 me-auto" role="tablist">
                     <li class="nav-item" role="presentation" v-for="(game, index) in games">
-                        <button @click="getFriendsWithGame(game.steam_appid)" role="tab" class="nav-link w-100" data-bs-toggle="pill" :data-bs-target="'#g' + game.steam_appid">{{ game.name }}</button>
+                        <button @click="getFriendsWithGame(game.gameId)" role="tab" class="nav-link w-100" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
                     </li>
                 </ul>
                 <div ref="tab_content" class="tab-content bg-secondary p-2 w-75" :class="games.length > 0 ? 'border' : ''">
-                    <div v-for="game in games" class="tab-pane fade card bg-primary" role="tabpanel" :id="'g' + game.steam_appid">
+                    <div v-for="game in games" class="tab-pane fade card bg-primary" role="tabpanel" :id="'g' + game.gameId">
                         <img :src="game.header_image" alt="game.name" class="w-100">
                         <div class="p-3">
                             <div class="d-flex justify-content-between">
-                                <router-link :to="{ name: 'Game', params: { gameId: game.steam_appid } }"><h4 class="text-light">{{ game.name }}</h4></router-link>
+                                <router-link :to="{ name: 'Game', params: { gameId: game.gameId } }"><h4 class="text-light">{{ game.name }}</h4></router-link>
                                 <p class="text-light">Time played: {{ game.timePlayed }}</p>
                             </div>
                             <div v-if="logged && username == Vue.$cookies.get('username')">
-                                <button v-if="gamePlaying != game.steam_appid" id="startGame" :disabled="gamePlaying !== ''" @click="startGame(game.steam_appid)" class="btn btn-outline-light">Start Game</button>
+                                <button v-if="gamePlaying != game.gameId" id="startGame" :disabled="gamePlaying !== ''" @click="startGame(game.gameId)" class="btn btn-outline-light">Start Game</button>
                                 <button v-else @click="stopGame" id="stopGame" class="btn btn-outline-light">Stop Game</button>
                             </div>
                             <h5 class="mt-5 text-light">Friends in game</h5>
@@ -78,8 +78,8 @@ const Library = {
                     })
                     Promise.all(promises).then(games => {
                         if (games.length > 0) {
-                            document.querySelector('button[data-bs-target="#g' + games[0].steam_appid + '"]').classList.add('active')
-                            document.querySelector('#g' + games[0].steam_appid).classList.add('active', 'show')
+                            document.querySelector('button[data-bs-target="#g' + games[0].gameId + '"]').classList.add('active')
+                            document.querySelector('#g' + games[0].gameId).classList.add('active', 'show')
                         }
                     })
                 })

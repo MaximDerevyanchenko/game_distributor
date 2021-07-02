@@ -5,8 +5,7 @@ module.exports = function (mongoose, io) {
     const axios = require('axios')
 
     module.exports.addToWishlist = function (req, res) {
-        const gameId = req.body.isLocal ? req.body.gameId : req.body.steam_appid
-        GameWishlist.create({username: req.cookies.username, gameId: gameId})
+        GameWishlist.create({username: req.cookies.username, gameId: req.body.gameId})
             .then(gameCart => res.status(201).json(gameCart))
             .catch(err => res.send(err))
     }
@@ -22,9 +21,11 @@ module.exports = function (mongoose, io) {
                                 if (!g.isLocal) {
                                     return axios.get("https://store.steampowered.com/api/appdetails?appids=" + g.gameId)
                                         .then(response => {
-                                            if (response.data[g.gameId].success)
-                                                return response.data[g.gameId].data
-                                            else
+                                            if (response.data[g.gameId].success) {
+                                                let result = response.data[g.gameId].data
+                                                result.gameId = result.steam_appid
+                                                return result
+                                            } else
                                                 return 204
                                         })
                                         .catch(err => res.send(err))

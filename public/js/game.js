@@ -1,5 +1,4 @@
 const Game = {
-    // TODO giocatori online
     props: ['gameId'],
     data: function () {
         return {
@@ -207,7 +206,7 @@ const Game = {
                                             .catch(error => console.log(error)))
 
                                     axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library")
-                                        .then(res => this.isInLibrary = res.data.map(val => val.gameId).includes(this.game.steam_appid))
+                                        .then(res => this.isInLibrary = res.data.map(val => val.gameId).includes(this.game.gameId))
                                         .catch(error => console.log(error))
                                 } else
                                     this.$router.push({ name: '404' })
@@ -248,7 +247,7 @@ const Game = {
         addToLibrary: function () {
             const gameToAdd = [{
                 username: this.$cookies.get('username'),
-                gameId: this.game.steam_appid,
+                gameId: this.game.gameId,
                 timePlayed: 0
             }]
             axios.post('http://localhost:3000/api/account/library', gameToAdd)
