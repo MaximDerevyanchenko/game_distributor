@@ -129,10 +129,8 @@ const Friends = {
                 .catch(err => console.log(err))
         },
         getPendingRequests: function (){
-            axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/pendingRequests")
-                .then(res => {
-                    this.pendingRequests = res.data
-                })
+            axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/friends/pending")
+                .then(res => this.pendingRequests = res.data)
                 .catch(err => console.log(err))
         },
         addFriend: function (){

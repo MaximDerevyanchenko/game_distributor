@@ -27,10 +27,13 @@ const Library = {
                                 <router-link :to="{ name: 'Game', params: { gameId: game.gameId } }"><h4 class="text-light">{{ game.name }}</h4></router-link>
                                 <p class="text-light">Time played: {{ game.timePlayed }}</p>
                             </div>
-                            <div v-if="logged && username == Vue.$cookies.get('username')">
-                                <button v-if="gamePlaying != game.gameId" id="startGame" :disabled="gamePlaying !== ''" @click="startGame(game.gameId)" class="btn btn-outline-light">Start Game</button>
-                                <button v-else @click="stopGame" id="stopGame" class="btn btn-outline-light">Stop Game</button>
+                            <div v-if="game.type == 'game'">
+                                <div v-if="logged && username == Vue.$cookies.get('username')">
+                                    <button v-if="gamePlaying != game.gameId" id="startGame" :disabled="gamePlaying !== ''" @click="startGame(game.gameId)" class="btn btn-outline-light">Start Game</button>
+                                    <button v-else @click="stopGame" id="stopGame" class="btn btn-outline-light">Stop Game</button>
+                                </div>
                             </div>
+                            <div v-else class="d-inline-block bg-dark border border-danger border-3 p-1 mt-2">Content not playable</div>
                             <h5 class="mt-5 text-light">Friends in game</h5>
                             <ul class="list-unstyled">
                                 <li v-for="friend in friendsInGame">
