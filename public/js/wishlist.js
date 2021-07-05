@@ -11,7 +11,7 @@ const Wishlist = {
         $route: function (to, from){
             this.getWishlist()
         }
-    },
+    }, // TODO controllare login/logout (aggiungere logged)
     template: `
     <div class="m-4 bg-gradient p-5">
         <div id="spinner" class="d-flex justify-content-center align-items-center">
@@ -32,7 +32,7 @@ const Wishlist = {
                          <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
                             <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
                             <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
-                            <button v-else class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
+                            <button v-else-if="logged" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
                          </div>
                     </div>
                 </div>

@@ -36,7 +36,7 @@ const Profile = {
                             <div v-if="!isEditOn" class="card-title d-flex justify-content-between">
                                 <h2>{{ account.nickname }} <span class="badge rounded-pill fs-6" :class="account.state == 'offline' ? 'bg-dark' : 'bg-success'">{{ account.state }}</span></h2>
                                 <div>
-                                    <router-link v-if="Vue.$cookies.get('username') === username" class="btn btn-outline-info" to="/dev">Dev Page</router-link>
+                                    <router-link v-if="Vue.$cookies.get('username') === username" class="btn btn-outline-info" to="/dev">I'm a Developer</router-link>
                                 </div>
                             </div>
                             <div v-else class="form-floating col-2">

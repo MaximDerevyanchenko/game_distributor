@@ -8,27 +8,28 @@ const Search = {
         }
     },
     template: `
-    <div>
-        <div v-for="game in games">
-            <div>
-                <div>
-                    <router-link class="nav-link text-light" :to="{ name: 'Game', params: { gameId: game.gameId }}">{{ game.name }}</router-link>
-                </div>
+    <div class="d-flex flex-column align-items-center">
+        <div class="bg-gradient mt-5 mb-3 p-5 w-75">
+            <div v-for="game in games" class="bg-transparent">
+                <router-link class="nav-link text-light h5 mb-3" style="background-color: transparent !important;" :to="{ name: 'Game', params: { gameId: game.gameId }}">{{ game.name }}</router-link>
+            </div>
+            <div v-if="games.length == 0">
+                <h5 class="text-center">No games found.</h5>
             </div>
         </div>
         <nav aria-label="Search results pages">
-            <ul class="pagination">
-                <li class="page-item" :class="page != 1 ? '': 'disabled'"><a class="page-link" @click="setPage(1)">First</a></li>
-                <li class="page-item" :class="page != 1 ? '': 'disabled'"><a class="page-link" v-if="" @click="setPage(page-1)">Previous</a></li>
+            <ul class="pagination mb-0">
+                <li class="page-item" :class="page != 1 ? '': 'disabled'"><a class="page-link" role="button" @click="setPage(1)">First</a></li>
+                <li class="page-item" :class="page != 1 ? '': 'disabled'"><a class="page-link" role="button" v-if="" @click="setPage(page-1)">Previous</a></li>
                 
-                <li class="page-item"><a class="page-link" v-if="page == pageCount && page != 1" @click="setPage(page-2)">{{page-2}}</a></li>
-                <li class="page-item"><a class="page-link" v-if="page != 1" @click="setPage(page-1)">{{page-1}}</a></li>
-                <li class="page-item active"><a class="page-link" @click="setPage(page)">{{page}}</a></li>
-                <li class="page-item"><a class="page-link" v-if="page != pageCount" @click="setPage(page+1)">{{page+1}}</a></li>
-                <li class="page-item"><a class="page-link" v-if="page == 1 && pageCount >= page + 2" @click="setPage(page+2)">{{page+2}}</a></li>
+                <li class="page-item"><a class="page-link" v-if="page == pageCount && page != 1" role="button" @click="setPage(page-2)">{{page-2}}</a></li>
+                <li class="page-item"><a class="page-link" v-if="page != 1" @click="setPage(page-1)" role="button">{{page-1}}</a></li>
+                <li class="page-item active"><a class="page-link" @click="setPage(page)" role="button">{{page}}</a></li>
+                <li class="page-item"><a class="page-link" v-if="page != pageCount" @click="setPage(page+1)" role="button">{{page+1}}</a></li>
+                <li class="page-item"><a class="page-link" v-if="page == 1 && pageCount >= page + 2" @click="setPage(page+2)" role="button">{{page+2}}</a></li>
                 
-                <li class="page-item" :class="page != pageCount ? '': 'disabled'"><a class="page-link" @click="setPage(page+1)">Next</a></li>
-                <li class="page-item" :class="page != pageCount ? '': 'disabled'"><a class="page-link" @click="setPage(pageCount)">Last</a></li>
+                <li class="page-item" :class="page != pageCount ? '': 'disabled'"><a class="page-link" role="button" @click="setPage(page+1)">Next</a></li>
+                <li class="page-item" :class="page != pageCount ? '': 'disabled'"><a class="page-link" role="button" @click="setPage(pageCount)">Last</a></li>
             </ul>
         </nav>
     </div>

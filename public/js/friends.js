@@ -13,78 +13,85 @@ const Friends = {
         }
     },
     template: `
-    <div class="mt-4">
-        <form v-if="logged && username == Vue.$cookies.get('username')" class="d-flex justify-content-around">
-            <div class="row col-5">
-                <div class="col">
-                    <div class="form-floating">
-                        <input id="friend" class="form-control bg-secondary text-white" placeholder="friend" v-model="friendToAdd" required type="text"/>
-                        <label for="friend">Friend username</label>
-                    </div>
+    <div class="d-flex flex-column align-items-center mt-4">
+        <form v-if="logged && username == Vue.$cookies.get('username')" class="d-flex justify-content-around w-auto">
+            <div class="col">
+                <div class="form-floating">
+                    <input id="friend" class="form-control bg-secondary text-white" placeholder="friend" v-model="friendToAdd" required type="text"/>
+                    <label for="friend">Friend username</label>
                 </div>
-                <div class="w-auto align-self-center">
-                    <button class="btn btn-outline-light" @click.prevent="addFriend">Add Friend<i class="fas fa-user-plus ms-2"></i></button>
-                </div>
+            </div>
+            <div class="w-auto align-self-center ms-3">
+                <button class="btn btn-outline-light" @click.prevent="addFriend">Add Friend<i class="fas fa-user-plus ms-2"></i></button>
             </div>
         </form>
         <h3 class="mt-3" v-if="friends.length !== 0">Your friends</h3>
         <h3 v-else class="text-center mt-3">{{ username }} doesn't have friends yet.</h3>
-        <h4 v-if="onlineFriends.length !== 0">Online</h4>
-        <div class="card bg-dark text-white border-secondary p-3" v-for="friend in onlineFriends" role="button">
-            <div class="row g-0">
-                <div class="col-3">
-                    <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
+        <h4 class="m-3" v-if="onlineFriends.length !== 0">Online</h4>
+        <div class="card bg-dark text-white border p-3" v-for="friend in onlineFriends" role="button">
+            <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username">
+                <div class="row g-0">
+                    <div class="col-3">
+                        <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
+                    </div>
+                    <div class="card-body col-9">
+                        <h3 >{{ friend.nickname }}</h3>
+                        <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
+                        <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
+                        <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
+                    </div>
                 </div>
-                <div class="card-body col-9">
-                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
-                    <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
-                    <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                    <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
-                </div>
-            </div>
+            </router-link>
         </div>
-        <h4 v-if="offlineFriends.length !== 0">Offline</h4>
-        <div class="card bg-dark text-white border-secondary p-3" v-for="friend in offlineFriends" role="button">
-            <div class="row g-0">
-                <div class="col-3">
-                    <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
+        <h4 class="m-3" v-if="offlineFriends.length !== 0">Offline</h4>
+        <div class="card bg-dark text-white border p-3 w-50" v-for="friend in offlineFriends" role="button">
+            <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username">
+                <div class="row g-0">
+                    <div class="col-3">
+                        <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
+                    </div>
+                    <div class="card-body col-9">
+                        <h3>{{ friend.nickname }}</h3>
+                        <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
+                        <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
+                        <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
+                    </div>
                 </div>
-                <div class="card-body col-9">
-                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username"><h3 class="w-25">{{ friend.nickname }}</h3></router-link>
-                    <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
-                    <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                    <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
-                </div>
-            </div>
+            </router-link>
         </div>
-        <h4 v-if="logged && friendRequests.length !== 0">Friend Requests</h4>
-        <div class="card bg-dark text-white border-secondary p-3" v-for="friendRequest in friendRequests" role="button">
-            <div class="row g-0">
-                <div class="col-3">
-                    <img v-if="friendRequest.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friendRequest.username + '/' + friendRequest.avatarImg" :alt="friendRequest.nickname" />
+        <h4 class="m-3" v-if="logged && friendRequests.length !== 0">Friend Requests</h4>
+        <div class="card bg-dark text-white border p-3 w-50" v-for="friendRequest in friendRequests" role="button">
+            <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friendRequest.username">
+                <div class="row g-0">
+                    <div class="col-3">
+                        <img v-if="friendRequest.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friendRequest.username + '/' + friendRequest.avatarImg" :alt="friendRequest.nickname" />
+                    </div>
+                    <div class="card-body col-9">
+                        <h3>{{ friendRequest.nickname }}</h3>
+                        <p class="card-text">State: {{friendRequest.state}} {{ friendRequest.inGame}}</p>
+                        <p class="card-text"><small class="text-muted">Last online {{ friendRequest.lastOnline}}</small></p>
+                        <button @click="acceptFriend(friendRequest.username)" class="btn btn-outline-success">Accept friendship</button>
+                        <button @click="denyFriend(friendRequest.username)" class="btn btn-outline-danger">Deny friendship</button>
+                    </div>
                 </div>
-                <div class="card-body col-9">
-                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friendRequest.username"><h3 class="w-25">{{ friendRequest.nickname }}</h3></router-link>
-                    <p class="card-text">State: {{friendRequest.state}} {{ friendRequest.inGame}}</p>
-                    <p class="card-text"><small class="text-muted">Last online {{ friendRequest.lastOnline}}</small></p>
-                    <button @click="acceptFriend(friendRequest.username)" class="btn btn-outline-success">Accept Friend</button>
-                    <button @click="denyFriend(friendRequest.username)" class="btn btn-outline-danger">Deny Friend</button>
-                </div>
-            </div>
+            </router-link>
         </div>
-        <h4 v-if="logged && pendingRequests.length !== 0">Pending Requests</h4>
-         <div class="card bg-dark text-white border-secondary p-3" v-for="pendingRequest in pendingRequests" role="button">
-            <div class="row g-0">
-                <div class="col-3">
-                    <img v-if="pendingRequest.avatarImg" class="card-img col-md-2" :src="'../static/img/' + pendingRequest.username + '/' + pendingRequest.avatarImg" :alt="pendingRequest.nickname" />
+        <h4 class="m-3" v-if="logged && pendingRequests.length !== 0">Pending Requests</h4>
+         <div class="card bg-dark text-white border p-3" v-for="pendingRequest in pendingRequests" role="button">
+            <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + pendingRequest.username">
+                <div class="row g-0">
+                    <div class="col-3">
+                        <img v-if="pendingRequest.avatarImg" class="card-img col-md-2" :src="'../static/img/' + pendingRequest.username + '/' + pendingRequest.avatarImg" :alt="pendingRequest.nickname" />
+                    </div>
+                    <div class="card-body col-9">
+                        <h3>{{ pendingRequest.nickname }}</h3>
+                        <p class="card-text">State: {{pendingRequest.state}} {{ pendingRequest.inGame}}</p>
+                        <p class="card-text"><small class="text-muted">Last online {{ pendingRequest.lastOnline}}</small></p>
+                    </div>
                 </div>
-                <div class="card-body col-9">
-                    <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + pendingRequest.username"><h3 class="w-25">{{ pendingRequest.nickname }}</h3></router-link>
-                    <p class="card-text">State: {{pendingRequest.state}} {{ pendingRequest.inGame}}</p>
-                    <p class="card-text"><small class="text-muted">Last online {{ pendingRequest.lastOnline}}</small></p>
-                </div>
-            </div>
+            </router-link>
         </div>
+        
         <div id="confirmRemove" class="modal fade" tabindex="-1" aria-labelledby="confirmRemove" aria-hidden="true">
             <div class="modal-dialog border border-light border-3 rounded rounded-3 modal-sm">
                 <div class="modal-content bg-secondary text-white">
