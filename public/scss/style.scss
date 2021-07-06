@@ -6,7 +6,25 @@ $secondary: #160d27;
 
 $gradient: linear-gradient(180deg, rgba(20,3,48,1) 0%, rgba(82,82,238,1) 20%, rgba(0,0,0,1) 100%);
 
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
+
+#game-details img {
+  max-width: 100%;
+}
+
+#game-details ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#game-details ul li strong {
+  margin-right: 5px;
+}
+
+nav {
+  border-radius: 30px;
+}
 
 textarea {
   height: 150px !important;

@@ -56,7 +56,7 @@ const Login = {
                         this.$parent.$emit('log-event')
                         axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/state', { state: "online" })
                             .then(() => {
-                                if (this.$router.currentRoute.path !== ('/profile/' + this.account.username))
+                                if (this.$router.currentRoute.path !== ('/profile/' + this.account.username) && this.$router.currentRoute.name !== 'Game')
                                     this.goToProfile()
                                 else
                                     this.$parent.$parent.$children[2].$emit('log-event')
