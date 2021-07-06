@@ -56,7 +56,18 @@ const Dev = {
                         <div class="m-2 mt-4">
                             <div class="row">
                                 <div class="col d-flex flex-column justify-content-between">
-                                    <div class="p-2">
+                                    <div>
+                                        <label class="input-group-text bg-transparent text-white border-0" for="header">Add your header image</label>
+                                        <div class="row">
+                                            <div class="col-10 col-lg">
+                                                <input class="form-control bg-transparent text-white" id="header" @change="uploadHeader" ref="headerPreview" type="file" accept="image/*"/>
+                                            </div>
+                                            <div class="col-1 d-flex align-items-center">
+                                                <span class="fas fa-trash" role="button" @click="removeHeader"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-2 mt-4">
                                          <div class="form-check form-switch m-2">
                                             <input type="checkbox" id="isFree" class="form-check-input" :class="game.is_free ? 'bg-info' : ''" v-model="game.is_free"/>
                                             <label class="form-check-label" for="isFree">Check if you your game is <em>free to play</em></label>
@@ -69,20 +80,9 @@ const Dev = {
                                             </div> 
                                          </div>
                                     </div>
-                                    <div class="mt-4">
-                                        <label class="input-group-text bg-transparent text-white border-0" for="header">Add your header image</label>
-                                        <div class="row">
-                                            <div class="col">
-                                                <input class="form-control bg-transparent text-white" id="header" @change="uploadHeader" ref="headerPreview" type="file" accept="image/*"/>
-                                            </div>
-                                            <div class="col-1 d-flex align-items-center">
-                                                <span class="fas fa-trash" role="button" @click="removeHeader"></span>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="col">
-                                    <img v-if="headerPreview" :src="headerPreview" class="img-thumbnail border-0" :alt="headerPreview"/>
+                                    <img v-if="headerPreview" :src="headerPreview" class="img-thumbnail border-0" :alt="game.header_image.name"/>
                                 </div>
                             </div>
                         </div>

@@ -15,10 +15,10 @@ const Profile = {
         }
     },
     template: `
-    <div class="position-relative">
+    <div class="position-relative container">
         <div class="w-100 h-100 position-absolute top-50 start-50 translate-middle" id="backgroundImg"></div>
-        <div class="d-flex col justify-content-center mt-4">
-            <div class="d-flex flex-column p-3 col-7 mt-5 bg-primary border rounded m-auto">
+        <div class="d-flex mt-4 justify-content-center">
+            <div class="d-flex flex-column p-3 mt-5 bg-primary border rounded">
                 <div class="card bg-transparent text-white">
                     <div class="row g-0">
                         <div class="col">
@@ -33,23 +33,23 @@ const Profile = {
                             </div>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between ms-3 col-5">
-                            <div v-if="!isEditOn" class="card-title d-flex justify-content-between">
+                            <div v-if="!isEditOn" class="card-title row row-cols-1 row-cols-lg-2 align-items-center">
                                 <h2>{{ account.nickname }} <span class="badge rounded-pill fs-6" :class="account.state == 'offline' ? 'bg-dark' : 'bg-success'">{{ account.state }}</span></h2>
-                                <div>
-                                    <router-link v-if="Vue.$cookies.get('username') === username" class="btn btn-outline-info" to="/dev">I'm a Developer</router-link>
+                                <div class="d-flex justify-content-end">
+                                    <router-link v-if="Vue.$cookies.get('username') === username" class="btn btn-outline-info " to="/dev">I'm a Developer</router-link>
                                 </div>
                             </div>
-                            <div v-else class="form-floating col-2">
+                            <div v-else class="form-floating col-6 col-lg-3">
                                 <input class="form-control bg-transparent text-white" placeholder="nickname" id="nickname" :value="account.nickname" v-model="account.nickname" required type="text" />
                                 <label for="nickname">Nickname</label>
                             </div>
                             <p class="card-text">{{ account.name }}</p>
-                            <div v-if="!isEditOn" class="row g-0">
-                                <p class="col-4 mb-0" v-if="!isEditOn && account.countryName">Country: {{ account.countryName }}</p>
+                            <div v-if="!isEditOn" class="row row-cols-1 row-cols-lg-2 gy-2 align-items-center">
+                                <p class="w-auto mb-0" v-if="!isEditOn && account.countryName">Country: {{ account.countryName }}</p>
                                 <img class="w-auto" :src="'https://www.countryflags.io/' + account.countryCode + '/shiny/48.png'" />
                             </div>
-                            <div v-else class="row align-items-center">
-                                <div class="form-floating col-6">
+                            <div v-else class="row row-cols-1 row-cols-lg-2 align-items-center">
+                                <div class="form-floating col-lg-6">
                                     <select class="form-select pb-1 bg-transparent text-white" id="country" v-model="accountChanges.countryCode">
                                         <option class="bg-secondary text-white" v-for="country in countries" :selected="country.code === accountChanges.countryCode" :value="country.code">{{ country.name }}</option>
                                     </select>
@@ -61,21 +61,21 @@ const Profile = {
                                     </div>
                                 </div>
                             </div>
-                            <label for="bio" class="card-text mb-0 mt-1">Bio</label>
-                            <p v-if="!isEditOn">{{ account.bio }}</p>
+                            <label for="bio" class="card-text mb-0 mt-1">Bio:</label>
+                            <p class="" v-if="!isEditOn">{{ account.bio }}</p>
                             <textarea v-else class="bg-transparent text-white mt-1" placeholder="Your bio" id="bio" v-model="account.bio"></textarea>
-                            <div v-if="isEditOn" class="row row-cols-2 my-4 justify-content-center">
-                                <div class="col-4">
+                            <div v-if="isEditOn" class="row row-cols-1 row-cols-lg-2 my-4 justify-content-center">
+                                <div class="col">
                                     <label class="input-group-text bg-transparent text-white border-0" for="background">Choose your background</label>
                                 </div>
                                 <div class="col">
                                     <input class="form-control bg-transparent text-white" id="background" @change="changeBackgroundPreview" type="file" accept="image/*"/>
                                 </div>
                             </div>
-                             <div class="row justify-content-end me-2">
+                             <div class="row justify-content-end gy-2 me-2">
                                 <button v-if="logged && username == Vue.$cookies.get('username') && !isEditOn" class="w-auto btn btn-outline-light" @click="isEditOn = true">Edit profile</button>
-                                <button v-if="isEditOn" class="w-auto btn btn-outline-danger me-3" @click="discardChanges">Discard changes</button>
-                                <button v-if="isEditOn" class="w-auto btn btn-outline-success" @click="saveChanges">Save changes</button>
+                                <button v-if="isEditOn" class="w-auto btn btn-outline-danger" @click="discardChanges">Discard changes</button>
+                                <button v-if="isEditOn" class="w-auto btn btn-outline-success ms-3" @click="saveChanges">Save changes</button>
                             </div>
                         </div>
                     </div>

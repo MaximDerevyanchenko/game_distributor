@@ -26,10 +26,10 @@ const SignUp = {
         }
     },
     template: `
-<div class="d-flex justify-content-center">
-    <form ref="form" class="needs-validation bg-secondary border border-light border-2 shadow-lg rounded w-50 mt-4 p-4" novalidate>
+<div class="d-flex justify-content-center container">
+    <form ref="form" class="needs-validation bg-secondary border border-light border-2 shadow-lg rounded mt-4 p-4" novalidate>
         <h4 class="display-4 text-center mb-4">Sign Up</h4>
-        <div class="row mb-4">
+        <div class="row row-cols-1 row-cols-lg-2 gy-4 mb-4">
             <div class="col">
                 <div class="form-floating">
                     <input class="form-control bg-transparent text-white" placeholder="username" id="usernameSignUp" v-model="account.username" type="text" @change="hideExists" required autocomplete="on"/>
@@ -43,8 +43,8 @@ const SignUp = {
                 </div>
              </div>
         </div>
-        <div class="row mb-4">
-            <div class="col pe-1">
+        <div class="row row-cols-1 row-cols-lg-3 gy-2 mb-4 justify-content-center">
+            <div class="col flex-fill">
                 <div class="d-block">
                     <div class="form-floating d-flex">
                         <input class="form-control flex-fill bg-transparent text-white" id="passwordSignUp" placeholder="password" v-model="account.password" minlength="6" v-bind:type="typePassword" required autocomplete="on"/>
@@ -53,10 +53,10 @@ const SignUp = {
                     </div>
                 </div>
             </div>
-            <div class="col-auto d-flex ps-1 pe-1">
+            <div class="col-sm-1 w-auto d-flex p-0 align-self-center">
                 <span ref="checkbox" class="far fa-eye align-self-center" @click="showPassword"></span>
             </div>
-             <div class="col ps-1">
+             <div class="col flex-fill">
                 <div class="d-block">
                     <div class="form-floating d-flex">
                         <input class="form-control bg-transparent text-white flex-fill" id="confirmPassword" placeholder="confirmPassword" v-model="confirmPassword" required v-bind:type="typePassword" autocomplete="current-password"/>
@@ -70,7 +70,7 @@ const SignUp = {
                 <div class="invalid-feedback d-block">Passwords are NOT the same.</div>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="row row-cols-1 row-cols-lg-2 gy-4 mb-4">
             <div class="col">
                 <div class="form-floating">
                     <input class="form-control bg-transparent text-white" placeholder="name" id="name" v-model="account.name" type="text" autocomplete="on"/>
@@ -84,7 +84,7 @@ const SignUp = {
                 </div>
              </div>
         </div>
-        <div class="row mb-4">
+        <div class="row row-cols-1 row-cols-lg-2 gy-4 mb-4">
             <div class="col">
                 <div class="form-floating">
                     <textarea class="form-control bg-transparent text-white" placeholder="Your bio" id="bio" v-model="account.bio" type="text"></textarea>
@@ -100,28 +100,28 @@ const SignUp = {
                 </div>
             </div>
         </div>
-         <div class="row mb-4">
-            <div class="col">
+         <div class="row row-cols-2 row-cols-lg-4 gy-2 mb-4">
+            <div class="col-11 col-lg-5">
                 <label class="input-group-text bg-transparent text-white border-0" for="avatar">Choose your avatar</label>
                 <input class="form-control bg-transparent text-white" id="avatar" @change="uploadAvatar" ref="avatarPreview" type="file" accept="image/*"/>
             </div>
-            <div class="w-auto align-self-end">
+            <div class="col-1 col-lg-1 align-self-end">
                 <span class="fas fa-trash mb-2" role="button" @click="removeAvatar"></span>
             </div>
-            <div class="col">
+            <div class="col-11 col-lg-5">
                 <label class="input-group-text bg-transparent text-white border-0" for="background">Choose your background</label>
                 <input class="form-control bg-transparent text-white" id="background" @change="uploadBackground" ref="backgroundPreview" type="file" accept="image/*" />
             </div>
-            <div class="w-auto align-self-end">
+            <div class="col-1 col-lg-1 align-self-end">
                 <span class="fas fa-trash mb-2" role="button" @click="removeBackground"></span>
             </div>
         </div>
-        <div class="row" :class="!avatarPreview && backgroundPreview ? 'flex-row-reverse' : ''" v-if="avatarPreview || backgroundPreview">
+        <div class="row row-cols-1 row-cols-lg-2 gy-2" :class="!avatarPreview && backgroundPreview ? 'flex-row-reverse' : ''" v-if="avatarPreview || backgroundPreview">
             <div class="col-6" v-if="avatarPreview">
-                <img class="img-thumbnail" :src="avatarPreview" :alt="avatarPreview"/>
+                <img class="img-thumbnail" :src="avatarPreview" :alt="account.avatarImg.name"/>
             </div>
             <div class="col-6" v-if="backgroundPreview">
-                <img class="img-thumbnail" :src="backgroundPreview" :alt="backgroundPreview"/>
+                <img class="img-thumbnail" :src="backgroundPreview" :alt="account.backgroundImg.name"/>
             </div>
         </div>
         <div class="d-flex justify-content-between mt-4">
