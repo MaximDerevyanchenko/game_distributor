@@ -4,14 +4,15 @@ const Wishlist = {
         return {
             games: [],
             gameToRemove: { },
-            gameToGift: { }
+            gameToGift: { },
+            logged: false
         }
     },
     watch: {
         $route: function (to, from){
             this.getWishlist()
         }
-    }, // TODO controllare login/logout (aggiungere logged)
+    },
     template: `
     <div class="m-4 bg-gradient p-5">
         <div id="spinner" class="d-flex justify-content-center align-items-center">
@@ -30,8 +31,8 @@ const Wishlist = {
                             <small class="card-text text-muted">Price: {{ game.price_overview.final_formatted }}</small>
                         </div>
                          <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
-                            <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
-                            <button v-if="username == Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
+                            <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
+                            <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
                             <button v-else-if="logged" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
                          </div>
                     </div>
@@ -122,8 +123,10 @@ const Wishlist = {
         }
     },
     mounted(){
+        this.logged = this.$checkLogin()
         this.getWishlist()
         if (this.$props.size === undefined)
             this.$props.size = 3
+        this.$on('log-event', () => this.logged = this.$checkLogin())
     }
 }
