@@ -69,12 +69,14 @@ const Game = {
                                     <div class="bg-dark border border-dark border-5 ms-2 mb-3 mb-md-0 align-self-center"><del>{{ game.price_overview.initial_formatted }}</del></div>
                                     <div class="bg-dark border border-success border-5 ms-2 mb-3 mb-md-0 me-2 align-self-center">{{ game.price_overview.final_formatted }}</div>
                                 </div>
-                                <div v-if="!logged || !isInLibrary" class="d-flex flex-row">
+                                <div class="d-flex flex-row">
                                     <div v-if="game.price_overview.discount_percent == 0" class="bg-dark border border-success border-5 me-2 align-self-center">{{ game.price_overview.final_formatted }}</div>
-                                    <button @click="addToCart" class="btn btn-outline-light me-2 align-self-center">Add to cart</button>
-                                    <button @click="addToWishlist" class="btn btn-outline-light align-self-center">Add to wishlist</button>
+                                    <div v-if="!logged || !isInLibrary">
+                                        <button @click="addToCart" class="btn btn-outline-light me-2 align-self-center">Add to cart</button>
+                                        <button @click="addToWishlist" class="btn btn-outline-light align-self-center">Add to wishlist</button>
+                                    </div>
+                                    <div v-else class="bg-dark border border-light border-3 p-1 align-self-center h-100">Already in Library</div>
                                 </div>
-                                <div v-else class="bg-dark border border-light border-3 p-1 align-self-center h-100">Already in Library</div>
                             </div>
                             <div v-else class="d-flex">
                                 <div class="bg-dark border border-danger border-3 p-1 align-self-center h-100">Game not available in store</div>
@@ -205,13 +207,20 @@ const Game = {
                                             .then(res => this.dlcs.push(res.data))
                                             .catch(error => console.log(error)))
 
-                                    axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library")
-                                        .then(res => this.isInLibrary = res.data.map(val => val.gameId).includes(this.game.gameId))
-                                        .catch(error => console.log(error))
+                                    this.checkLibrary()
                                 } else
                                     this.$router.push({ name: '404' })
                             })
                             .catch(error => console.log(error))
+                    else
+                        this.checkLibrary()
+                })
+                .catch(error => console.log(error))
+        },
+        checkLibrary: function () {
+            axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/library")
+                .then(res => {
+                    this.isInLibrary = res.data.map(val => val.gameId).includes(this.game.gameId)
                 })
                 .catch(error => console.log(error))
         },
@@ -256,10 +265,12 @@ const Game = {
             } else {
                 const gameToAdd = [{
                     username: this.$cookies.get('username'),
-                    gameId: this.game.gameId,
-                    timePlayed: 0
+                    startedAt: 0,
+                    timePlayed: 0,
+                    name: this.game.name,
+                    gameId: this.game.gameId
                 }]
-                axios.post('http://localhost:3000/api/account/library', gameToAdd)
+                axios.post('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/library', gameToAdd)
                     .then(_ => this.$router.push({name: 'Library', params: {username: Vue.$cookies.get('username')}}))
                     .catch(err => console.log(err))
             }

@@ -13,18 +13,18 @@ const Library = {
     template: `
         <div class="mt-3">
             <p class="text-center">Library</p>
-            <div class="d-flex w-75 justify-content-center">
-                <ul class="nav nav-pills flex-column w-25 me-auto" role="tablist">
-                    <li class="nav-item" role="presentation" v-for="(game, index) in games">
+            <div class="d-block d-md-flex">
+                <ul class="nav nav-pills flex-row flex-md-column col-12 col-md-3" role="tablist">
+                    <li class="nav-item col-6 col-md-12" role="presentation" v-for="(game, index) in games">
                         <button @click="getFriendsWithGame(game.gameId)" role="tab" class="nav-link w-100" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
                     </li>
                 </ul>
-                <div ref="tab_content" class="tab-content bg-secondary p-2 w-75" :class="games.length > 0 ? 'border' : ''">
+                <div ref="tab_content" class="tab-content bg-secondary p-2 col-9 col-md-6" :class="games.length > 0 ? 'border' : ''">
                     <div v-for="game in games" class="tab-pane fade card bg-primary" role="tabpanel" :id="'g' + game.gameId">
                         <img :src="game.header_image" alt="game.name" class="w-100">
                         <div class="p-3">
-                            <div class="d-flex justify-content-between">
-                                <router-link :to="{ name: 'Game', params: { gameId: game.gameId } }"><h4 class="text-light">{{ game.name }}</h4></router-link>
+                            <div class="d-block d-sm-flex">
+                                <router-link class="me-sm-auto" :to="{ name: 'Game', params: { gameId: game.gameId } }"><h4 class="text-light">{{ game.name }}</h4></router-link>
                                 <p class="text-light">Time played: {{ game.timePlayed }}</p>
                             </div>
                             <div v-if="game.type == 'game'">
@@ -34,24 +34,30 @@ const Library = {
                                 </div>
                             </div>
                             <div v-else class="d-inline-block bg-dark border border-danger border-3 p-1 mt-2">Content not playable</div>
-                            <h5 class="mt-5 text-light">Friends in game</h5>
-                            <ul class="list-unstyled">
-                                <li v-for="friend in friendsInGame">
-                                    <router-link :to="{ name: 'Profile', params: { username: friend.username } }">
-                                        <img :src="friend.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" class="img-thumbnail w-25">
-                                        <h6 class="d-inline text-light">{{ friend.nickname }}</h6>
-                                    </router-link>
-                                </li>
-                            </ul>
-                            <h5 class="text-light">Friends that own this game</h5>
-                            <ul class="list-unstyled">
-                                <li v-for="friend in friends">
-                                    <router-link :to="{ name: 'Profile', params: { username: friend.username } }">
-                                        <img :src="friend.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" class="img-thumbnail w-25">
-                                        <h6 class="d-inline text-light">{{ friend.nickname }}</h6>
-                                    </router-link>
-                                </li>
-                            </ul>
+                            <div class="d-block d-lg-flex mt-5">
+                                <div class="col-12 col-lg-6">
+                                    <h5 class="text-light">Friends in game</h5>
+                                    <ul class="list-unstyled">
+                                        <li v-for="friend in friendsInGame" class="mb-2">
+                                            <router-link :to="{ name: 'Profile', params: { username: friend.username } }">
+                                                <img :src="friend.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" class="rounded">
+                                                <h6 class="d-inline text-light">{{ friend.nickname }}</h6>
+                                            </router-link>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <h5 class="text-light">Friends that own this game</h5>
+                                    <ul class="list-unstyled">
+                                        <li v-for="friend in friends" class="mb-2">
+                                            <router-link :to="{ name: 'Profile', params: { username: friend.username } }">
+                                                <img :src="friend.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" class="rounded">
+                                                <h6 class="d-inline text-light">{{ friend.nickname }}</h6>
+                                            </router-link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,14 +76,26 @@ const Library = {
                 .then(response => {
                     const promises = []
                     response.data.forEach((game, index) => {
-                        promises.push(
-                        axios.get("http://localhost:3000/api/games/" + game.gameId + "/steam")
-                            .then(res => {
-                                res.data.timePlayed = game.timePlayed < 60 ? game.timePlayed + " minutes" : Math.floor(game.timePlayed / 6) / 10 + " hours"
-                                this.games.push(res.data)
-                                return res.data
-                            })
-                            .catch(err => console.log(err)))
+                        if (game.isLocal)
+                            promises.push(
+                                axios.get("http://localhost:3000/api/games/" + game.gameId + "/local")
+                                    .then(res => {
+                                        res.data.timePlayed = game.timePlayed < 60 ? game.timePlayed + " minutes" : Math.floor(game.timePlayed / 6) / 10 + " hours"
+                                        res.data.header_image = '../static/img/' + game.gameId + '/' + res.data.header_image
+                                        res.data.type = 'game'
+                                        this.games.push(res.data)
+                                        return res.data
+                                    })
+                                    .catch(err => console.log(err)))
+                        else
+                            promises.push(
+                                axios.get("http://localhost:3000/api/games/" + game.gameId + "/steam")
+                                    .then(res => {
+                                        res.data.timePlayed = game.timePlayed < 60 ? game.timePlayed + " minutes" : Math.floor(game.timePlayed / 6) / 10 + " hours"
+                                        this.games.push(res.data)
+                                        return res.data
+                                    })
+                                    .catch(err => console.log(err)))
                     })
                     Promise.all(promises).then(games => {
                         if (games.length > 0) {

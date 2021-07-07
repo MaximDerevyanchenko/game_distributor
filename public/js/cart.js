@@ -151,7 +151,8 @@ const Cart = {
                 startedAt: 0,
                 timePlayed: 0,
                 name: this.gameToBuy.name,
-                gameId: this.gameToBuy.gameId
+                gameId: this.gameToBuy.gameId,
+                isLocal: this.gameToBuy.isLocal
             })
                 .then(() => this.$router.push({ name: 'Library', params: { username: Vue.$cookies.get('username')}}))
                 .catch(err => console.log(err))
