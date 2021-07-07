@@ -110,14 +110,18 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.addFriend = function (req, res) {
-        Account.updateOne({username: req.cookies.username}, {$addToSet: {pendingRequests: [req.body.username]}})
-            .then(() =>
-                Account.findOneAndUpdate({username: req.body.username}, {$addToSet: {friendRequests: [req.cookies.username]}})
-                    .then(friend => {
-                        io.emit('friendAdded', req.cookies.username, friend)
-                        res.json(friend)
-                    })
-                    .catch(err => res.send(err)))
+        Account.findOneAndUpdate({username: req.body.username}, {$addToSet: {friendRequests: [req.cookies.username]}})
+            .then(friend => {
+                if (friend !== null)
+                    Account.updateOne({username: req.cookies.username}, {$addToSet: {pendingRequests: [req.body.username]}})
+                        .then(() => {
+                            io.emit('friendAdded', req.cookies.username, friend)
+                            res.json(friend)
+                        })
+                        .catch(err => res.send(err))
+                else
+                    res.sendStatus(204)
+            })
             .catch(err => res.send(err))
     }
 

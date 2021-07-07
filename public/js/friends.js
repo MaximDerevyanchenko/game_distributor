@@ -9,36 +9,38 @@ const Friends = {
             friendRequests: [],
             pendingRequests: [],
             friendToRemove: { },
-            logged: false
+            logged: false,
+            errorText: ""
         }
     },
     template: `
     <div class="d-flex flex-column align-items-center mt-4">
-        <form v-if="logged && username == Vue.$cookies.get('username')" class="d-flex justify-content-around w-auto">
+        <form v-if="logged && username === Vue.$cookies.get('username')" class="d-flex justify-content-around w-auto">
             <div class="col">
-                <div class="form-floating">
+                <div class="form-floating has-validation">
                     <input id="friend" class="form-control bg-secondary text-white" placeholder="friend" v-model="friendToAdd" required type="text"/>
                     <label for="friend">Friend username</label>
+                    <div class="invalid-feedback">{{ errorText }}</div>
                 </div>
             </div>
             <div class="w-auto align-self-center ms-3">
                 <button class="btn btn-outline-light" @click.prevent="addFriend">Add Friend<i class="fas fa-user-plus ms-2"></i></button>
             </div>
         </form>
-        <h3 class="mt-3" v-if="friends.length !== 0">Your friends</h3>
+        <h3 class="mt-3" v-if="friends.length !== 0">{{ username === Vue.$cookies.get('username') ? 'Your friends' : 'Friends' }}</h3>
         <h3 v-else class="text-center mt-3">{{ username }} doesn't have friends yet.</h3>
         <h4 class="m-3" v-if="onlineFriends.length !== 0">Online</h4>
         <div class="card bg-dark text-white border p-3" v-for="friend in onlineFriends" role="button">
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username">
                 <div class="row g-0">
                     <div class="col-3">
-                        <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
+                        <img class="card-img col-md-2" :src="friend.avatarImg ? '../static/img/' + friend.username + '/' + friend.avatarImg : '../static/img/no-profile-image.png'" :alt="friend.nickname" />
                     </div>
                     <div class="card-body col-9">
                         <h3 >{{ friend.nickname }}</h3>
                         <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                         <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                        <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
+                        <button v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click.prevent="friendToRemove = friend">Remove Friend</button>
                     </div>
                 </div>
             </router-link>
@@ -48,13 +50,13 @@ const Friends = {
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username">
                 <div class="row g-0">
                     <div class="col-3">
-                        <img v-if="friend.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friend.username + '/' + friend.avatarImg" :alt="friend.nickname" />
+                        <img class="card-img col-md-2" :src="friend.avatarImg ? '../static/img/' + friend.username + '/' + friend.avatarImg : '../static/img/no-profile-image.png'" :alt="friend.nickname" />
                     </div>
                     <div class="card-body col-9">
                         <h3>{{ friend.nickname }}</h3>
                         <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                         <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                        <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="friendToRemove = friend">Remove Friend</button>
+                        <button v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click.prevent="friendToRemove = friend">Remove Friend</button>
                     </div>
                 </div>
             </router-link>
@@ -64,14 +66,14 @@ const Friends = {
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friendRequest.username">
                 <div class="row g-0">
                     <div class="col-3">
-                        <img v-if="friendRequest.avatarImg" class="card-img col-md-2" :src="'../static/img/' + friendRequest.username + '/' + friendRequest.avatarImg" :alt="friendRequest.nickname" />
+                        <img class="card-img col-md-2" :src="friendRequest.avatarImg ? '../static/img/' + friendRequest.username + '/' + friendRequest.avatarImg : '../static/img/no-profile-image.png'" :alt="friendRequest.nickname" />
                     </div>
                     <div class="card-body col-9">
                         <h3>{{ friendRequest.nickname }}</h3>
                         <p class="card-text">State: {{friendRequest.state}} {{ friendRequest.inGame}}</p>
                         <p class="card-text"><small class="text-muted">Last online {{ friendRequest.lastOnline}}</small></p>
-                        <button @click="acceptFriend(friendRequest.username)" class="btn btn-outline-success">Accept friendship</button>
-                        <button @click="denyFriend(friendRequest.username)" class="btn btn-outline-danger">Deny friendship</button>
+                        <button @click.prevent="acceptFriend(friendRequest.username)" class="btn btn-outline-success">Accept friendship</button>
+                        <button @click.prevent="denyFriend(friendRequest.username)" class="btn btn-outline-danger">Deny friendship</button>
                     </div>
                 </div>
             </router-link>
@@ -81,7 +83,7 @@ const Friends = {
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + pendingRequest.username">
                 <div class="row g-0">
                     <div class="col-3">
-                        <img v-if="pendingRequest.avatarImg" class="card-img col-md-2" :src="'../static/img/' + pendingRequest.username + '/' + pendingRequest.avatarImg" :alt="pendingRequest.nickname" />
+                        <img class="card-img col-md-2" :src="pendingRequest.avatarImg ? '../static/img/' + pendingRequest.username + '/' + pendingRequest.avatarImg : '../static/img/no-profile-image.png'" :alt="pendingRequest.nickname" />
                     </div>
                     <div class="card-body col-9">
                         <h3>{{ pendingRequest.nickname }}</h3>
@@ -100,7 +102,7 @@ const Friends = {
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure to remove <em>{{ friendToRemove.nickname }}<em>?</p>
+                        <p>Are you sure to remove <em>{{ friendToRemove.nickname }}</em>?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
@@ -130,9 +132,7 @@ const Friends = {
         },
         getFriendRequests: function (){
             axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/friends/requests")
-                .then(res => {
-                    this.friendRequests = res.data
-                })
+                .then(res => this.friendRequests = res.data)
                 .catch(err => console.log(err))
         },
         getPendingRequests: function (){
@@ -141,21 +141,26 @@ const Friends = {
                 .catch(err => console.log(err))
         },
         addFriend: function (){
+            document.querySelector('#friend').classList.add('is-invalid')
             if (this.friendToAdd !== this.$props.username) {
-                if (this.friends.includes({ username: this.friendToAdd }))
-                    alert('You already added ' + this.friendToAdd + ' as a friend!')
-                else if (this.friendRequests.includes({ username: this.friendToAdd }))
-                    alert('You already send a friend request to ' + this.friendToAdd)
+                if (this.friends.map(f => f.username).includes(this.friendToAdd))
+                    this.errorText = 'You already added ' + this.friendToAdd + ' as a friend!'
+                else if (this.pendingRequests.map(r => r.username).includes(this.friendToAdd))
+                    this.errorText = 'You already sent a friend request to ' + this.friendToAdd
                 else
                     axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/friends", { username: this.friendToAdd})
                         .then(res => {
-                            this.friendToAdd = ""
-                            if (!this.pendingRequests.map(p => p.username).includes(res.data.username))
+                            if (res.status === 200) {
+                                this.friendToAdd = ""
                                 this.pendingRequests.push(res.data)
+                                document.querySelector('#friend').classList.remove('is-invalid')
+                            } else {
+                                this.errorText = "This user doesn't exist."
+                            }
                         })
                         .catch(err => console.log(err))
             } else
-                alert('You cannot add yourself as a friend!')
+                this.errorText = 'You cannot add yourself as a friend!'
         },
         removeFriend: function () {
             axios.delete('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/friends/' + this.friendToRemove.username)

@@ -12,7 +12,7 @@ global.appRoot = path.resolve(__dirname);
 
 const PORT = 3000;
 
-mongoose.connect('mongodb://localhost/steam', { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost/stim', { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true });
 
 app.use(cookieParser())
 app.use(multipart({ }))

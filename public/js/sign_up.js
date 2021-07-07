@@ -275,6 +275,7 @@ const SignUp = {
             form.append('backgroundImg', this.account.backgroundImg)
             form.append('state', this.account.state)
             form.append('lastOnline', new Date().toLocaleString())
+            form.append('isDeveloper', false.toString())
             return form
         }
     },
