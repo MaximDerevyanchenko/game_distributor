@@ -21,6 +21,7 @@ app.use(multipart({ }))
 app.use(express.json());
 
 app.use('/static', express.static(__dirname + '/public'));
+app.use('/scripts', express.static(__dirname + '/node_modules'))
 
 const routes = require('./src/routes/routes');
 routes(app, mongoose, io);

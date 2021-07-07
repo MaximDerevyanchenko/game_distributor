@@ -18,7 +18,7 @@ const Dev = {
          <div v-if="account.isDeveloper" class="d-flex flex-column justify-content-center">
             <h2 class="text-center mb-3">My Games</h2>
             <div class="text-center">
-                <button class="btn btn-outline-light" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game in ...?</button>
+                <button class="btn btn-outline-light" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game into Stim?</button>
             </div>
             <div class="d-flex flex-column bg-secondary m-5">
                 <router-link v-for="game in games" class="p-1 border rounded border-1 text-light" :to="{ name: 'Game', params: { gameId: game.gameId }}">
@@ -32,7 +32,7 @@ const Dev = {
             </div>
         </div>
         <div v-else class="d-flex flex-column">
-            <p class="text-center">You're not yet a developer. Come on, click below and become a developer to add your games into ...!</p>
+            <p class="text-center">You're not yet a developer. Come on, click below and become a developer to add your games into Stim!</p>
             <div class="text-center">
                 <button class="btn btn-outline-light" @click="becomeDeveloper">Become a developer</button>
             </div>
