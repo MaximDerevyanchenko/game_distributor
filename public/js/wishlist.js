@@ -28,11 +28,11 @@ const Wishlist = {
                         <div class="card-body bg-secondary text-white text-center" @click="goToGame(index)" role="button">
                             <h5 class="card-title mt-2 mb-4">{{game.name}}</h5>
                             <p class="card-text">{{game.short_description | escape }}</p>
-                            <small class="card-text text-muted">Price: {{ game.price_overview.final_formatted }}</small>
+                            <small class="card-text text-muted">{{ game.release_date && game.release_date.coming_soon ? 'Price not available' : 'Price: ' + game.price_overview.final_formatted }}</small>
                         </div>
                          <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
-                            <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
-                            <button v-if="logged && username == Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
+                            <button v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
+                            <button v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
                             <button v-else-if="logged" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
                          </div>
                     </div>
