@@ -28,6 +28,7 @@ const Navbar = {
                             <button class="btn btn-outline-light h-100" data-bs-toggle="dropdown"><i class="fas fa-user-circle me-2"></i>{{ logged ? Vue.$cookies.get('username') : 'Account'}}</button>
                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-start dropdown-menu-md-end bg-secondary">
                                 <li><router-link :to="'/profile/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-user me-2"></i>Profile</router-link></li>
+                                <li><router-link to="/dev" class="dropdown-item"><i class="fas fa-file-code me-2"></i>Developing</router-link></li>  
                                 <li><router-link :to="'/library/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-book-open me-2"></i>Library</router-link></li>
                                 <li><router-link to="/cart" class="dropdown-item"><i class="fas fa-shopping-cart me-2"></i>Cart</router-link></li>
                                 <li><router-link :to="'/wishlist/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-clipboard-list me-2"></i>Wishlist</router-link></li>

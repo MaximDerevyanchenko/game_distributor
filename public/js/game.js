@@ -1,4 +1,3 @@
-//TODO tracciare il logout dalla pagina del gioco
 const Game = {
     props: ['gameId'],
     data: function () {
@@ -34,15 +33,16 @@ const Game = {
                     </button>
                     <div class="carousel-indicators">
                         <button v-if="game.isLocal" ref="indicators" type="button" class="active" aria-current="true" data-bs-target="#carousel" data-bs-slide-to="0" aria-label="0"></button>
-                        <button v-for="(screenshot, index) in game.screenshots" ref="indicators" type="button" :class="index == 0 ? 'active' : ''" :aria-current="index == 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="index"></button>
+                        <button v-for="(screenshot, index) in game.screenshots" ref="indicators" type="button" :class="index === 0 ? 'active' : ''" :aria-current="index === 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="index"></button>
                     </div>
                     <div class="carousel-inner mx-auto">
                         <div class="carousel-item" data-bs-interval="3000" v-if="game.isLocal" ref="items" class="active">
                             <div class="d-flex justify-content-center">
                                 <img v-if="game.header_image !== ''" :src="'../../static/img/' + game.gameId + '/' + game.header_image" class="w-75" alt="Game screenshot" />
+                                <img v-else :src="'../../static/img/no-image.png'" class="w-75" alt="Game screenshot" />
                             </div>
                         </div>
-                        <div class="carousel-item" data-bs-interval="3000" v-for="(screenshot, index) in game.screenshots" ref="items" :class="index == 0 ? 'active' : ''">
+                        <div class="carousel-item" data-bs-interval="3000" v-for="(screenshot, index) in game.screenshots" ref="items" :class="index === 0 ? 'active' : ''">
                             <div class="d-flex justify-content-center">
                                 <img :src="screenshot.path_thumbnail" class="w-75" alt="Game screenshot" />
                             </div>
@@ -53,7 +53,7 @@ const Game = {
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
-                <div v-if="game.type == 'game'" class="mt-5">Online players: {{ onlinePlayers }}</div>
+                <div v-if="game.type === 'game'" class="mt-5">Online players: {{ onlinePlayers }}</div>
                 <div class="d-flex card bg-secondary mt-2">
                     <div class="d-inline d-md-flex flex-row justify-content-end align-self-center col-auto col-md-12 card-body">
                         <h4 class="me-auto h-100 align-self-center mb-3 mb-md-0">{{ game.name }}</h4>
@@ -64,13 +64,13 @@ const Game = {
                                 <div v-else class="bg-dark border border-light border-3 p-1 align-self-center">Already in Library</div>
                             </div>
                             <div v-else-if="game.price_overview" class="d-inline d-md-flex">
-                                <div v-if="game.price_overview.discount_percent != 0" class="d-flex">
+                                <div v-if="game.price_overview.discount_percent !== 0" class="d-flex">
                                     <div class="bg-success border border-success border-5 mb-3 mb-md-0 align-self-center">-{{ game.price_overview.discount_percent }}%</div>
                                     <div class="bg-dark border border-dark border-5 ms-2 mb-3 mb-md-0 align-self-center"><del>{{ game.price_overview.initial_formatted }}</del></div>
                                     <div class="bg-dark border border-success border-5 ms-2 mb-3 mb-md-0 me-2 align-self-center">{{ game.price_overview.final_formatted }}</div>
                                 </div>
                                 <div class="d-flex flex-row">
-                                    <div v-if="game.price_overview.discount_percent == 0" class="bg-dark border border-success border-5 me-2 align-self-center">{{ game.price_overview.final_formatted }}</div>
+                                    <div v-if="game.price_overview.discount_percent === 0" class="bg-dark border border-success border-5 me-2 align-self-center">{{ game.price_overview.final_formatted }}</div>
                                     <div v-if="!logged || !isInLibrary">
                                         <button @click="addToCart" class="btn btn-outline-light me-2 align-self-center">Add to cart</button>
                                         <button @click="addToWishlist" class="btn btn-outline-light align-self-center">Add to wishlist</button>
@@ -105,7 +105,7 @@ const Game = {
                     <div class="col-12 col-md-9 border border-end-0 border-bottom-0 ps-3 pt-3">
                         <h3>About the game</h3>
                         <p v-html="game.about_the_game"></p>
-                        <p v-if="game.about_the_game != game.detailed_description" v-html="game.detailed_description"></p>
+                        <p v-if="game.about_the_game !== game.detailed_description" v-html="game.detailed_description"></p>
                         
                         <h4 v-if="game.platforms">System Requirements</h4>
                         <ul v-if="game.platforms" class="nav nav-pills" role="tablist">
@@ -128,14 +128,14 @@ const Game = {
                             </div>
                             <div v-if="game.platforms && game.platforms.mac" class="tab-pane fade" id="mac" role="tabpanel" aria-labelledby="mac-tab">
                                 <div class="d-flex row">
-                                    <div v-if="game.mac_requirements.minimum" class="game.mac_requirements.recommended ? 'w-50' : 'w-100'" v-html="game.mac_requirements.minimum"></div>
-                                    <div v-if="game.mac_requirements.recommended" class="game.mac_requirements.minimum ? 'w-50' : 'w-100'" v-html="game.mac_requirements.recommended"></div>
+                                    <div v-if="game.mac_requirements.minimum" :class="game.mac_requirements.recommended ? 'w-50' : 'w-100'" v-html="game.mac_requirements.minimum"></div>
+                                    <div v-if="game.mac_requirements.recommended" :class="game.mac_requirements.minimum ? 'w-50' : 'w-100'" v-html="game.mac_requirements.recommended"></div>
                                 </div>
                             </div>
                             <div v-if="game.platforms && game.platforms.linux" class="tab-pane fade" id="linux" role="tabpanel" aria-labelledby="linux-tab">
                                 <div class="d-flex row">
-                                    <div v-if="game.linux_requirements.minimum" class="game.linux_requirements.recommended ? 'w-50' : 'w-100'" v-html="game.linux_requirements.minimum"></div>
-                                    <div v-if="game.linux_requirements.recommended" class="game.linux_requirements.minimum ? 'w-50' : 'w-100'" v-html="game.linux_requirements.recommended"></div>
+                                    <div v-if="game.linux_requirements.minimum" :class="game.linux_requirements.recommended ? 'w-50' : 'w-100'" v-html="game.linux_requirements.minimum"></div>
+                                    <div v-if="game.linux_requirements.recommended" :class="game.linux_requirements.minimum ? 'w-50' : 'w-100'" v-html="game.linux_requirements.recommended"></div>
                                 </div>
                             </div>
                         </div>
@@ -282,9 +282,6 @@ const Game = {
     mounted() {
         this.getGame()
         this.logged = this.$checkLogin()
-        this.$on('log-event', () => {
-            console.log("log")
-            this.logged = this.$checkLogin()
-        })
+        this.$on('log-event', () => this.logged = this.$checkLogin())
     }
 }
