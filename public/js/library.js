@@ -13,7 +13,7 @@ const Library = {
     template: `
         <div id="library" class="mt-3">
             <p class="text-center">Library</p>
-            <div class="d-block d-md-flex">
+            <div v-if="games.length !== 0" class="d-block d-md-flex">
                 <ul class="nav nav-pills flex-row flex-md-column col-12 col-md-3" role="tablist">
                     <li class="nav-item col-6 col-md-12 border border-light" role="presentation" v-for="(game, index) in games">
                         <button @click="getFriendsWithGame(game.gameId)" role="tab" class="nav-link w-100 h-100" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
@@ -48,7 +48,7 @@ const Library = {
                                     </ul>
                                 </div>
                                 <div class="col-12 col-lg-6">
-                                    <h5 class="text-light">Friends that own this game</h5>
+                                    <h5 class="text-light mt-3">Friends that own this game</h5>
                                     <div v-if="friends.length === 0" class="text-light ps-2">None of your friends has this game</div>
                                     <ul v-else class="list-unstyled">
                                         <li v-for="friend in friends" class="mb-2">
@@ -63,6 +63,9 @@ const Library = {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div v-else class="d-flex justify-content-center m-3">
+              <p>Your library is empty! Go to the <router-link to="/store" class="link-light">Store</router-link> and add something! <i class="fas fa-smile-wink"></i></p>
             </div>
         </div>
     `,

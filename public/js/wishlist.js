@@ -14,15 +14,15 @@ const Wishlist = {
         }
     },
     template: `
-    <div class="m-4 bg-gradient p-5">
+    <div class="mt-4 bg-gradient p-1 p-sm-5">
         <div id="spinner" class="d-flex justify-content-center align-items-center">
             <strong>Loading... </strong>
             <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
         </div>
         <div id="wishlistComp" class="d-none">
             <h4 class="text-center">Wishlist</h4>
-            <div v-if="games.length !== 0" :class="'row row-cols-' + size + ' g-4 mb-2'">
-                <div class="col" v-for="(game,index) in games">
+            <div v-if="games.length !== 0" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-2">
+                <div class="col p-0" v-for="(game,index) in games">
                     <div class="card h-100 m-4">
                         <img v-if="game.header_image !== ''" :src="game.isLocal ? '../static/img/' + game.gameId + '/' + game.header_image : game.header_image" :alt="game.name" class="card-img-top" @click="goToGame(index)" role="button"/>
                         <div class="card-body bg-secondary text-white text-center" @click="goToGame(index)" role="button">

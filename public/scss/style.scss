@@ -13,6 +13,12 @@ $gradient: linear-gradient(180deg, rgba(20,3,48,1) 0%, rgba(82,82,238,1) 20%, rg
   max-width: 100%;
 }
 
+h1 img {
+  width: 10%;
+  max-height: 100px;
+  max-width: 95px;
+}
+
 .tab-pane ul li img {
   height: 35px;
   width: auto;

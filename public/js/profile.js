@@ -18,7 +18,7 @@ const Profile = {
     <div class="position-relative container p-2">
         <div class="w-100 h-100 position-absolute top-50 start-50 translate-middle" id="backgroundImg"></div>
         <div class="d-flex mt-2 justify-content-center">
-            <div class="d-flex flex-column p-3 mt-2 bg-primary border rounded">
+            <div class="d-flex flex-column p-1 p-sm-3 mt-2 bg-primary border rounded">
                 <div class="card bg-transparent text-white">
                     <div class="row g-0">
                         <div class="col-12 col-lg-3">
@@ -91,7 +91,7 @@ const Profile = {
                         <button class="nav-link m-1" data-bs-toggle="pill" id="wish" data-bs-target="#wishlist" role="tab">Wishlist</button>
                     </li>
                 </ul>
-                <div v-if="!isEditOn" class="tab-content border rounded bg-secondary p-3" id="pills-tabContent">
+                <div v-if="!isEditOn" class="tab-content border rounded bg-secondary p-0 p-sm-3" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="library" role="tabpanel">
                         <library :username="username"></library>
                     </div>

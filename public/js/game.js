@@ -56,7 +56,7 @@ const Game = {
                 <div v-if="game.type === 'game'" class="mt-5">Online players: {{ onlinePlayers }}</div>
                 <div class="d-flex card bg-secondary mt-2">
                     <div class="d-inline d-md-flex flex-row justify-content-end align-self-center col-auto col-md-12 card-body">
-                        <h4 class="me-auto h-100 align-self-center mb-3 mb-md-0">{{ game.name }}</h4>
+                        <h4 class="me-auto h-100 align-self-center mb-3 mb-md-0 text-center">{{ game.name }}</h4>
                         <div v-if="game.release_date && !game.release_date.coming_soon">
                             <div v-if="game.is_free" class="d-flex">
                                 <div class="bg-success border border-success border-3 me-2 align-self-center">Free</div>

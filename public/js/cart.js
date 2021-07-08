@@ -7,7 +7,7 @@ const Cart = {
         }
     },
     template: `
-    <div class="d-flex flex-column align-items-center mt-4 bg-secondary bg-gradient rounded rounded-3 p-5">
+    <div class="d-flex flex-column align-items-center mt-4 bg-secondary bg-gradient rounded rounded-3 p-1 p-sm-5">
         <div id="spinner" class="d-flex align-items-center">
             <strong>Loading... </strong>
             <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
@@ -15,7 +15,7 @@ const Cart = {
         <div id="cart" class="d-none">
             <h4 class="text-center">Your shopping cart</h4>
             <div v-if="games.length !== 0" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-2">
-                <div class="col" v-for="(game,index) in games">
+                <div class="col p-0" v-for="(game,index) in games">
                     <div class="card h-100 m-4">
                         <img v-if="game.header_image !== ''" :src="game.isLocal ? '../static/img/' + game.gameId + '/' + game.header_image : game.header_image" :alt="game.name" class="card-img-top" @click="goToGame(index)" role="button"/>
                         <div class="card-body bg-secondary text-white text-center" @click="goToGame(index)" role="button">
