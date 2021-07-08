@@ -75,3 +75,21 @@ textarea {
 .toast-container {
   z-index: 5000;
 }
+
+@include media-breakpoint-down(md) {
+  .dropdown-menu {
+    background-color: $primary !important;
+  }
+}
+
+a .card-img {
+  height: 200px;
+  width: auto;
+}
+
+@include media-breakpoint-down(sm){
+  a .card-img {
+    height: 130px;
+  }
+}
+

@@ -15,14 +15,14 @@ const Profile = {
         }
     },
     template: `
-    <div class="position-relative container">
+    <div class="position-relative container p-2">
         <div class="w-100 h-100 position-absolute top-50 start-50 translate-middle" id="backgroundImg"></div>
-        <div class="d-flex mt-4 justify-content-center">
-            <div class="d-flex flex-column p-3 mt-5 bg-primary border rounded">
+        <div class="d-flex mt-2 justify-content-center">
+            <div class="d-flex flex-column p-3 mt-2 bg-primary border rounded">
                 <div class="card bg-transparent text-white">
                     <div class="row g-0">
-                        <div class="col">
-                            <img id="avatarImg" class="card-img-top rounded p-0 img-thumbnail" :src="account.avatarImg == '' ? '../static/img/no-profile-image.png' : '../static/img/' + account.username + '/' + account.avatarImg" alt="" >
+                        <div class="col-12 col-lg-3">
+                            <img id="avatarImg" class="card-img-top rounded p-0 img-thumbnail" :src="account.avatarImg === '' ? '../static/img/no-profile-image.png' : '../static/img/' + account.username + '/' + account.avatarImg" alt="" >
                             <div v-if="isEditOn" class="mt-2">
                                 <div class="row">
                                     <label class="input-group-text bg-transparent text-white border-0" for="avatar">Choose your avatar</label>
@@ -34,7 +34,7 @@ const Profile = {
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between ms-3 col-5">
                             <div v-if="!isEditOn" class="card-title row row-cols-1 row-cols-lg-2 align-items-center">
-                                <h2>{{ account.nickname }} <span class="badge rounded-pill fs-6" :class="account.state == 'offline' ? 'bg-dark' : 'bg-success'">{{ account.state }}</span></h2>
+                                <h2>{{ account.nickname }} <span class="badge rounded-pill fs-6" :class="account.state === 'offline' ? 'bg-dark' : 'bg-success'">{{ account.state }}</span></h2>
                                 <div class="d-flex justify-content-end">
                                     <router-link v-if="Vue.$cookies.get('username') === username" class="btn btn-outline-info " to="/dev">I'm a Developer</router-link>
                                 </div>
@@ -62,7 +62,7 @@ const Profile = {
                                 </div>
                             </div>
                             <label for="bio" class="card-text mb-0 mt-1">Bio:</label>
-                            <p class="" v-if="!isEditOn">{{ account.bio }}</p>
+                            <p class="text-break" v-if="!isEditOn">{{ account.bio }}</p>
                             <textarea v-else class="bg-transparent text-white mt-1" placeholder="Your bio" id="bio" v-model="account.bio"></textarea>
                             <div v-if="isEditOn" class="row row-cols-1 row-cols-lg-2 my-4 justify-content-center">
                                 <div class="col">
@@ -73,7 +73,7 @@ const Profile = {
                                 </div>
                             </div>
                              <div class="row justify-content-end gy-2 me-2">
-                                <button v-if="logged && username == Vue.$cookies.get('username') && !isEditOn" class="w-auto btn btn-outline-light" @click="isEditOn = true">Edit profile</button>
+                                <button v-if="logged && username === Vue.$cookies.get('username') && !isEditOn" class="w-auto btn btn-outline-light" @click="isEditOn = true">Edit profile</button>
                                 <button v-if="isEditOn" class="w-auto btn btn-outline-danger" @click="discardChanges">Discard changes</button>
                                 <button v-if="isEditOn" class="w-auto btn btn-outline-success ms-3" @click="saveChanges">Save changes</button>
                             </div>
@@ -157,7 +157,7 @@ const Profile = {
         discardChanges: function (){
             this.isEditOn = false
             this.account.bio = this.oldBio
-            document.querySelector('#avatarImg').src = '../static/img/' + this.account.username + '/' + this.account.avatarImg
+            document.querySelector('#avatarImg').src = this.account.avatarImg !== '' ? '../static/img/' + this.account.username + '/' + this.account.avatarImg : '../static/img/no-profile-image.png'
             document.querySelector('#backgroundImg').style.backgroundImage = 'url(../static/img/' + this.account.username + '/' + this.account.backgroundImg + ')'
         },
         getCountries: function () {

@@ -15,12 +15,12 @@ const Friends = {
     },
     template: `
     <div class="d-flex flex-column align-items-center mt-4">
-        <form v-if="logged && username === Vue.$cookies.get('username')" class="d-flex justify-content-around w-auto">
+        <form v-if="logged && username === Vue.$cookies.get('username')" class="d-flex justify-content-around row row-cols-1 row-cols-lg-2">
             <div class="col">
                 <div class="form-floating has-validation">
-                    <input id="friend" class="form-control bg-secondary text-white" placeholder="friend" v-model="friendToAdd" required type="text"/>
+                    <input id="friend" class="form-control bg-secondary text-white mb-2 mb-md-0" placeholder="friend" v-model="friendToAdd" required type="text"/>
                     <label for="friend">Friend username</label>
-                    <div class="invalid-feedback">{{ errorText }}</div>
+                    <div class="invalid-feedback mb-2 mb-md-0">{{ errorText }}</div>
                 </div>
             </div>
             <div class="w-auto align-self-center ms-3">
@@ -30,13 +30,13 @@ const Friends = {
         <h3 class="mt-3" v-if="friends.length !== 0">{{ username === Vue.$cookies.get('username') ? 'Your friends' : 'Friends' }}</h3>
         <h3 v-else class="text-center mt-3">{{ username }} doesn't have friends yet.</h3>
         <h4 class="m-3" v-if="onlineFriends.length !== 0">Online</h4>
-        <div class="card bg-dark text-white border p-3" v-for="friend in onlineFriends" role="button">
+        <div class="card bg-dark text-white border col-12 col-lg-7 p-3" v-for="friend in onlineFriends" role="button">
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username">
-                <div class="row g-0">
-                    <div class="col-3">
-                        <img class="card-img col-md-2" :src="friend.avatarImg ? '../static/img/' + friend.username + '/' + friend.avatarImg : '../static/img/no-profile-image.png'" :alt="friend.nickname" />
+                <div class="d-lg-flex g-0">
+                    <div>
+                        <img class="card-img" :src="friend.avatarImg ? '../static/img/' + friend.username + '/' + friend.avatarImg : '../static/img/no-profile-image.png'" :alt="friend.nickname" />
                     </div>
-                    <div class="card-body col-9">
+                    <div class="card-body">
                         <h3 >{{ friend.nickname }}</h3>
                         <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                         <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
@@ -46,13 +46,13 @@ const Friends = {
             </router-link>
         </div>
         <h4 class="m-3" v-if="offlineFriends.length !== 0">Offline</h4>
-        <div class="card bg-dark text-white border p-3 w-50" v-for="friend in offlineFriends" role="button">
+        <div class="card bg-dark text-white border p-3 col-12 col-lg-7" v-for="friend in offlineFriends" role="button">
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username">
-                <div class="row g-0">
-                    <div class="col-3">
-                        <img class="card-img col-md-2" :src="friend.avatarImg ? '../static/img/' + friend.username + '/' + friend.avatarImg : '../static/img/no-profile-image.png'" :alt="friend.nickname" />
+                <div class="d-lg-flex g-0">
+                    <div>
+                        <img class="card-img" :src="friend.avatarImg ? '../static/img/' + friend.username + '/' + friend.avatarImg : '../static/img/no-profile-image.png'" :alt="friend.nickname" />
                     </div>
-                    <div class="card-body col-9">
+                    <div class="card-body">
                         <h3>{{ friend.nickname }}</h3>
                         <p class="card-text">State: {{friend.state}} {{ friend.inGame}}</p>
                         <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
@@ -62,30 +62,30 @@ const Friends = {
             </router-link>
         </div>
         <h4 class="m-3" v-if="logged && friendRequests.length !== 0">Friend Requests</h4>
-        <div class="card bg-dark text-white border p-3 w-50" v-for="friendRequest in friendRequests" role="button">
+        <div class="card bg-dark text-white border p-3 col-12 col-lg-7" v-for="friendRequest in friendRequests" role="button">
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friendRequest.username">
-                <div class="row g-0">
-                    <div class="col-3">
-                        <img class="card-img col-md-2" :src="friendRequest.avatarImg ? '../static/img/' + friendRequest.username + '/' + friendRequest.avatarImg : '../static/img/no-profile-image.png'" :alt="friendRequest.nickname" />
+                <div class="d-lg-flex g-0">
+                    <div>
+                        <img class="card-img" :src="friendRequest.avatarImg ? '../static/img/' + friendRequest.username + '/' + friendRequest.avatarImg : '../static/img/no-profile-image.png'" :alt="friendRequest.nickname" />
                     </div>
-                    <div class="card-body col-9">
+                    <div class="card-body">
                         <h3>{{ friendRequest.nickname }}</h3>
                         <p class="card-text">State: {{friendRequest.state}} {{ friendRequest.inGame}}</p>
                         <p class="card-text"><small class="text-muted">Last online {{ friendRequest.lastOnline}}</small></p>
-                        <button @click.prevent="acceptFriend(friendRequest.username)" class="btn btn-outline-success">Accept friendship</button>
+                        <button @click.prevent="acceptFriend(friendRequest.username)" class="btn btn-outline-success mb-2 mb-md-0">Accept friendship</button>
                         <button @click.prevent="denyFriend(friendRequest.username)" class="btn btn-outline-danger">Deny friendship</button>
                     </div>
                 </div>
             </router-link>
         </div>
         <h4 class="m-3" v-if="logged && pendingRequests.length !== 0">Pending Requests</h4>
-         <div class="card bg-dark text-white border p-3" v-for="pendingRequest in pendingRequests" role="button">
+         <div class="card bg-dark text-white border p-3 col-12 col-lg-7" v-for="pendingRequest in pendingRequests" role="button">
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + pendingRequest.username">
-                <div class="row g-0">
-                    <div class="col-3">
-                        <img class="card-img col-md-2" :src="pendingRequest.avatarImg ? '../static/img/' + pendingRequest.username + '/' + pendingRequest.avatarImg : '../static/img/no-profile-image.png'" :alt="pendingRequest.nickname" />
+                <div class="d-lg-flex g-0">
+                    <div>
+                        <img class="card-img" :src="pendingRequest.avatarImg ? '../static/img/' + pendingRequest.username + '/' + pendingRequest.avatarImg : '../static/img/no-profile-image.png'" :alt="pendingRequest.nickname" />
                     </div>
-                    <div class="card-body col-9">
+                    <div class="card-body">
                         <h3>{{ pendingRequest.nickname }}</h3>
                         <p class="card-text">State: {{pendingRequest.state}} {{ pendingRequest.inGame}}</p>
                         <p class="card-text"><small class="text-muted">Last online {{ pendingRequest.lastOnline}}</small></p>

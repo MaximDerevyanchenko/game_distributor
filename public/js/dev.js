@@ -14,13 +14,13 @@ const Dev = {
         }
     },
     template: `
-    <div class="border rounded border-light m-4 p-3">
-         <div v-if="account.isDeveloper" class="d-flex flex-column justify-content-center">
-            <h2 class="text-center mb-3">My Games</h2>
+    <div class="p-2 mt-3 row justify-content-center">
+         <div v-if="account.isDeveloper" class="d-flex flex-column border rounded border-light justify-content-center col-12 col-lg-8 pb-3">
+            <h2 class="text-center m-3">My Games</h2>
             <div class="text-center">
                 <button class="btn btn-outline-light" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game into Stim?</button>
             </div>
-            <div class="d-flex flex-column bg-secondary m-5">
+            <div class="d-flex flex-column bg-secondary m-2 mt-3 ms-md-5 me-md-5">
                 <router-link v-for="game in games" class="p-1 border rounded border-1 text-light" :to="{ name: 'Game', params: { gameId: game.gameId }}">
                     <div class="d-flex justify-content-between">
                         <div>{{ game.name }}</div>
@@ -87,7 +87,8 @@ const Dev = {
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
                         <button type="submit" @click.prevent="addGame" class="btn btn-outline-light">Add</button>
                     </div>
                 </form>
