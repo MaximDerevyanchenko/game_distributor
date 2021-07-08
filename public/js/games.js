@@ -18,10 +18,10 @@ const Games = {
                     <span class="visually-hidden">Previous</span>
                 </button>
                 <div class="carousel-indicators">
-                    <button v-for="(game, index) in games" ref="indicators" type="button" :class="index == 0 ? 'active' : ''" :aria-current="index == 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="game.name"></button>
+                    <button v-for="(game, index) in games" ref="indicators" type="button" :class="index === 0 ? 'active' : ''" :aria-current="index === 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="game.name"></button>
                 </div>
                 <div class="carousel-inner bg-dark">
-                    <div class="carousel-item p-1" @click="goToGame(game)" role="button" data-bs-interval="3000" v-for="(game,index) in games" ref="items" :class="index == 0 ? 'active' : ''">
+                    <div class="carousel-item p-1" @click="goToGame(game)" role="button" data-bs-interval="3000" v-for="(game,index) in games" ref="items" :class="index === 0 ? 'active' : ''">
                         <div class="w-100 h-100 position-absolute top-50 start-50 translate-middle" id="backgroundImg" :style="'background: url(' + game.background + ')'"></div>
                          <div class="d-block d-lg-flex justify-content-center">
                             <img :src="game.header_image" class="d-inline col-12 col-lg-8 ps-lg-3" :alt="game.name" /> 

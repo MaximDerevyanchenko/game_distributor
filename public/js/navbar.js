@@ -17,7 +17,7 @@ const Navbar = {
                         <router-link class="nav-link active text-light" id="store" to="/store">Store</router-link>
                     </li>
                     <li class="nav-item mt-2 mb-2">
-                        <form class="d-flex col-6 col-md-auto">
+                        <form class="d-flex col-12 col-sm-9 col-md-auto">
                             <input class="form-control me-2 bg-primary text-white" type="search" placeholder="Type..." aria-label="Search" v-model="name"/>
                             <button class="btn btn-outline-light" type="submit" @click.prevent="searchGame">Search</button>
                         </form>

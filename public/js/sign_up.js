@@ -26,7 +26,7 @@ const SignUp = {
         }
     },
     template: `
-<div class="d-flex justify-content-center container">
+<div class="d-flex justify-content-center container p-0">
     <form ref="form" class="needs-validation bg-secondary border border-light border-2 shadow-lg rounded mt-4 p-4" novalidate>
         <h4 class="display-4 text-center mb-4">Sign Up</h4>
         <div class="row row-cols-1 row-cols-lg-2 gy-4 mb-4">
