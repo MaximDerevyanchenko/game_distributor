@@ -1,4 +1,8 @@
 module.exports = function(app, mongoose, io) {
+	require('../models/accountModel')(mongoose)
+	require("../models/gameModel.js")(mongoose)
+	require('../models/gameCartModel')(mongoose)
+
 	const countryController = require('../controllers/countryController')
 	countryController(mongoose, io)
 	const accountController = require('../controllers/accountController')

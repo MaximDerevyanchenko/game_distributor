@@ -13,20 +13,20 @@ const Navbar = {
             </button>
             <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav mb-2 mb-md-0 d-flex justify-content-between w-100">
-                    <li class="nav-item mt-2">
+                    <li class="nav-item mt-2 mt-md-0">
                         <router-link class="nav-link active text-light" id="store" to="/store">Store</router-link>
                     </li>
-                    <li class="nav-item mt-2 mb-2">
+                    <li class="nav-item mt-2 mb-2 mt-md-0 mb-md-0">
                         <form class="d-flex col-12 col-sm-9 col-md-auto">
                             <input class="form-control me-2 bg-primary text-white" type="search" placeholder="Type..." aria-label="Search" v-model="name"/>
                             <button class="btn btn-outline-light" type="submit" @click.prevent="searchGame">Search</button>
                         </form>
                     </li>
-                    <li class="nav-item mt-2">
+                    <li class="nav-item mt-2 mt-md-0">
                         <button ref="show-login" class="btn btn-outline-light" v-if="!logged" data-bs-toggle="modal" data-bs-target="#login"><i class="fas fa-user-circle me-2"></i>Account</button>
                         <div v-else class="dropdown">
                             <button class="btn btn-outline-light h-100" data-bs-toggle="dropdown"><i class="fas fa-user-circle me-2"></i>{{ logged ? Vue.$cookies.get('username') : 'Account'}}</button>
-                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-start dropdown-menu-md-end bg-secondary border border-light">
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-start dropdown-menu-md-end bg-secondary position-absolute border border-light">
                                 <li><router-link :to="'/profile/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-user me-2"></i>Profile</router-link></li>
                                 <li><router-link to="/dev" class="dropdown-item"><i class="fas fa-file-code me-2"></i>Developing</router-link></li>  
                                 <li><router-link :to="'/library/' + Vue.$cookies.get('username')" class="dropdown-item"><i class="fas fa-book-open me-2"></i>Library</router-link></li>

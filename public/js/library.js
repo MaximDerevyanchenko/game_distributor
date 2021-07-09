@@ -12,14 +12,14 @@ const Library = {
     },
     template: `
         <div id="library" class="mt-3">
-            <p class="text-center">Library</p>
+            <h4 class="text-center mb-4">Library</h4>
             <div v-if="games.length !== 0" class="d-block d-md-flex">
                 <ul class="nav nav-pills flex-row flex-md-column col-12 col-md-3" role="tablist">
                     <li class="nav-item col-6 col-md-12 border border-light" role="presentation" v-for="(game, index) in games">
-                        <button @click="getFriendsWithGame(game.gameId)" role="tab" class="nav-link w-100 h-100" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
+                        <button @click="getFriendsWithGame(game.gameId)" role="tab" class="nav-link w-100 h-100 px-2 py-1 py-md-2" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
                     </li>
                 </ul>
-                <div ref="tab_content" class="tab-content bg-secondary p-2 col-12 col-md-9 col-lg-6" :class="games.length > 0 ? 'border' : ''">
+                <div ref="tab_content" class="tab-content bg-secondary p-2 col-12 col-md-9 col-xl-7" :class="games.length > 0 ? 'border' : ''">
                     <div v-for="game in games" class="tab-pane fade card bg-primary" role="tabpanel" :id="'g' + game.gameId">
                         <img :src="game.header_image" alt="game.name" class="w-100">
                         <div class="p-3">
@@ -48,7 +48,7 @@ const Library = {
                                     </ul>
                                 </div>
                                 <div class="col-12 col-lg-6">
-                                    <h5 class="text-light mt-3">Friends that own this game</h5>
+                                    <h5 class="text-light mt-3 mt-lg-0">Friends that own this game</h5>
                                     <div v-if="friends.length === 0" class="text-light ps-2">None of your friends has this game</div>
                                     <ul v-else class="list-unstyled">
                                         <li v-for="friend in friends" class="mb-2">

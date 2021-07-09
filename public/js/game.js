@@ -14,7 +14,7 @@ const Game = {
             <div class="mb-4">
                 <h3>{{ game.name }}</h3>
             </div>
-            <div class="col-12 col-lg-9">
+            <div class="col-12 col-xl-9">
                 <div class="d-block d-lg-flex">
                     <p class="me-auto col-lg-9">{{ game.short_description }}</p>
                     <div v-if="game.genres" class="card bg-primary border-0 mb-3 ms-0 ms-lg-3 col-lg-3 align-self-start">
@@ -72,7 +72,7 @@ const Game = {
                                 <div class="d-flex flex-row">
                                     <div v-if="game.price_overview.discount_percent === 0" class="bg-dark border border-success border-5 me-2 align-self-center">{{ game.price_overview.final_formatted }}</div>
                                     <div v-if="!logged || !isInLibrary">
-                                        <button @click="addToCart" class="btn btn-outline-light me-2 align-self-center">Add to cart</button>
+                                        <button @click="addToCart" class="btn btn-outline-light me-2 align-self-center mb-2 mt-2">Add to cart</button>
                                         <button @click="addToWishlist" class="btn btn-outline-light align-self-center">Add to wishlist</button>
                                     </div>
                                     <div v-else class="bg-dark border border-light border-3 p-1 align-self-center h-100">Already in Library</div>
@@ -101,8 +101,8 @@ const Game = {
                     </router-link>
                 </div>
                 
-                <div id="game-details" class="row mt-5">
-                    <div class="col-12 col-md-9 border border-end-0 border-bottom-0 ps-3 pt-3">
+                <div id="game-details" class="row gx-0 mt-5">
+                    <div class="col-12 col-md-9 border border-end-0 border-bottom-0 ps-3 pe-3 pt-3">
                         <h3>About the game</h3>
                         <p v-html="game.about_the_game"></p>
                         <p v-if="game.about_the_game !== game.detailed_description" v-html="game.detailed_description"></p>

@@ -5,7 +5,7 @@ $primary: #140330;
 $secondary: #160d27;
 
 $gradient: linear-gradient(180deg, rgba(20,3,48,1) 0%, rgba(82,82,238,1) 20%, rgba(0,0,0,1) 100%);
-
+$v-gradient: linear-gradient(135deg, rgba(0,0,0,1) 30%, rgba(82,82,238,1) 50%, rgba(0,0,0,1) 70%);
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
@@ -99,3 +99,20 @@ a .card-img {
   }
 }
 
+@include media-breakpoint-up(sm) {
+  .page-link {
+    padding: .375rem .75rem !important;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .page-link {
+    padding: .5rem 1.25rem !important;
+  }
+}
+
+.bg-v-gradient {
+  background-image: $v-gradient;
+  background-repeat: repeat;
+  background-size: 10px 10px;
+}

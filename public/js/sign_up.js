@@ -26,8 +26,8 @@ const SignUp = {
         }
     },
     template: `
-<div class="d-flex justify-content-center container p-0">
-    <form ref="form" class="needs-validation bg-secondary border border-light border-2 shadow-lg rounded mt-4 p-4" novalidate>
+<div class="d-flex justify-content-center">
+    <form ref="form" class="needs-validation bg-secondary border border-light border-2 shadow-lg container-sm rounded mt-4 p-4" novalidate>
         <h4 class="display-4 text-center mb-4">Sign Up</h4>
         <div class="row row-cols-1 row-cols-lg-2 gy-4 mb-4">
             <div class="col">
@@ -117,18 +117,20 @@ const SignUp = {
             </div>
         </div>
         <div class="row row-cols-1 row-cols-lg-2 gy-2" :class="!avatarPreview && backgroundPreview ? 'flex-row-reverse' : ''" v-if="avatarPreview || backgroundPreview">
-            <div class="col-6" v-if="avatarPreview">
+            <div class="col" v-if="avatarPreview">
                 <img class="img-thumbnail" :src="avatarPreview" :alt="account.avatarImg.name"/>
             </div>
-            <div class="col-6" v-if="backgroundPreview">
+            <div class="col" v-if="backgroundPreview">
                 <img class="img-thumbnail" :src="backgroundPreview" :alt="account.backgroundImg.name"/>
             </div>
         </div>
-        <div class="d-flex justify-content-between mt-4">
-            <div class="ms-2">
+        <div class="d-md-flex justify-content-between mt-4">
+            <div class="ms-2 col-12 col-md-6">
                 <em>All fields with <span class="text-danger">*</span> are required.</em>
             </div>
+            <div class="d-flex mt-2 justify-content-center">
             <button @click.prevent="signUp" class="btn btn-outline-light" type="submit">Sign Up<i class="fas fa-pen-fancy ms-2"></i></button>
+            </div>
         </div>
     </form>
 </div>`,

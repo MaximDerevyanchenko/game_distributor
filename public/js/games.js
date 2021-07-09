@@ -12,7 +12,7 @@ const Games = {
                 <strong class="fs-4 me-4 align-middle">Loading...</strong>
                 <div class="spinner-grow ms-4" role="status" aria-hidden="true"></div>
             </div>
-            <div v-if="progress == 100" id="carousel" ref="carousel" class="carousel slide carousel-fade mt-5 d-flex justify-content-center col-12 col-md-9 col-xl-6" data-bs-ride="carousel">
+            <div v-if="progress === 100" id="carousel" ref="carousel" class="carousel slide carousel-fade mt-5 d-flex justify-content-center col-12 col-md-9 col-xxl-6" data-bs-ride="carousel">
                 <button class="carousel-control" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>

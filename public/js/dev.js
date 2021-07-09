@@ -15,7 +15,7 @@ const Dev = {
     },
     template: `
     <div class="p-2 mt-3 row justify-content-center">
-         <div v-if="account.isDeveloper" class="d-flex flex-column border rounded border-light justify-content-center col-12 col-lg-8 pb-3">
+         <div v-if="account.isDeveloper" class="d-flex flex-column border rounded border-light justify-content-center col-12 col-md-10 col-lg-8 pb-3">
             <h2 class="text-center m-3">My Games</h2>
             <div class="text-center">
                 <button class="btn btn-outline-light" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game into Stim?</button>
@@ -55,7 +55,7 @@ const Dev = {
                         </div>
                         <div class="m-2 mt-4">
                             <div class="row">
-                                <div class="col d-flex flex-column justify-content-between">
+                                <div class="d-flex flex-column justify-content-between col-lg">
                                     <div>
                                         <label class="input-group-text bg-transparent text-white border-0" for="header">Add your header image</label>
                                         <div class="row">

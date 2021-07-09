@@ -1,5 +1,5 @@
 module.exports = function (mongoose, io) {
-    const GameCart = require('../models/gameCartModel')(mongoose)
+    const GameCart = mongoose.model('GameCart')
     const GameSchema = mongoose.model('GameSchema')
     const axios = require('axios')
 

@@ -1,6 +1,7 @@
 const fs = require('fs')
 module.exports = function (mongoose, io) {
-    const Account = require('../models/accountModel')(mongoose)
+    const Account = mongoose.model('AccountSchema')
+    const GameSchema = mongoose.model('GameSchema')
 
     module.exports.login = function (req, res) {
         Account.findOne({username: req.body.username, password: req.body.password})
@@ -68,7 +69,17 @@ module.exports = function (mongoose, io) {
                 acc.friends.forEach(friend =>
                     promises.push(
                         Account.findOne({username: friend})
-                            .then(fr => fr)
+                            .then(fr => {
+                                if (fr.state === 'in game')
+                                    return GameSchema.findOne({ gameId: fr.inGame })
+                                        .then(f => {
+                                            fr.inGame = f.name
+                                            return fr
+                                        })
+                                        .catch(err => res.send(err))
+                                else
+                                    return fr
+                            })
                             .catch(err => res.send(err))))
                 Promise.all(promises)
                     .then(friends => res.json(friends))

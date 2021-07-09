@@ -7,8 +7,8 @@ const Cart = {
         }
     },
     template: `
-    <div class="d-flex flex-column align-items-center mt-4 bg-secondary bg-gradient rounded rounded-3 p-1 p-sm-5">
-        <div id="spinner" class="d-flex align-items-center">
+    <div class="d-flex flex-column align-items-center mt-4 bg-secondary bg-gradient rounded rounded-3 p-1 p-md-3">
+        <div id="spinner" class="d-flex align-items-center m-3">
             <strong>Loading... </strong>
             <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
         </div>
@@ -34,9 +34,9 @@ const Cart = {
                 <p>Your cart is empty! Go to the <router-link to="/store" class="link-light">Store</router-link> and add something! <i class="fas fa-smile-wink"></i></p>
             </div>
             <div v-if="games.length !== 0" class="d-flex justify-content-center col-12 mt-5">Total: {{ games | computePrice }}</div>
-            <div class="w-100 d-flex justify-content-between mt-1">
-                <button v-if="games.length !== 0" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemoveAll">Remove all items</button>
-                <button v-if="games.length !== 0" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#confirmPurchaseAll">Purchase all items</button>
+            <div class="d-sm-flex justify-content-between mt-2 text-center">
+                <button v-if="games.length !== 0" class="btn btn-outline-danger m-2 m-sm-0" data-bs-toggle="modal" data-bs-target="#confirmRemoveAll">Remove all items</button>
+                <button v-if="games.length !== 0" class="btn btn-outline-success m-2 m-sm-0" data-bs-toggle="modal" data-bs-target="#confirmPurchaseAll">Purchase all items</button>
             </div>
         </div>
         <div id="confirmRemove" class="modal fade" tabindex="-1" aria-labelledby="confirmRemove" aria-hidden="true">

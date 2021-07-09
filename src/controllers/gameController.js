@@ -1,5 +1,5 @@
 module.exports = function (mongoose, io) {
-	const GameSchema = require("../models/gameModel.js")(mongoose)
+	const GameSchema = mongoose.model('GameSchema')
 	const Accounts = mongoose.model('AccountSchema')
 	const fs = require('fs')
 	const axios = require('axios')
