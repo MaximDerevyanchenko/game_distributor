@@ -1,5 +1,3 @@
-// TODO controllare la notifica al gioco
-// TODO testare richieste di amicizia a vicenda
 const Notification = {
     data: function() {
         return {

@@ -11,9 +11,13 @@ const Library = {
         }
     },
     template: `
-        <div id="library" class="mt-3">
+        <div class="mt-3">
             <h4 class="text-center mb-4">Library</h4>
-            <div v-if="games.length !== 0" class="d-block d-md-flex">
+            <div id="spinner" class="d-flex align-items-center m-3 justify-content-center">
+              <strong>Loading... </strong>
+              <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
+            </div>
+            <div id="Library" v-if="games.length !== 0" class="d-none">
                 <ul class="nav nav-pills flex-row flex-md-column col-12 col-md-3" role="tablist">
                     <li class="nav-item col-6 col-md-12 border border-light" role="presentation" v-for="(game, index) in games">
                         <button @click="getFriendsWithGame(game.gameId)" role="tab" class="nav-link w-100 h-100 px-2 py-1 py-md-2" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
@@ -29,8 +33,8 @@ const Library = {
                             </div>
                             <div v-if="game.type === 'game'">
                                 <div v-if="logged && username === Vue.$cookies.get('username')">
-                                    <button v-if="gamePlaying !== game.gameId" id="startGame" :disabled="gamePlaying !== ''" @click="startGame(game.gameId)" class="btn btn-outline-light">Start Game</button>
-                                    <button v-else @click="stopGame" id="stopGame" class="btn btn-outline-light">Stop Game</button>
+                                  <button v-if="gamePlaying === game.gameId" @click="stopGame" id="stopGame" class="btn btn-outline-light">Stop Game</button>
+                                  <button v-else id="startGame" :disabled="gamePlaying !== ''" @click="startGame(game.gameId)" class="btn btn-outline-light">Start Game</button>
                                 </div>
                             </div>
                             <div v-else class="d-inline-block bg-dark border border-danger border-3 p-1 mt-2">Content not playable</div>
@@ -64,7 +68,7 @@ const Library = {
                     </div>
                 </div>
             </div>
-            <div v-else class="d-flex justify-content-center m-3">
+            <div v-else id="emptyLib" class="justify-content-center m-3 d-none">
               <p>Your library is empty! Go to the <router-link to="/store" class="link-light">Store</router-link> and add something! <i class="fas fa-smile-wink"></i></p>
             </div>
         </div>
@@ -110,6 +114,12 @@ const Library = {
                             document.querySelector('button[data-bs-target="#g' + games[0].gameId + '"]').classList.add('active')
                             document.querySelector('#g' + games[0].gameId).classList.add('active', 'show')
                             this.getFriendsWithGame(games[0].gameId)
+                            document.querySelector('#spinner').classList.add('d-none')
+                            document.querySelector('#Library').classList.remove('d-none')
+                            document.querySelector('#Library').classList.add('d-block', 'd-md-flex')
+                        } else {
+                            document.querySelector('#emptyLib').classList.remove('d-none')
+                            document.querySelector('#emptyLib').classList.add('d-flex')
                         }
                     })
                 })
@@ -123,11 +133,14 @@ const Library = {
                 axios.post("http://localhost:3000/api/account/" + this.$props.username, {state: "in game", inGame: gameId})
                     .then(() => {
                         this.gamePlaying = gameId
+                        console.log(3 === 3)
                         window.addEventListener('beforeunload', _ => {
-                            axios.post('http://localhost:3000/api/account/' + this.$props.username + '/library/' + this.gamePlaying + '/close')
-                                .then(_ => {})
+                            this.stopGame()
+                            axios.post("http://localhost:3000/api/account/" + this.$props.username, { state: "offline" })
+                                .then(() => {})
                                 .catch(err => console.log(err))
                         })
+                        this.$parent.$emit('log-event')
                     })
                     .catch(err => console.log(err))
             }

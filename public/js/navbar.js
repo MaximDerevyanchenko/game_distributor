@@ -69,5 +69,18 @@ const Navbar = {
         this.$on('login-needed', () => {
             this.$refs['show-login'].click()
         })
+        window.addEventListener('load', () => {
+            axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/state', { state: "online" })
+                .then(() => {
+                    this.$emit("log-event")
+                    this.$parent.$children[2].$emit("log-event")
+                })
+                .catch(err => console.log(err))
+        })
+        window.addEventListener('beforeunload', _ => {
+            axios.post("http://localhost:3000/api/account/" + this.$props.username, { state: "offline" })
+                .then(() => {})
+                .catch(err => console.log(err))
+        })
     }
 }

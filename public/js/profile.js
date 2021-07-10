@@ -1,4 +1,3 @@
-// TODO controllare caricamento immagine
 const Profile = {
     props: ['username'],
     data: function() {
@@ -16,7 +15,7 @@ const Profile = {
         }
     },
     template: `
-    <div class="position-relative  m-0 p-2">
+    <div class="position-relative m-0 p-2">
         <div class="w-100 h-100 position-absolute top-50 start-50 translate-middle mt-3" id="backgroundImg"></div>
         <div class="d-flex mt-2 container justify-content-center p-0">
             <div class="d-flex flex-column mt-2 bg-primary p-2 rounded rounded-3">
@@ -35,10 +34,11 @@ const Profile = {
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between col-5 p-2 p-md-3">
                             <div v-if="!isEditOn" class="card-title row row-cols-1 row-cols-lg-2 align-items-center">
-                              <h2 class="w-auto mb-0">{{ account.nickname }}</h2><span class="badge border border-light rounded-pill mb-1 fs-6 align-self-end w-auto" :class="account.state === 'offline' ? 'bg-dark' : account.state === 'online' ? 'bg-success' : 'bg-v-gradient'">{{ account.state }}</span>
+                              <h2 class="w-auto mb-0">{{ account.nickname }}</h2>
+                              <span class="badge rounded-pill mb-1 fs-6 align-self-end w-auto" :class="account.state === 'offline' ? 'bg-dark' : account.state === 'online' ? 'bg-success' : 'bg-v-gradient border border-light'">{{ account.state }}</span>
                             </div>
                             <div v-else class="form-floating col-6 col-lg-3">
-                                <input class="form-control bg-transparent text-white" placeholder="nickname" id="nickname" :value="account.nickname" v-model="account.nickname" required type="text" />
+                                <input class="form-control bg-transparent text-white" placeholder="nickname" id="nickname" v-model="accountChanges.nickname" required type="text" />
                                 <label for="nickname">Nickname</label>
                             </div>
                             <p class="card-text mb-0" v-if="!isEditOn">{{ account.name }}</p>
@@ -116,6 +116,7 @@ const Profile = {
                 .then(res => {
                     this.account = res.data
                     this.oldBio = this.account.bio
+                    this.accountChanges.nickname = this.account.nickname
                     this.accountChanges.countryCode = this.account.countryCode
                     const background = document.querySelector('#backgroundImg')
                     if (this.account.backgroundImg !== '') {
@@ -149,7 +150,7 @@ const Profile = {
             this.isEditOn = false
             this.accountChanges.bio = this.account.bio
             this.accountChanges.countryName = this.countries.filter(c => c.code === this.accountChanges.countryCode)[0].name
-            axios.post('http://localhost:3000/api/account/' + this.$props.username, this.accountChanges)
+            axios.post('http://localhost:3000/api/account/' + this.$props.username, this.buildForm())
                 .then(() => this.getAccount())
                 .catch(err => console.log(err))
         },
@@ -164,6 +165,19 @@ const Profile = {
                 .then(res => this.countries = res.data)
                 .catch(err => console.log(err))
         },
+        buildForm: function (){
+            const form = new FormData()
+            form.append('username', this.account.username)
+            form.append('nickname', this.accountChanges.nickname)
+            form.append('bio', this.accountChanges.bio)
+            form.append('countryCode', this.accountChanges.countryCode)
+            form.append('countryName', this.accountChanges.countryName)
+            if (this.accountChanges.avatarImg !== undefined)
+                form.append('avatarImg', this.accountChanges.avatarImg)
+            if (this.accountChanges.backgroundImg !== undefined)
+                form.append('backgroundImg', this.accountChanges.backgroundImg)
+            return form
+        }
     },
     mounted() {
         this.logged = this.$checkLogin()

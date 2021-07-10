@@ -28,7 +28,7 @@ const Friends = {
             </div>
         </form>
         <h3 class="mt-3" v-if="friends.length !== 0">{{ username === Vue.$cookies.get('username') ? 'Your friends' : 'Friends' }}</h3>
-        <h3 v-else class="text-center mt-3">{{ username }} doesn't have friends yet.</h3>
+        <h3 v-else class="text-center mt-3">{{ username === Vue.$cookies.get('username') ? "You don't" : username + " doesn't"}} have friends yet.</h3>
         <h4 class="m-3" v-if="onlineFriends.length !== 0">Online</h4>
         <div class="card bg-dark text-white border col-12 col-md-9 col-xl-7 p-3" v-for="friend in onlineFriends" role="button">
             <router-link class="card-title text-white text-decoration-none" :to="'/profile/' + friend.username">
@@ -39,7 +39,7 @@ const Friends = {
                     <div class="card-body">
                         <div class="row row-cols-2 align-items-center">
                             <h3 class="w-auto mb-0">{{ friend.nickname }}</h3>
-                            <span class="badge rounded-pill fs-6 align-self-end w-auto " :class="friend.state === 'in game' ? 'bg-gradient' : 'bg-success'">{{ friend.state }}</span>
+                            <span class="badge rounded-pill fs-6 align-self-end w-auto" :class="friend.state === 'in game' ? 'bg-v-gradient' : 'bg-success'">{{ friend.state }}</span>
                         </div>
                         <p class="card-text mt-2" v-if="friend.state === 'in game'">is playing <em>{{ friend.inGame }}</em></p>
                         <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
@@ -92,7 +92,7 @@ const Friends = {
                     <div>
                         <img class="card-img" :src="pendingRequest.avatarImg ? '../static/img/' + pendingRequest.username + '/' + pendingRequest.avatarImg : '../static/img/no-profile-image.png'" :alt="pendingRequest.nickname" />
                     </div>
-                    <div class="card-body row-cols-2">
+                    <div class="card-body">
                         <div class="row row-cols-2 align-items-center">
                             <h3 class="w-auto mb-0">{{ pendingRequest.nickname }}</h3>
                             <span class="badge rounded-pill fs-6 align-self-end w-auto" :class="pendingRequest.state === 'offline' ? 'bg-dark' : 'bg-success'">{{ pendingRequest.state === 'in game' ? 'online' : pendingRequest.state }}</span>
@@ -125,8 +125,12 @@ const Friends = {
     watch: {
         $route: function (to, from){
             this.getFriends()
-            this.getFriendRequests()
-            this.getPendingRequests()
+            this.friendRequests = []
+            this.pendingRequests = []
+            if (this.$props.username === this.$cookies.get('username')){
+                this.getFriendRequests()
+                this.getPendingRequests()
+            }
         }
     },
     methods: {
@@ -156,6 +160,8 @@ const Friends = {
                     this.errorText = 'You already added ' + this.friendToAdd + ' as a friend!'
                 else if (this.pendingRequests.map(r => r.username).includes(this.friendToAdd))
                     this.errorText = 'You already sent a friend request to ' + this.friendToAdd
+                else if (this.friendRequests.map(r => r.username).includes(this.friendToAdd))
+                    this.errorText = 'This user already sent you a friend request.'
                 else
                     axios.post("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/friends", { username: this.friendToAdd})
                         .then(res => {
@@ -206,19 +212,8 @@ const Friends = {
         },
         friendStateChanged: function (change){
             const friend = change[0]
-            const body = change[1]
             if (this.$cookies.isKey('username') && this.friends.map(f => f.username).includes(friend.username)) {
-                friend.state = body.state
-                friend.inGame = body.inGame
-                const index = this.friends.indexOf(this.friends.filter(v => v.username === friend.username)[0])
-                Vue.set(this.friends, index, friend)
-                if (friend.state === 'online') {
-                    this.onlineFriends.push(friend)
-                    this.offlineFriends = this.offlineFriends.filter(f => f.username !== friend.username)
-                } else {
-                    this.offlineFriends.push(friend)
-                    this.onlineFriends = this.onlineFriends.filter(f => f.username !== friend.username)
-                }
+                this.getFriends()
             }
         },
         friendDenied: function (friend) {
@@ -230,13 +225,19 @@ const Friends = {
     mounted(){
         this.logged = this.$checkLogin()
         this.getFriends()
-        this.getFriendRequests()
-        this.getPendingRequests()
+        if (this.$props.username === this.$cookies.get('username')){
+            this.getFriendRequests()
+            this.getPendingRequests()
+        }
         this.$on('log-event', () => {
             this.logged = this.$checkLogin()
             this.getFriends()
-            this.getFriendRequests()
-            this.getPendingRequests()
+            this.friendRequests = []
+            this.pendingRequests = []
+            if (this.$props.username === this.$cookies.get('username')){
+                this.getFriendRequests()
+                this.getPendingRequests()
+            }
         })
     }
 }

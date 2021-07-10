@@ -22,7 +22,7 @@ const Search = {
                 <li class="page-item" :class="page !== 1 ? '': 'disabled'"><a class="page-link" role="button" @click="setPage(1)">First</a></li>
                 <li class="page-item" :class="page !== 1 ? '': 'disabled'"><a class="page-link" role="button" v-if="" @click="setPage(page-1)">Previous</a></li>
                 
-                <li class="page-item"><a class="page-link" v-if="page === pageCount && page != 1" role="button" @click="setPage(page-2)">{{page-2}}</a></li>
+                <li class="page-item"><a class="page-link" v-if="page === pageCount && page !== 1" role="button" @click="setPage(page-2)">{{page-2}}</a></li>
                 <li class="page-item"><a class="page-link" v-if="page !== 1" @click="setPage(page-1)" role="button">{{page-1}}</a></li>
                 <li class="page-item active"><a class="page-link" @click="setPage(page)" role="button">{{page}}</a></li>
                 <li class="page-item"><a class="page-link" v-if="page !== pageCount" @click="setPage(page+1)" role="button">{{page+1}}</a></li>

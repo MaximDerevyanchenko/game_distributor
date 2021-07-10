@@ -184,8 +184,49 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.updateMyAccount = function (req, res) {
+        const avatar = req.files.avatarImg
+        const background = req.files.backgroundImg
+        if (avatar)
+            req.body['avatarImg'] = avatar.name
+        if (background)
+            req.body['backgroundImg'] = background.name
         Account.findOneAndUpdate({username: req.cookies.username}, req.body)
             .then(acc => {
+                const userPath = './public/img/' + req.body.username
+                if (req.files) {
+                    if (avatar || background ) {
+                        fs.mkdir(userPath, () => {
+                            if (avatar && avatar !== acc.avatarImg) {
+                                if (acc.backgroundImg !== acc.avatarImg)
+                                    fs.rm(userPath + '/' + acc.avatarImg, () => {
+                                        fs.rename(avatar.path, userPath + '/' + avatar.name, err => {
+                                            if (err != null)
+                                                res.send(err)
+                                        })
+                                    })
+                                else
+                                    fs.rename(avatar.path, userPath + '/' + avatar.name, err => {
+                                        if (err != null)
+                                            res.send(err)
+                                    })
+                            }
+                            if (background && background !== avatar && background !== acc.backgroundImg){
+                                if (acc.backgroundImg !== acc.avatarImg || avatar)
+                                    fs.rm(userPath + '/' + acc.backgroundImg, () => {
+                                        fs.rename(background.path, userPath + '/' + background.name, err => {
+                                            if (err != null)
+                                                res.send(err)
+                                        })
+                                    })
+                                else
+                                    fs.rename(background.path, userPath + '/' + background.name, err => {
+                                        if (err != null)
+                                            res.send(err)
+                                    })
+                            }
+                        })
+                    }
+                }
                 io.emit('friendStateChanged', acc, req.body)
                 res.json(acc)
             })
