@@ -11,7 +11,7 @@ const Login = {
         }
     },
     template: `
-    <div id="login" class="modal fade">
+    <div id="login" class="modal fade" tabindex="-1" aria-labelledby="Login" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <form class="modal-content needs-validation border border-light border-2 shadow-lg rounded mt-4 p-4 bg-secondary text-white" ref="form" novalidate>
                 <div class="modal-title text-center">
@@ -40,7 +40,7 @@ const Login = {
                     </div>
                 </div>
                 <div class="modal-footer justify-content-around"> 
-                    <button @click="login" type="submit" class="btn btn-outline-light">Login</button>
+                    <button @click="login" role="button" type="submit" class="btn btn-outline-light">Login</button>
                     <router-link class="btn btn-outline-light" @click.native="closeModal" to="/signup">Not yet signed up?</router-link>
                 </div>
             </form>
@@ -52,19 +52,24 @@ const Login = {
             if (this.isValidated(e))
                 axios.post('http://localhost:3000/api/account', this.account)
                     .then(response => {
-                        this.$cookies.set("username", response.data.username, 7 * this.day)
-                        this.$parent.$emit('log-event')
-                        axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/state', { state: "online" })
-                            .then(() => {
-                                if (this.$router.currentRoute.path !== ('/profile/' + this.account.username) && this.$router.currentRoute.name !== 'Game')
-                                    this.goToProfile()
-                                else
-                                    this.$parent.$parent.$children[2].$emit('log-event')
-                            })
-                            .catch(err => console.log(err))
-                        this.closeModal()
+                        if (!response.data){
+                            this.resetForm()
+                            this.error = true
+                        } else {
+                            this.$cookies.set("username", response.data.username, 7 * this.day)
+                            this.$parent.$emit('log-event')
+                            axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/state', {state: "online"})
+                                .then(() => {
+                                    if (this.$router.currentRoute.path !== ('/profile/' + this.account.username) && this.$router.currentRoute.name !== 'Game')
+                                        this.goToProfile()
+                                    else
+                                        this.$parent.$parent.$children[2].$emit('log-event')
+                                })
+                                .catch(err => console.log(err))
+                            this.closeModal()
+                        }
                     })
-                    .catch(err => {
+                    .catch(() => {
                         this.resetForm()
                         this.error = true
                     })

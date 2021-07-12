@@ -38,7 +38,7 @@ const Notification = {
 
                     elem += '" width="20" height="20" class="rounded me-2" alt="' + this.user.nickname + ' avatar">' +
                         '                    <strong class="me-auto">' + this.user.nickname + '</strong>' +
-                        '                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>'
+                        '                    <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>'
                     nodeList.item(nodeList.length - 1).innerHTML = elem
                 })
                 .catch(error => console.log(error))
@@ -72,7 +72,7 @@ const Notification = {
             new bootstrap.Toast(html).show()
         },
         buildToast: function () {
-            let toast = '<div class="toast fade hide bg-dark" role="alert" aria-live="assertive" aria-atomic="true">\n'
+            let toast = '<div class="toast fade hide bg-dark" role="alert" aria-live="assertive" aria-atomic="true">'
 
             if (this.user.username !== undefined) {
                 toast += '<div class="toast-header bg-dark">' +
@@ -85,7 +85,7 @@ const Notification = {
 
                 toast += '" width="20" height="20" class="rounded me-2" alt="' + this.user.nickname + ' avatar">' +
                     '                    <strong class="me-auto">' + this.user.nickname + '</strong>' +
-                    '                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>' +
+                    '                    <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>' +
                     '                </div>'
             } else
                 toast += '<div class="toast-header bg-dark">' +
@@ -106,6 +106,8 @@ const Notification = {
     },
     sockets: {
         friendStateChanged: function (change) {
+            if (this.$checkLogin())
+                this.getMyAccount()
             const user = change[0]
             const body = change[1]
             if (this.$cookies.isKey('username') && user.username !== this.$cookies.get('username') && this.myAccount.friends.includes(user.username) && body.state !== 'offline' && user.state !== 'in game' && body.state !== user.state) {
@@ -122,6 +124,8 @@ const Notification = {
             }
         },
         friendAdded: function (requestDetails) {
+            if (this.$checkLogin())
+                this.getMyAccount()
             const sender = requestDetails[0]
             const friend = requestDetails[1]
             if (this.$cookies.get('username') === friend.username) {
@@ -134,6 +138,8 @@ const Notification = {
             }
         },
         friendAccept: function (acceptDetails) {
+            if (this.$checkLogin())
+                this.getMyAccount()
             const acceptedBy = acceptDetails[0]
             const friend = acceptDetails[1]
             if (this.$cookies.get('username') === friend.username) {
@@ -161,7 +167,7 @@ const Notification = {
         gameBought: function (purchaseData) {
             const user = purchaseData[0]
             const game = purchaseData[1]
-            if (this.$cookies.get('username') === game.developer){
+            if (game.developers.includes(this.$cookies.get('username'))){
                 this.game = game
                 this.user = {}
                 this.getUser(user)
@@ -169,14 +175,18 @@ const Notification = {
 
                 this.addToast()
             }
+        },
+        friendRemoved: function () {
+            if (this.$checkLogin())
+                this.getMyAccount()
         }
     },
     mounted() {
-        this.getMyAccount()
+        if (this.$checkLogin())
+            this.getMyAccount()
+        this.$on('log-event', () => {
+            if (this.$checkLogin())
+                this.getMyAccount()
+        })
     }
-    <!-- Friend request V -->
-    <!-- Gift V -->
-    <!-- Went Online V -->
-    <!-- Started playing V -->
-    <!-- Developed game was bought -->
 }

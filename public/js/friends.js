@@ -24,7 +24,7 @@ const Friends = {
                 </div>
             </div>
             <div class="w-auto mt-2 ms-3">
-                <button class="btn btn-outline-light" @click.prevent="addFriend">Add Friend<i class="fas fa-user-plus ms-2"></i></button>
+                <button class="btn btn-outline-light" role="button" @click.prevent="addFriend">Add Friend<i class="fas fa-user-plus ms-2"></i></button>
             </div>
         </form>
         <h3 class="mt-3" v-if="friends.length !== 0">{{ username === Vue.$cookies.get('username') ? 'Your friends' : 'Friends' }}</h3>
@@ -43,7 +43,7 @@ const Friends = {
                         </div>
                         <p class="card-text mt-2" v-if="friend.state === 'in game'">is playing <em>{{ friend.inGame }}</em></p>
                         <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                        <button v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click.prevent="friendToRemove = friend">Remove Friend</button>
+                        <button v-if="logged && username === Vue.$cookies.get('username')" role="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click.prevent="friendToRemove = friend">Remove Friend</button>
                     </div>
                 </div>
             </router-link>
@@ -61,7 +61,7 @@ const Friends = {
                             <span class="badge rounded-pill fs-6 align-self-end w-auto bg-dark">{{ friend.state }}</span>
                         </div>
                         <p class="card-text"><small class="text-muted">Last online {{ friend.lastOnline}}</small></p>
-                        <button v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click.prevent="friendToRemove = friend">Remove Friend</button>
+                        <button v-if="logged && username === Vue.$cookies.get('username')" role="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click.prevent="friendToRemove = friend">Remove Friend</button>
                     </div>
                 </div>
             </router-link>
@@ -79,8 +79,8 @@ const Friends = {
                             <span class="badge rounded-pill fs-6 align-self-end w-auto" :class="friendRequest.state === 'offline' ? 'bg-dark' : 'bg-success'">{{ friendRequest.state === 'in game' ? 'online' : friendRequest.state }}</span>
                         </div>
                         <p class="card-text"><small class="text-muted">Last online {{ friendRequest.lastOnline}}</small></p>
-                        <button @click.prevent="acceptFriend(friendRequest.username)" class="btn btn-outline-success mb-2 mb-md-0">Accept friendship</button>
-                        <button @click.prevent="denyFriend(friendRequest.username)" class="btn btn-outline-danger">Deny friendship</button>
+                        <button @click.prevent="acceptFriend(friendRequest.username)" role="button" class="btn btn-outline-success mb-2 mb-md-0">Accept friendship</button>
+                        <button @click.prevent="denyFriend(friendRequest.username)" role="button" class="btn btn-outline-danger">Deny friendship</button>
                     </div>
                 </div>
             </router-link>
@@ -108,14 +108,14 @@ const Friends = {
                 <div class="modal-content bg-secondary text-white">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirm removal</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
+                        <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure to remove <em>{{ friendToRemove.nickname }}</em>?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-outline-light" @click="removeFriend">Yes</button>
+                        <button type="button" role="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
+                        <button type="button" role="button" class="btn btn-outline-light" @click="removeFriend">Yes</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +123,7 @@ const Friends = {
     </div>
     `,
     watch: {
-        $route: function (to, from){
+        $route: function (){
             this.getFriends()
             this.friendRequests = []
             this.pendingRequests = []

@@ -1,5 +1,5 @@
-module.exports = function (mongoose, io) {
-    const Country = require("../models/countryModel.js")(mongoose)
+module.exports = function (mongoose, _) {
+    const Country = mongoose.model('Country')
 
     module.exports.getCountries = function (req, res) {
         Country.find()

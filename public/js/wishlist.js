@@ -9,13 +9,13 @@ const Wishlist = {
         }
     },
     watch: {
-        $route: function (to, from){
+        $route: function (){
             this.getWishlist()
         }
     },
     template: `
     <div class="mt-2 bg-gradient p-2 p-md-3">
-        <div id="spinner" class="d-flex justify-content-center align-items-center m-3">
+        <div id="spinnerWish" class="d-flex justify-content-center align-items-center m-3">
             <strong>Loading... </strong>
             <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
         </div>
@@ -31,9 +31,9 @@ const Wishlist = {
                             <small class="card-text text-muted">{{ game.release_date && game.release_date.coming_soon ? 'Price not available' : 'Price: ' + game.price_overview.final_formatted }}</small>
                         </div>
                          <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
-                            <button v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
-                            <button v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
-                            <button v-else-if="logged" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
+                            <button role="button" v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
+                            <button role="button" v-if="logged && username === Vue.$cookies.get('username')" class="btn btn-outline-light" @click="addToCart(index)">Add to cart</button>
+                            <button role="button" v-else-if="logged" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmGift" @click="gameToGift = game">Gift the game</button>
                          </div>
                     </div>
                 </div>
@@ -48,14 +48,14 @@ const Wishlist = {
                 <div class="modal-content bg-secondary text-white">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirm removal</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
+                        <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure to remove <em>{{ gameToRemove.name }}</em> from the wishlist?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-outline-light" @click="remove">Yes</button>
+                        <button type="button" role="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
+                        <button type="button" role="button" class="btn btn-outline-light" @click="remove">Yes</button>
                     </div>
                 </div>
             </div>
@@ -66,14 +66,14 @@ const Wishlist = {
                 <div class="modal-content bg-secondary text-white">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirm gift</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
+                        <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure to gift <em>{{gameToGift.name}}</em> to {{ username }}?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-outline-light" @click="giftGame">Yes</button>
+                        <button type="button" role="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
+                        <button type="button" role="button" class="btn btn-outline-light" @click="giftGame">Yes</button>
                     </div>
                 </div>
             </div>
@@ -85,7 +85,7 @@ const Wishlist = {
             axios.get("http://localhost:3000/api/account/" + this.$props.username + "/wishlist")
                 .then(response => {
                     this.games = response.data
-                    document.querySelector('#spinner').classList.add('d-none')
+                    document.querySelector('#spinnerWish').classList.add('d-none')
                     document.querySelector('#wishlistComp').classList.remove('d-none')
                 })
                 .catch(error => console.log(error))

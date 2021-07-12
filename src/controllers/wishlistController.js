@@ -1,8 +1,6 @@
-module.exports = function (mongoose, io) {
-
-    const GameWishlist = require('../models/gameWishlistModel')(mongoose)
+module.exports = function (mongoose, _, axios) {
+    const GameWishlist = mongoose.model('GameWishlist')
     const GameSchema = mongoose.model('GameSchema')
-    const axios = require('axios')
 
     module.exports.addToWishlist = function (req, res) {
         GameWishlist.create({username: req.cookies.username, gameId: req.body.gameId})
@@ -43,6 +41,6 @@ module.exports = function (mongoose, io) {
     module.exports.deleteFromWishlist = function (req, res) {
         GameWishlist.deleteOne({username: req.cookies.username, gameId: req.params.gameId})
             .then(() => res.json())
-            .catch(err => console.log(err))
+            .catch(err => res.send(err))
     }
 }

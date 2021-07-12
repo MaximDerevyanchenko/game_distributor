@@ -13,12 +13,12 @@ const Games = {
                 <div class="spinner-grow ms-4" role="status" aria-hidden="true"></div>
             </div>
             <div v-if="progress === 100" id="carousel" ref="carousel" class="carousel slide carousel-fade mt-5 d-flex justify-content-center col-12 col-md-9 col-xxl-6" data-bs-ride="carousel">
-                <button class="carousel-control" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                <button class="carousel-control" type="button" data-bs-target="#carousel" role="button" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
                 <div class="carousel-indicators">
-                    <button v-for="(game, index) in games" ref="indicators" type="button" :class="index === 0 ? 'active' : ''" :aria-current="index === 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="game.name"></button>
+                    <button v-for="(game, index) in games" ref="indicators" role="button" type="button" :class="index === 0 ? 'active' : ''" :aria-current="index === 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="game.name"></button>
                 </div>
                 <div class="carousel-inner bg-dark">
                     <div class="carousel-item p-1" @click="goToGame(game)" role="button" data-bs-interval="3000" v-for="(game,index) in games" ref="items" :class="index === 0 ? 'active' : ''">
@@ -33,7 +33,7 @@ const Games = {
                         </div>
                     </div>
                 </div>
-                <button class="carousel-control" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                <button class="carousel-control" type="button" role="button" data-bs-target="#carousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
@@ -47,15 +47,11 @@ const Games = {
                     let promises = []
                     response.data.forEach(game => {
                         if (game.isLocal)
-                            promises.push(axios.get("http://localhost:3000/api/games/" + game.gameId + "/local", {
-                                    onDownloadProgress: progressEvent => this.progress = ((this.progress / promises.length) + 1) * 100 / promises.length
-                                })
+                            promises.push(axios.get("http://localhost:3000/api/games/" + game.gameId + "/local")
                                     .then(g => g)
                                     .catch(err => console.log(err)))
                         else
-                            promises.push(axios.get("http://localhost:3000/api/games/" + game.gameId + "/steam", {
-                                    onDownloadProgress: progressEvent => this.progress = ((this.progress / promises.length) + 1) * 100 / promises.length
-                                })
+                            promises.push(axios.get("http://localhost:3000/api/games/" + game.gameId + "/steam")
                                 .then(g => g)
                                 .catch(err => console.log(err)))
                     })
@@ -71,11 +67,6 @@ const Games = {
                         })
                         .catch(err => console.log(err))
                 })
-                .catch(error => console.log(error))
-        },
-        syncGames: function () {
-            axios.post("http://localhost:3000/api/games")
-                .then(response => this.games = response.data)
                 .catch(error => console.log(error))
         },
         goToGame: function (game) {

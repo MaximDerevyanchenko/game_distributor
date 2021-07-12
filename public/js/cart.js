@@ -8,7 +8,7 @@ const Cart = {
     },
     template: `
     <div class="d-flex flex-column align-items-center mt-4 bg-secondary bg-gradient rounded rounded-3 p-1 p-md-3">
-        <div id="spinner" class="d-flex align-items-center m-3">
+        <div id="spinnerCart" class="d-flex align-items-center m-3">
             <strong>Loading... </strong>
             <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
         </div>
@@ -24,8 +24,8 @@ const Cart = {
                             <small class="card-text text-muted">Price: {{ game.price_overview.final_formatted }}</small>
                         </div>
                          <div class="card-footer bg-secondary text-white p-3 d-flex justify-content-between">
-                            <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
-                            <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#confirmPurchase" @click="gameToBuy = game">Purchase</button>
+                            <button class="btn btn-outline-danger" data-bs-toggle="modal" role="button" data-bs-target="#confirmRemove" @click="gameToRemove = game">Remove</button>
+                            <button class="btn btn-outline-light" data-bs-toggle="modal" role="button" data-bs-target="#confirmPurchase" @click="gameToBuy = game">Purchase</button>
                          </div>
                     </div>
                 </div>
@@ -35,8 +35,8 @@ const Cart = {
             </div>
             <div v-if="games.length !== 0" class="d-flex justify-content-center col-12 mt-5">Total: {{ games | computePrice }}</div>
             <div class="d-sm-flex justify-content-between mt-2 text-center">
-                <button v-if="games.length !== 0" class="btn btn-outline-danger m-2 m-sm-0" data-bs-toggle="modal" data-bs-target="#confirmRemoveAll">Remove all items</button>
-                <button v-if="games.length !== 0" class="btn btn-outline-success m-2 m-sm-0" data-bs-toggle="modal" data-bs-target="#confirmPurchaseAll">Purchase all items</button>
+                <button v-if="games.length !== 0" class="btn btn-outline-danger m-2 m-sm-0" role="button" data-bs-toggle="modal" data-bs-target="#confirmRemoveAll">Remove all items</button>
+                <button v-if="games.length !== 0" class="btn btn-outline-success m-2 m-sm-0" role="button" data-bs-toggle="modal" data-bs-target="#confirmPurchaseAll">Purchase all items</button>
             </div>
         </div>
         <div id="confirmRemove" class="modal fade" tabindex="-1" aria-labelledby="confirmRemove" aria-hidden="true">
@@ -44,14 +44,14 @@ const Cart = {
                 <div class="modal-content bg-secondary text-white">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirm removal</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
+                        <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure to remove <em>{{ gameToRemove.name }}</em> from shopping cart?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-outline-light" @click="remove">Yes</button>
+                        <button type="button" role="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
+                        <button type="button" role="button" class="btn btn-outline-light" @click="remove">Yes</button>
                     </div>
                 </div>
             </div>
@@ -62,14 +62,14 @@ const Cart = {
                 <div class="modal-content bg-secondary text-white">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirm removal all</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
+                        <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure to remove all your items from shopping cart?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-outline-light" @click="removeAll">Yes</button>
+                        <button type="button" role="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
+                        <button type="button" role="button" class="btn btn-outline-light" @click="removeAll">Yes</button>
                     </div>
                 </div>
             </div>
@@ -80,14 +80,14 @@ const Cart = {
                 <div class="modal-content bg-secondary text-white">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirm purchase</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
+                        <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure to buy <em>{{gameToBuy.name}}</em>?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-outline-light" @click="buy">Yes</button>
+                        <button type="button" role="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
+                        <button type="button" role="button" class="btn btn-outline-light" @click="buy">Yes</button>
                     </div>
                 </div>
             </div>
@@ -98,14 +98,14 @@ const Cart = {
                 <div class="modal-content bg-secondary text-white">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirm purchase all</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
+                        <button type="button" role="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure to buy all the items in the shopping cart?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-outline-light" @click="buyAll">Yes</button>
+                        <button type="button" role="button" class="btn btn-outline-light" data-bs-dismiss="modal">No</button>
+                        <button type="button" role="button" class="btn btn-outline-light" @click="buyAll">Yes</button>
                     </div>
                 </div>
             </div>
@@ -117,7 +117,7 @@ const Cart = {
             axios.get("http://localhost:3000/api/account/" + this.$cookies.get('username') + "/cart")
                 .then(response => {
                     this.games = response.data
-                    document.querySelector('#spinner').classList.add('d-none')
+                    document.querySelector('#spinnerCart').classList.add('d-none')
                     document.querySelector('#cart').classList.remove('d-none')
                 })
                 .catch(error => console.log(error))

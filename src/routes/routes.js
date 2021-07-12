@@ -1,18 +1,21 @@
-module.exports = function(app, mongoose, io) {
+module.exports = function(app, mongoose, io, axios) {
+	require("../models/countryModel.js")(mongoose)
 	require('../models/accountModel')(mongoose)
 	require("../models/gameModel.js")(mongoose)
 	require('../models/gameCartModel')(mongoose)
+	require('../models/gameWishlistModel')(mongoose)
+	require('../models/gameLibraryModel')(mongoose)
 
 	const countryController = require('../controllers/countryController')
 	countryController(mongoose, io)
 	const accountController = require('../controllers/accountController')
 	accountController(mongoose, io)
 	const gameController = require('../controllers/gameController')
-	gameController(mongoose, io)
+	gameController(mongoose, io, axios)
 	const cartController = require('../controllers/cartController')
-	cartController(mongoose, io)
+	cartController(mongoose, io, axios)
 	const wishlistController = require('../controllers/wishlistController')
-	wishlistController(mongoose, io)
+	wishlistController(mongoose, io, axios)
 	const libraryController = require('../controllers/libraryController')
 	libraryController(mongoose, io)
 

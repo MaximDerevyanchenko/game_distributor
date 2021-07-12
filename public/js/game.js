@@ -27,13 +27,13 @@ const Game = {
                     </div>
                 </div>
                 <div id="carousel" ref="carousel" class="carousel slide mb-4" data-bs-ride="carousel">
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                    <button class="carousel-control-prev" type="button" role="button" data-bs-target="#carousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <div class="carousel-indicators">
-                        <button v-if="game.isLocal" ref="indicators" type="button" class="active" aria-current="true" data-bs-target="#carousel" data-bs-slide-to="0" aria-label="0"></button>
-                        <button v-for="(screenshot, index) in game.screenshots" ref="indicators" type="button" :class="index === 0 ? 'active' : ''" :aria-current="index === 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="index"></button>
+                        <button v-if="game.isLocal" ref="indicators" type="button" role="button" class="active" aria-current="true" data-bs-target="#carousel" data-bs-slide-to="0" aria-label="0"></button>
+                        <button v-for="(_,index) in game.screenshots" ref="indicators" type="button" role="button" :class="index === 0 ? 'active' : ''" :aria-current="index === 0 ? 'true' : ''" data-bs-target="#carousel" :data-bs-slide-to="index" :aria-label="index"></button>
                     </div>
                     <div class="carousel-inner mx-auto">
                         <div class="carousel-item" data-bs-interval="3000" v-if="game.isLocal" ref="items" class="active">
@@ -48,7 +48,7 @@ const Game = {
                             </div>
                         </div>
                     </div>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                    <button class="carousel-control-next" type="button" role="button" data-bs-target="#carousel" data-bs-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
@@ -60,7 +60,7 @@ const Game = {
                         <div v-if="game.release_date && !game.release_date.coming_soon">
                             <div v-if="game.is_free" class="d-flex">
                                 <div class="bg-success border border-success border-3 me-2 align-self-center">Free</div>
-                                <button v-if="!isInLibrary" @click="addToLibrary" class="btn btn-outline-light align-self-center">Add to library</button>
+                                <button v-if="!isInLibrary" @click="addToLibrary" role="button" class="btn btn-outline-light align-self-center">Add to library</button>
                                 <div v-else class="bg-dark border border-light border-3 p-1 align-self-center">Already in Library</div>
                             </div>
                             <div v-else-if="game.price_overview" class="d-inline d-md-flex">
@@ -72,8 +72,8 @@ const Game = {
                                 <div class="d-flex flex-row">
                                     <div v-if="game.price_overview.discount_percent === 0" class="bg-dark border border-success border-5 me-2 align-self-center">{{ game.price_overview.final_formatted }}</div>
                                     <div v-if="!logged || !isInLibrary">
-                                        <button @click="addToCart" class="btn btn-outline-light me-2 align-self-center mb-2 mt-2">Add to cart</button>
-                                        <button @click="addToWishlist" class="btn btn-outline-light align-self-center">Add to wishlist</button>
+                                        <button @click="addToCart" role="button" class="btn btn-outline-light me-2 align-self-center mb-2 mt-2">Add to cart</button>
+                                        <button @click="addToWishlist" role="button" class="btn btn-outline-light align-self-center">Add to wishlist</button>
                                     </div>
                                     <div v-else class="bg-dark border border-light border-3 p-1 align-self-center h-100">Already in Library</div>
                                 </div>
@@ -84,7 +84,7 @@ const Game = {
                         </div>
                         <div v-else class="d-flex flex-row">
                             <div class="bg-dark border border-light border-3 p-1 me-2 align-self-center h-100">Coming Soon</div>
-                            <button @click="addToWishlist" class="btn btn-outline-light align-self-center h-100">Add to wishlist</button>
+                            <button @click="addToWishlist" role="button" class="btn btn-outline-light align-self-center h-100">Add to wishlist</button>
                         </div>
                     </div>
                 </div>
@@ -105,6 +105,7 @@ const Game = {
                     <div class="col-12 col-md-9 border border-end-0 border-bottom-0 ps-3 pe-3 pt-3">
                         <h3>About the game</h3>
                         <p v-html="game.about_the_game"></p>
+                        <p v-if="!game.about_the_game">No description found.</p>
                         <p v-if="game.about_the_game !== game.detailed_description" v-html="game.detailed_description"></p>
                         
                         <h4 v-if="game.platforms">System Requirements</h4>
@@ -181,7 +182,7 @@ const Game = {
         </div>
     `,
     watch: {
-        $route: function (to, from){
+        $route: function (){
             this.getGame()
         }
     },

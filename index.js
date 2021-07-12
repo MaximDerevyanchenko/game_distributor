@@ -24,7 +24,7 @@ app.use('/static', express.static(__dirname + '/public'));
 app.use('/scripts', express.static(__dirname + '/node_modules'))
 
 const routes = require('./src/routes/routes');
-routes(app, mongoose, io);
+routes(app, mongoose, io, require('axios'));
 
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})

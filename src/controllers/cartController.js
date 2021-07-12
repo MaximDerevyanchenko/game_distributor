@@ -1,7 +1,6 @@
-module.exports = function (mongoose, io) {
+module.exports = function (mongoose, _, axios) {
     const GameCart = mongoose.model('GameCart')
     const GameSchema = mongoose.model('GameSchema')
-    const axios = require('axios')
 
     module.exports.addToCart = function (req, res) {
         GameCart.create({username: req.cookies.username, gameId: req.body.gameId})
@@ -43,12 +42,12 @@ module.exports = function (mongoose, io) {
     module.exports.deleteFromCart = function (req, res) {
         GameCart.deleteOne({username: req.cookies.username, gameId: req.params.gameId})
             .then(() => res.json())
-            .catch(err => console.log(err))
+            .catch(err => res.send(err))
     }
 
     module.exports.deleteManyFromCart = function (req, res) {
         GameCart.deleteMany({username: req.cookies.username})
             .then(() => res.json())
-            .catch(err => console.log(err))
+            .catch(err => res.send(err))
     }
 }

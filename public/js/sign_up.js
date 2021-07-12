@@ -1,8 +1,6 @@
 const SignUp = {
     data: function() {
         return {
-            exists: false,
-            existingId: "",
             account: {
                 'username': "",
                 'password': "",
@@ -14,6 +12,7 @@ const SignUp = {
                 'bio': "",
                 'name': "",
                 'countryName': "Italy",
+                'countryCode': 'IT',
                 'lastOnline': null
             },
             typePassword: "password",
@@ -32,8 +31,9 @@ const SignUp = {
         <div class="row row-cols-1 row-cols-lg-2 gy-4 mb-4">
             <div class="col">
                 <div class="form-floating">
-                    <input class="form-control bg-transparent text-white" placeholder="username" id="usernameSignUp" v-model="account.username" type="text" @change="hideExists" required autocomplete="on"/>
+                    <input class="form-control bg-transparent text-white" placeholder="username" id="usernameSignUp" v-model="account.username" type="text" required autocomplete="on"/>
                     <label for="usernameSignUp">Username<span class="text-danger fw-bold ms-2">*</span></label>
+                    <div class="invalid-feedback">This username is not available.</div>
                 </div>
             </div>
              <div class="col">
@@ -93,10 +93,13 @@ const SignUp = {
             </div>
             <div class="col">
                 <div class="form-floating">
-                    <select class="form-select pb-1 bg-transparent text-white" id="country" v-model="account.countryName">
-                        <option class="bg-primary text-white" v-for="country in countries" :value="country.name">{{ country.name }}</option>
+                    <select class="form-select pb-1 bg-transparent text-white" id="country" v-model="account.countryCode">
+                        <option class="bg-primary text-white" v-for="country in countries" :value="country.code">{{ country.name }}</option>
                     </select>
                     <label for="country">Country</label>
+                </div>
+                <div class="text-center">
+                  <img class="w-auto" :src="'https://www.countryflags.io/' + account.countryCode + '/shiny/48.png'" :alt="account.countryName" />
                 </div>
             </div>
         </div>
@@ -129,7 +132,7 @@ const SignUp = {
                 <em>All fields with <span class="text-danger">*</span> are required.</em>
             </div>
             <div class="d-flex mt-2 justify-content-center">
-            <button @click.prevent="signUp" class="btn btn-outline-light" type="submit">Sign Up<i class="fas fa-pen-fancy ms-2"></i></button>
+            <button @click.prevent="signUp" class="btn btn-outline-light" role="button" type="submit">Sign Up<i class="fas fa-pen-fancy ms-2"></i></button>
             </div>
         </div>
     </form>
@@ -137,12 +140,12 @@ const SignUp = {
     methods: {
         signUp: function (e) {
             if (this.isValidated(e)){
-                this.exists = false
                 axios.post('http://localhost:3000/api/account/create', this.buildForm())
                     .then(res => {
                         if (!res.data.hasOwnProperty("password")) {
-                            this.existingId = res.data.username
-                            this.exists = true
+                            const username = document.querySelector('#usernameSignUp')
+                            username.classList.remove('is-valid')
+                            username.classList.add('is-invalid')
                         } else
                             this.login()
                     })
@@ -224,10 +227,10 @@ const SignUp = {
                     this.$cookies.set("username", response.data.username, 7 * this.day)
                     this.$parent.$children[1].$emit('log-event')
                     axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/state', { state: "online" })
-                        .then(res => this.$router.push({ name: 'Profile', params: { username: this.account.username }}))
+                        .then(() => this.$router.push({ name: 'Profile', params: { username: this.account.username }}))
                         .catch(err => console.log(err))
                 })
-                .catch(err => console.log("l'utente non esiste"))
+                .catch(err => console.log(err))
         },
         uploadAvatar: function (e) {
             this.account.avatarImg = e.target.files[0]
@@ -251,9 +254,6 @@ const SignUp = {
             this.$refs.backgroundPreview.value = ""
             this.backgroundPreview = null
         },
-        hideExists: function () {
-            this.exists = false
-        },
         showPassword: function (){
             this.typePassword = this.typePassword === "password" ? "text" : "password"
             this.$refs['checkbox'].classList.toggle('fa-eye-slash')
@@ -271,8 +271,8 @@ const SignUp = {
             form.append('name', this.account.name)
             form.append('nickname', this.account.nickname)
             form.append('bio', this.account.bio)
-            form.append('countryCode', this.countries.filter(c => c.name === this.account.countryName)[0].code)
-            form.append('countryName', this.account.countryName)
+            form.append('countryCode', this.account.countryCode)
+            form.append('countryName', this.account.countryName = this.countries.filter(c => c.code === this.account.countryCode)[0].name)
             form.append('avatarImg', this.account.avatarImg)
             form.append('backgroundImg', this.account.backgroundImg)
             form.append('state', this.account.state)

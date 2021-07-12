@@ -1,11 +1,18 @@
-const fs = require('fs')
 module.exports = function (mongoose, io) {
+    const fs = require('fs')
+    const bcrypt = require('bcrypt')
     const Account = mongoose.model('AccountSchema')
     const GameSchema = mongoose.model('GameSchema')
 
     module.exports.login = function (req, res) {
-        Account.findOne({username: req.body.username, password: req.body.password})
-            .then(acc => res.json(acc))
+        Account.findOne({username: req.body.username})
+            .then(acc =>
+                bcrypt.compare(req.body.password, acc.password, (err, result) => {
+                    if (result)
+                        res.json(acc)
+                    else
+                        res.send(result)
+                }))
             .catch(err => res.send(err))
     }
 
@@ -25,41 +32,44 @@ module.exports = function (mongoose, io) {
     }
 
     module.exports.signup = function (req, res) {
-        Account.findOne({ username: req.body.username })
-            .then(acc => {
-                if (acc != null)
-                    res.json({username: acc.username})
-                else {
-                    const userPath = './public/img/' + req.body.username
-                    const avatar = req.files.avatarImg
-                    const background = req.files.backgroundImg
-                    if (avatar || background) {
-                        fs.mkdir(userPath, err => {
-                            if (err != null)
-                                res.send(err)
-                            else {
-                                if (avatar)
-                                    fs.rename(avatar.path, userPath + '/' + avatar.name, err => {
-                                        if (err != null)
-                                            res.send(err)
-                                    })
-                                if (background && background !== avatar)
-                                    fs.rename(background.path,userPath + '/' + background.name, err => {
-                                        if (err != null)
-                                            res.send(err)
-                                    })
-                            }
-                        })
-                    }
-                    req.body['avatarImg'] = avatar ? avatar.name : ""
-                    req.body['backgroundImg'] = background ? background.name : ""
+        bcrypt.hash(req.body.password, 0, (err, hash ) => {
+            req.body.password = hash
+            Account.findOne({username: req.body.username})
+                .then(acc => {
+                    if (acc != null)
+                        res.json({username: acc.username})
+                    else {
+                        const userPath = './public/img/' + req.body.username
+                        const avatar = req.files.avatarImg
+                        const background = req.files.backgroundImg
+                        if (avatar || background) {
+                            fs.mkdir(userPath, err => {
+                                if (err != null)
+                                    res.send(err)
+                                else {
+                                    if (avatar)
+                                        fs.rename(avatar.path, userPath + '/' + avatar.name, err => {
+                                            if (err != null)
+                                                res.send(err)
+                                        })
+                                    if (background && background !== avatar)
+                                        fs.rename(background.path, userPath + '/' + background.name, err => {
+                                            if (err != null)
+                                                res.send(err)
+                                        })
+                                }
+                            })
+                        }
+                        req.body['avatarImg'] = avatar ? avatar.name : ""
+                        req.body['backgroundImg'] = background ? background.name : ""
 
-                    Account.create(req.body)
-                        .then(account => res.status(201).json(account))
-                        .catch(err => res.send(err))
-                }
-            })
-            .catch(err => res.send(err))
+                        Account.create(req.body)
+                            .then(account => res.status(201).json(account))
+                            .catch(err => res.send(err))
+                    }
+                })
+                .catch(err => res.send(err))
+        })
     }
 
     module.exports.getFriends = function (req, res) {
@@ -88,11 +98,11 @@ module.exports = function (mongoose, io) {
             .catch(err => res.send(err))
     }
 
-    module.exports.getFriendRequests = function (req, res) {
+    const getRequests = function (req, res, isFriend){
         Account.findOne({username: req.cookies.username})
             .then(acc => {
                 let promises = []
-                acc.friendRequests.forEach(friend =>
+                acc[isFriend ? 'friendRequests' : 'pendingRequests'].forEach(friend =>
                     promises.push(
                         Account.findOne({username: friend})
                             .then(fr => fr)
@@ -104,20 +114,12 @@ module.exports = function (mongoose, io) {
             .catch(err => res.send(err))
     }
 
+    module.exports.getFriendRequests = function (req, res) {
+        getRequests(req, res, true)
+    }
+
     module.exports.getPendingRequests = function (req, res) {
-        Account.findOne({username: req.cookies.username})
-            .then(acc => {
-                let promises = []
-                acc.pendingRequests.forEach(friend =>
-                    promises.push(
-                        Account.findOne({username: friend})
-                            .then(fr => fr)
-                            .catch(err => res.send(err))))
-                Promise.all(promises)
-                    .then(friends => res.json(friends))
-                    .catch(err => res.send(err))
-            })
-            .catch(err => res.send(err))
+        getRequests(req, res, false)
     }
 
     module.exports.addFriend = function (req, res) {

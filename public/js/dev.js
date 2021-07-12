@@ -18,7 +18,7 @@ const Dev = {
          <div v-if="account.isDeveloper" class="d-flex flex-column border rounded border-light justify-content-center col-12 col-md-10 col-lg-8 pb-3">
             <h2 class="text-center m-3">My Games</h2>
             <div class="text-center">
-                <button class="btn btn-outline-light" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game into Stim?</button>
+                <button class="btn btn-outline-light" role="button" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game into Stim?</button>
             </div>
             <div class="d-flex flex-column bg-secondary m-2 mt-3 ms-md-5 me-md-5">
                 <router-link v-for="game in games" class="p-1 border rounded border-1 text-light" :to="{ name: 'Game', params: { gameId: game.gameId }}">
@@ -34,7 +34,7 @@ const Dev = {
         <div v-else class="d-flex flex-column">
             <p class="text-center">You're not yet a developer. Come on, click below and become a developer to add your games into Stim!</p>
             <div class="text-center">
-                <button class="btn btn-outline-light" @click="becomeDeveloper">Become a developer</button>
+                <button class="btn btn-outline-light" role="button" @click="becomeDeveloper">Become a developer</button>
             </div>
         </div>
         
@@ -48,6 +48,7 @@ const Dev = {
                         <div class="form-floating m-2">
                             <input id="name" v-model="game.name" class="form-control bg-transparent text-white" type="text" placeholder="Name" autocomplete="off" required />
                             <label for="name">Name</label>
+                            <div class="invalid-tooltip">Name MUST be set.</div>
                         </div>
                         <div class="form-floating m-2">
                             <textarea id="shortDescription" v-model="game.short_description" class="form-control bg-transparent text-white" placeholder="Short description"></textarea>
@@ -88,8 +89,8 @@ const Dev = {
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" @click.prevent="addGame" class="btn btn-outline-light">Add</button>
+                        <button type="button" role="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" role="button" @click.prevent="addGame" class="btn btn-outline-light">Add</button>
                     </div>
                 </form>
             </div>
@@ -124,6 +125,9 @@ const Dev = {
                         this.$router.push({ name: 'Game', params: { gameId: res.data.gameId }})
                     })
                     .catch(err => console.log(err))
+            } else {
+                document.querySelector('#name').classList.remove('is-valid')
+                document.querySelector('#name').classList.add('is-invalid')
             }
         },
         uploadHeader: function (e){

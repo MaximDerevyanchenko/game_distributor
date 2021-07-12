@@ -13,13 +13,13 @@ const Library = {
     template: `
         <div class="mt-3">
             <h4 class="text-center mb-4">Library</h4>
-            <div id="spinner" class="d-flex align-items-center m-3 justify-content-center">
+            <div id="spinnerLib" class="d-flex align-items-center m-3 justify-content-center">
               <strong>Loading... </strong>
               <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
             </div>
             <div id="Library" v-if="games.length !== 0" class="d-none">
                 <ul class="nav nav-pills flex-row flex-md-column col-12 col-md-3" role="tablist">
-                    <li class="nav-item col-6 col-md-12 border border-light" role="presentation" v-for="(game, index) in games">
+                    <li class="nav-item col-6 col-md-12 border border-light" role="presentation" v-for="game in games">
                         <button @click="getFriendsWithGame(game.gameId)" role="tab" class="nav-link w-100 h-100 px-2 py-1 py-md-2" data-bs-toggle="pill" :data-bs-target="'#g' + game.gameId">{{ game.name }}</button>
                     </li>
                 </ul>
@@ -33,8 +33,8 @@ const Library = {
                             </div>
                             <div v-if="game.type === 'game'">
                                 <div v-if="logged && username === Vue.$cookies.get('username')">
-                                  <button v-if="gamePlaying === game.gameId" @click="stopGame" id="stopGame" class="btn btn-outline-light">Stop Game</button>
-                                  <button v-else id="startGame" :disabled="gamePlaying !== ''" @click="startGame(game.gameId)" class="btn btn-outline-light">Start Game</button>
+                                  <button role="button" v-if="gamePlaying == game.gameId" @click="stopGame" id="stopGame" class="btn btn-outline-light">Stop Game</button>
+                                  <button role="button" v-else id="startGame" :aria-disabled="gamePlaying !== ''" :disabled="gamePlaying !== ''" @click="startGame(game.gameId)" class="btn btn-outline-light">Start Game</button>
                                 </div>
                             </div>
                             <div v-else class="d-inline-block bg-dark border border-danger border-3 p-1 mt-2">Content not playable</div>
@@ -74,7 +74,7 @@ const Library = {
         </div>
     `,
     watch: {
-        $route: function (to, from){
+        $route: function (){
             this.games = []
             this.getLibrary()
         }
@@ -84,7 +84,7 @@ const Library = {
             axios.get("http://localhost:3000/api/account/"  + this.$props.username + "/library")
                 .then(response => {
                     const promises = []
-                    response.data.forEach((game, index) => {
+                    response.data.forEach(game => {
                         if (game.isLocal)
                             promises.push(
                                 axios.get("http://localhost:3000/api/games/" + game.gameId + "/local")
@@ -110,11 +110,11 @@ const Library = {
                                     .catch(err => console.log(err)))
                     })
                     Promise.all(promises).then(games => {
+                        document.querySelector('#spinnerLib').classList.add('d-none')
                         if (games.length > 0) {
                             document.querySelector('button[data-bs-target="#g' + games[0].gameId + '"]').classList.add('active')
                             document.querySelector('#g' + games[0].gameId).classList.add('active', 'show')
                             this.getFriendsWithGame(games[0].gameId)
-                            document.querySelector('#spinner').classList.add('d-none')
                             document.querySelector('#Library').classList.remove('d-none')
                             document.querySelector('#Library').classList.add('d-block', 'd-md-flex')
                         } else {
@@ -133,20 +133,15 @@ const Library = {
                 axios.post("http://localhost:3000/api/account/" + this.$props.username, {state: "in game", inGame: gameId})
                     .then(() => {
                         this.gamePlaying = gameId
-                        console.log(3 === 3)
-                        window.addEventListener('beforeunload', _ => {
-                            this.stopGame()
-                            axios.post("http://localhost:3000/api/account/" + this.$props.username, { state: "offline" })
-                                .then(() => {})
-                                .catch(err => console.log(err))
-                        })
+                        window.addEventListener('beforeunload', this.listener)
                         this.$parent.$emit('log-event')
                     })
                     .catch(err => console.log(err))
             }
         },
         stopGame: function (){
-            axios.post('http://localhost:3000/api/' + this.$props.username + '/game/' + this.gamePlaying + '/closed')
+            window.removeEventListener('beforeunload', this.listener)
+            axios.post('http://localhost:3000/api/account/' + this.$props.username + '/library/' + this.gamePlaying + '/close')
                 .then(_ => {})
                 .catch(err => console.log(err))
 
@@ -175,6 +170,12 @@ const Library = {
                             this.friends.push(friend)
                     })
                 })
+                .catch(err => console.log(err))
+        },
+        listener: function () {
+            this.stopGame()
+            axios.post("http://localhost:3000/api/account/" + this.$props.username, { state: "offline" })
+                .then(() => {})
                 .catch(err => console.log(err))
         }
     },

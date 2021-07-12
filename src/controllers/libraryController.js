@@ -1,10 +1,10 @@
 module.exports = function (mongoose, io) {
-    const GameLibrary = require('../models/gameLibraryModel')(mongoose)
+    const GameLibrary = mongoose.model('GameLibrary')
     const GameSchema = mongoose.model('GameSchema')
     const GameCart = mongoose.model('GameCart')
     const GameWishlist = mongoose.model('GameWishlist')
     const Accounts = mongoose.model('AccountSchema')
-    const millisToMins = 1000 * 60
+    const millisToMinutes = 1000 * 60
 
     module.exports.addToLibrary = function (req, res) {
         GameLibrary.insertMany(req.body)
@@ -65,7 +65,7 @@ module.exports = function (mongoose, io) {
     module.exports.startGame = function (req, res) {
         GameLibrary.findOneAndUpdate({ username: req.params.username, gameId: req.params.gameId }, { startedAt: req.body.started })
                 .then(_ => res.sendStatus(200))
-                .catch(err => console.log(err))
+                .catch(err => res.send(err))
     }
 
     module.exports.closedGame = function (req, res) {
@@ -73,10 +73,10 @@ module.exports = function (mongoose, io) {
             .then(userGame => {
                 let totalTimePlayed = userGame.timePlayed
                 const timePlayed = Date.now() - userGame.startedAt
-                totalTimePlayed = totalTimePlayed + Math.floor((timePlayed / millisToMins))
+                totalTimePlayed = totalTimePlayed + Math.floor((timePlayed / millisToMinutes))
                 GameLibrary.findOneAndUpdate({ username: req.params.username, gameId: req.params.gameId }, { timePlayed: totalTimePlayed })
                     .then(_ => res.sendStatus(200))
-                    .catch(err => console.log(err))
+                    .catch(err => res.send(err))
             })
     }
 }
