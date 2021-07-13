@@ -269,7 +269,8 @@ const Game = {
                     startedAt: 0,
                     timePlayed: 0,
                     name: this.game.name,
-                    gameId: this.game.gameId
+                    gameId: this.game.gameId,
+                    isLocal: this.game.isLocal
                 }]
                 axios.post('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/library', gameToAdd)
                     .then(_ => this.$router.push({name: 'Library', params: {username: Vue.$cookies.get('username')}}))
