@@ -144,7 +144,6 @@ const Library = {
             axios.post('http://localhost:3000/api/account/' + this.$props.username + '/library/' + this.gamePlaying + '/close')
                 .then(_ => {})
                 .catch(err => console.log(err))
-
             axios.post("http://localhost:3000/api/account/" + this.$props.username, { state: "online", inGame: ""})
                 .then(() => this.gamePlaying = "")
                 .catch(err => console.log(err))
@@ -152,8 +151,13 @@ const Library = {
         getMyAccount: function () {
             axios.get('http://localhost:3000/api/account/' + this.$props.username)
                 .then(res => {
-                    this.account = res.data
-                    this.gamePlaying = res.data.inGame === undefined ? '' : res.data.inGame
+                    if (res.data == null){
+                        if (this.$router.currentRoute.name !== 'Profile')
+                            this.$router.push({ name: '404' })
+                    } else {
+                        this.account = res.data
+                        this.gamePlaying = res.data.inGame === undefined ? '' : res.data.inGame
+                    }
                 })
                 .catch(err => console.log(err))
         },

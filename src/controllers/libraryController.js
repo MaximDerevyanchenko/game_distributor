@@ -14,7 +14,7 @@ module.exports = function (mongoose, io) {
                         res.status(201).json()
                         games.forEach(game => {
                             if (game.isLocal) {
-                                GameSchema.find({ gameId: game.gameId })
+                                GameSchema.findOne({ gameId: game.gameId })
                                     .then(response => io.emit('gameBought', req.cookies.username, response))
                                     .catch(error => res.send(error))
                             }

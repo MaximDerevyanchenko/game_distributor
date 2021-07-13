@@ -115,17 +115,21 @@ const Profile = {
         getAccount: function () {
             axios.get('http://localhost:3000/api/account/' + this.$props.username)
                 .then(res => {
-                    this.account = res.data
-                    this.oldBio = this.account.bio
-                    this.accountChanges.nickname = this.account.nickname
-                    this.accountChanges.countryCode = this.account.countryCode
-                    const background = document.querySelector('#backgroundImg')
-                    if (this.account.backgroundImg !== '') {
-                        const url = '../static/img/' + this.account.username + '/' + this.account.backgroundImg
-                        background.style.backgroundImage = 'url(' + url + ')'
-                        let image = new Image();
-                        image.src = url
-                        image.onload = () => document.querySelector('.position-relative').style.height = image.naturalHeight + 'px'
+                    if (res.data == null)
+                        this.$router.push({ name: '404' })
+                    else {
+                        this.account = res.data
+                        this.oldBio = this.account.bio
+                        this.accountChanges.nickname = this.account.nickname
+                        this.accountChanges.countryCode = this.account.countryCode
+                        const background = document.querySelector('#backgroundImg')
+                        if (this.account.backgroundImg !== '') {
+                            const url = '../static/img/' + this.account.username + '/' + this.account.backgroundImg
+                            background.style.backgroundImage = 'url(' + url + ')'
+                            let image = new Image();
+                            image.src = url
+                            image.onload = () => document.querySelector('.position-relative').style.height = image.naturalHeight + 'px'
+                        }
                     }
                 })
                 .catch(err => console.log(err))

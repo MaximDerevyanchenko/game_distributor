@@ -1,3 +1,4 @@
 *.js eol=lf
 *.html eol=lf
 *.scss eol=lf
+*.md eol=lf

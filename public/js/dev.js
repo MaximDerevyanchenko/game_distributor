@@ -15,7 +15,7 @@ const Dev = {
     },
     template: `
     <div class="p-2 mt-3 row justify-content-center">
-         <div v-if="account.isDeveloper" class="d-flex flex-column border rounded border-light justify-content-center col-12 col-md-10 col-lg-8 pb-3">
+         <div v-if="account && account.isDeveloper" class="d-flex flex-column border rounded border-light justify-content-center col-12 col-md-10 col-lg-8 pb-3">
             <h2 class="text-center m-3">My Games</h2>
             <div class="text-center">
                 <button class="btn btn-outline-light" role="button" data-bs-target="#addGame" data-bs-toggle="modal">Do you want to add your game into Stim?</button>
@@ -102,15 +102,18 @@ const Dev = {
             axios.get('http://localhost:3000/api/account/' + Vue.$cookies.get('username'))
                 .then(res => {
                     this.account = res.data
-                    if (this.account.isDeveloper)
+                    if (this.account !== null && this.account.isDeveloper)
                         this.getMyGames()
                 })
                 .catch(err => console.log(err))
         },
         becomeDeveloper: function (){
-            axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username'), { isDeveloper: true })
-                .then(() => this.$emit('becameDeveloper'))
-                .catch(err => console.log(err))
+            if (this.$cookies.isKey('username'))
+                axios.patch('http://localhost:3000/api/account/' + this.$cookies.get('username'), { isDeveloper: true })
+                    .then(() => this.$emit('becameDeveloper'))
+                    .catch(err => console.log(err))
+            else
+                this.$parent.$children[1].$emit("login-needed")
         },
         getMyGames: function (){
             axios.get('http://localhost:3000/api/account/' + this.$cookies.get('username') + '/developed')

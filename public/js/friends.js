@@ -137,9 +137,14 @@ const Friends = {
         getFriends: function () {
             axios.get('http://localhost:3000/api/account/' + this.$props.username + '/friends')
                 .then(res => {
-                    this.friends = res.data
-                    this.onlineFriends = this.friends.filter(f => f.state === 'online' || f.state === 'in game')
-                    this.offlineFriends = this.friends.filter(f => f.state === 'offline')
+                    if (!Array.isArray(res.data)){
+                        if (this.$router.currentRoute.name !== 'Profile')
+                            this.$router.push({ name: '404' })
+                    } else {
+                        this.friends = res.data
+                        this.onlineFriends = this.friends.filter(f => f.state === 'online' || f.state === 'in game')
+                        this.offlineFriends = this.friends.filter(f => f.state === 'offline')
+                    }
                 })
                 .catch(err => console.log(err))
         },

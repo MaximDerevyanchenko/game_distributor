@@ -6,14 +6,18 @@ module.exports = function (mongoose, io) {
 
     module.exports.login = function (req, res) {
         Account.findOne({username: req.body.username})
-            .then(acc =>
-                bcrypt.compare(req.body.password, acc.password, (err, result) => {
-                    if (result)
-                        res.json(acc)
-                    else
-                        res.send(result)
-                }))
-            .catch(err => res.send(err))
+            .then(acc => {
+                if (acc)
+                    bcrypt.compare(req.body.password, acc.password, (err, result) => {
+                        if (result)
+                            res.json(acc)
+                        else
+                            res.send(result)
+                    })
+                else
+                    res.send(acc)
+            })
+            .catch(err => {console.log(err);res.send(err)})
     }
 
     module.exports.changeState = function (req, res) {
