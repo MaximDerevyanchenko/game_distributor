@@ -1,8 +1,23 @@
 module.exports = function(mongoose) {
-    const Schema = mongoose.Schema;
+    const Schema = mongoose.Schema
     const GameSchema = new Schema({
-        appid: Number,
-		name: String
-    });
-    return mongoose.model('GameSchema', GameSchema, 'games');
-};
+        gameId: Number,
+		name: String,
+        isLocal: Boolean,
+        developers: [String],
+        publishers: [String],
+        is_free: Boolean,
+        short_description: String,
+        price_overview: {
+            final: Number,
+            final_formatted: String,
+            discount_percent: Number
+        },
+        header_image: String,
+        release_date: {
+            coming_soon: Boolean,
+            date: String
+        }
+    })
+    return mongoose.model('GameSchema', GameSchema, 'games')
+}

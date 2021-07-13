@@ -1,0 +1,118 @@
+$primary: #290661;
+$secondary: #5f0ee0;
+
+$primary: #140330;
+$secondary: #160d27;
+
+$gradient: linear-gradient(180deg, rgba(20,3,48,1) 0%, rgba(82,82,238,1) 20%, rgba(0,0,0,1) 100%);
+$v-gradient: linear-gradient(135deg, rgba(0,0,0,1) 30%, rgba(82,82,238,1) 50%, rgba(0,0,0,1) 70%);
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+#game-details img {
+  max-width: 100%;
+}
+
+h1 img {
+  width: 10%;
+  max-height: 100px;
+  max-width: 95px;
+}
+
+.tab-pane ul li img {
+  height: 35px;
+  width: auto;
+}
+
+#game-details ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#game-details ul li strong {
+  margin-right: 5px;
+}
+
+nav {
+  border-radius: 30px;
+}
+
+textarea {
+  height: 150px !important;
+}
+
+.fa-eye {
+  width: 20px;
+}
+
+.carousel-control {
+  background: none;
+  border: 0;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.carousel-indicators {
+  bottom: -50px;
+}
+
+.spinner-grow {
+  width: 5rem;
+  height: 5rem;
+}
+
+.nav-link:not(#store) {
+  color: white !important;
+  background-color: $primary !important;
+}
+
+.nav-link.active:not(#store) {
+  color: $primary !important;
+  background-color: white !important;
+}
+
+#backgroundImg {
+  z-index: -1;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  filter: blur(3px);
+}
+
+.toast-container {
+  z-index: 5000;
+}
+
+@include media-breakpoint-down(md) {
+  .dropdown-menu {
+    background-color: $primary !important;
+  }
+}
+
+a .card-img {
+  height: 200px;
+  width: auto;
+}
+
+@include media-breakpoint-down(sm){
+  a .card-img {
+    height: 130px;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .page-link {
+    padding: .375rem .75rem !important;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .page-link {
+    padding: .5rem 1.25rem !important;
+  }
+}
+
+.bg-v-gradient {
+  background-image: $v-gradient;
+  background-repeat: repeat;
+  background-size: 10px 10px;
+}
